@@ -8,4 +8,4 @@ Aurenir Pereira de Carvalho
 Anthony Rian da Silva Andrade 
 Natan Vinicius da Silva Costa
 Cezar Santos Vilanova
-Aristeu Pereira do
+Aristeu Pereira do Nascimento Neto
