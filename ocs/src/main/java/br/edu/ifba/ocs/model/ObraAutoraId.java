@@ -33,4 +33,5 @@ public class ObraAutoraId implements Serializable {
     public int hashCode() {
         return Objects.hash(obra, autora);
     }
+    //testes de hoje
 }
