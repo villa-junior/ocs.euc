@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Cadastro de Filmes</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .container { max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; }
+        input[type="text"], input[type="number"] { width: 100%; padding: 8px; box-sizing: border-box; }
+        button { padding: 10px 15px; background-color: purple; color: white; border: none; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Formulário de Filme</h1>
+    
+    <form th:action="${filme.id == null} ? @{/filmes} : @{/filmes/alterar}" method="post" th:object="${filme}">
+
+        <input type="hidden" th:field="*{id}">
+
+        <div class="form-group">
+            <label for="nome">Nome do Filme:</label>
+            <input type="text" id="nome" th:field="*{nome}">
+        </div>
+        <div class="form-group">
+            <label for="anoLancamento">Ano de Lançamento:</label>
+            <input type="number" id="anoLancamento" th:field="*{anoLancamento}">
+        </div>
+        <div class="form-group">
+            <label for="tempoDuracaoEmMinutos">Duração (minutos):</label>
+            <input type="number" id="tempoDuracaoEmMinutos" th:field="*{tempoDuracaoEmMinutos}">
+        </div>
+        <div class="form-group">
+            <label for="categoria">Categoria:</label>
+            <input type="text" id="categoria" th:field="*{categoria}">
+        </div>
+        <div class="form-group">
+            <label for="classificacaoEtaria">Classificação Etária:</label>
+            <input type="number" id="classificacaoEtaria" th:field="*{classificacaoEtaria}">
+        </div>
+        <div class="form-group">
+            <label for="urlImagem">URL da Imagem Principal:</label>
+            <input type="text" id="urlImagem" th:field="*{urlImagem}" placeholder="https://exemplo.com/imagem.jpg">
+        </div>
+        <div class="form-group">
+            <label for="urlVideo">Link do Vídeo no YouTube:</label>
+            <input type="text" id="urlVideo" th:field="*{urlVideo}" placeholder="https://www.youtube.com/watch?v=...">
+        </div>
+        <button type="submit">Salvar</button>
+    </form>
+</div>
+
+</body>
+</html>
