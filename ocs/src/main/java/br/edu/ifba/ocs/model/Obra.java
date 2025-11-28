@@ -6,89 +6,76 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
+@Table(name = "obra")
 public class Obra {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idObra;
+    @Column(name = "id_obra")
+    private Integer id;
 
-    @Column(nullable = false)
     private String titulo;
 
-    @Column(nullable = false, columnDefinition = "TEXT")
     private String resumo;
 
-    @Column(nullable = false, columnDefinition = "TEXT")
+    @Column(name = "palavras_chave")
     private String palavrasChave;
 
-    @Column(nullable = false)
+    @Column(name = "ano_publicacao")
     private Integer anoPublicacao;
 
-    @Column(nullable = false)
+    @Column(name = "url_arquivo")
     private String urlArquivo;
 
     @ManyToOne
-    @JoinColumn(name = "id_categoria", nullable = false)
+    @JoinColumn(name = "id_categoria")
     private Categoria categoria;
 
     @ManyToOne
-    @JoinColumn(name = "id_conta", nullable = false)
+    @JoinColumn(name = "id_conta")
     private Conta conta;
 
-    @Column(nullable = false)
+    @Column(name = "data_registro")
     private LocalDate dataRegistro;
 
-    public Obra() {
-    }
+    public Obra() {}
 
-    public Obra(String titulo, String resumo, String palavrasChave, Integer anoPublicacao,
-                String urlArquivo, Categoria categoria, Conta conta, LocalDate dataRegistro) {
-        this.titulo = titulo;
-        this.resumo = resumo;
-        this.palavrasChave = palavrasChave;
-        this.anoPublicacao = anoPublicacao;
-        this.urlArquivo = urlArquivo;
-        this.categoria = categoria;
-        this.conta = conta;
-        this.dataRegistro = dataRegistro;
-    }
+    // Getters e Setters
+    public Integer getId() { return id; }
 
-    public Integer getIdObra() { return idObra; }
-    public void setIdObra(Integer idObra) { this.idObra = idObra; }
+    public void setId(Integer id) { this.id = id; }
 
     public String getTitulo() { return titulo; }
+
     public void setTitulo(String titulo) { this.titulo = titulo; }
 
     public String getResumo() { return resumo; }
+
     public void setResumo(String resumo) { this.resumo = resumo; }
 
     public String getPalavrasChave() { return palavrasChave; }
+
     public void setPalavrasChave(String palavrasChave) { this.palavrasChave = palavrasChave; }
 
     public Integer getAnoPublicacao() { return anoPublicacao; }
+
     public void setAnoPublicacao(Integer anoPublicacao) { this.anoPublicacao = anoPublicacao; }
 
     public String getUrlArquivo() { return urlArquivo; }
+
     public void setUrlArquivo(String urlArquivo) { this.urlArquivo = urlArquivo; }
 
     public Categoria getCategoria() { return categoria; }
+
     public void setCategoria(Categoria categoria) { this.categoria = categoria; }
 
     public Conta getConta() { return conta; }
+
     public void setConta(Conta conta) { this.conta = conta; }
 
     public LocalDate getDataRegistro() { return dataRegistro; }
-    public void setDataRegistro(LocalDate dataRegistro) { this.dataRegistro = dataRegistro; }
 
-    @Override
-    public String toString() {
-        return "Obra{" +
-                "idObra=" + idObra +
-                ", titulo='" + titulo + '\'' +
-                ", anoPublicacao=" + anoPublicacao +
-                ", categoria=" + categoria +
-                ", conta=" + conta +
-                '}';
-    }
+    public void setDataRegistro(LocalDate dataRegistro) { this.dataRegistro = dataRegistro; }
 }
+
 

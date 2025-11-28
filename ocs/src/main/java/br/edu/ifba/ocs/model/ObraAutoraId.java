@@ -1,37 +1,46 @@
 package br.edu.ifba.ocs.model;
 
+
+
+import jakarta.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
 
+@Embeddable
 public class ObraAutoraId implements Serializable {
-    private Integer obra;
-    private Integer autora;
 
-    public ObraAutoraId() {
+    @Column(name = "id_obra")
+    private Integer idObra;
+
+    @Column(name = "id_autora")
+    private Integer idAutora;
+
+    public ObraAutoraId() {}
+
+    public ObraAutoraId(Integer idObra, Integer idAutora) {
+        this.idObra = idObra;
+        this.idAutora = idAutora;
     }
 
-    public ObraAutoraId(Integer obra, Integer autora) {
-        this.obra = obra;
-        this.autora = autora;
-    }
+    public Integer getIdObra() { return idObra; }
 
-    public Integer getObra() { return obra; }
-    public void setObra(Integer obra) { this.obra = obra; }
+    public void setIdObra(Integer idObra) { this.idObra = idObra; }
 
-    public Integer getAutora() { return autora; }
-    public void setAutora(Integer autora) { this.autora = autora; }
+    public Integer getIdAutora() { return idAutora; }
+
+    public void setIdAutora(Integer idAutora) { this.idAutora = idAutora; }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof ObraAutoraId)) return false;
         ObraAutoraId that = (ObraAutoraId) o;
-        return Objects.equals(obra, that.obra) && Objects.equals(autora, that.autora);
+        return Objects.equals(idObra, that.idObra) &&
+                Objects.equals(idAutora, that.idAutora);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(obra, autora);
+        return Objects.hash(idObra, idAutora);
     }
-    //testes de hoje
 }

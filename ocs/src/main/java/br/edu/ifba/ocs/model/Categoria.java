@@ -1,31 +1,29 @@
 package br.edu.ifba.ocs.model;
 
 
+
+
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "categoria")
 public class Categoria {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idCategoria;
+    @Column(name = "id_categoria")
+    private Integer id;
 
-    @Column(nullable = false)
     private String nome;
 
-    public Categoria() {
+    public Categoria() {}
+
+    public Integer getId() {
+        return id;
     }
 
-    public Categoria(String nome) {
-        this.nome = nome;
-    }
-
-    public Integer getIdCategoria() {
-        return idCategoria;
-    }
-
-    public void setIdCategoria(Integer idCategoria) {
-        this.idCategoria = idCategoria;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getNome() {
@@ -34,13 +32,5 @@ public class Categoria {
 
     public void setNome(String nome) {
         this.nome = nome;
-    }
-
-    @Override
-    public String toString() {
-        return "Categoria{" +
-                "idCategoria=" + idCategoria +
-                ", nome='" + nome + '\'' +
-                '}';
     }
 }

@@ -2,33 +2,37 @@ package br.edu.ifba.ocs.model;
 
 
 
+
 import jakarta.persistence.*;
 
 @Entity
-@IdClass(ObraAutoraId.class)
+@Table(name = "obra_autora")
 public class ObraAutora {
 
-    @Id
+    @EmbeddedId
+    private ObraAutoraId id;
+
     @ManyToOne
+    @MapsId("idObra")
     @JoinColumn(name = "id_obra")
     private Obra obra;
 
-    @Id
     @ManyToOne
+    @MapsId("idAutora")
     @JoinColumn(name = "id_autora")
     private Autora autora;
 
-    public ObraAutora() {
-    }
+    public ObraAutora() {}
 
-    public ObraAutora(Obra obra, Autora autora) {
-        this.obra = obra;
-        this.autora = autora;
-    }
+    public ObraAutoraId getId() { return id; }
+
+    public void setId(ObraAutoraId id) { this.id = id; }
 
     public Obra getObra() { return obra; }
+
     public void setObra(Obra obra) { this.obra = obra; }
 
     public Autora getAutora() { return autora; }
+
     public void setAutora(Autora autora) { this.autora = autora; }
 }
