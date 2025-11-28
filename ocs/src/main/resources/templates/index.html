@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Teste</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column; /* Coloca texto e imagem empilhados */
+            justify-content: center; /* Centraliza verticalmente */
+            align-items: center;     /* Centraliza horizontalmente */
+            text-align: center;
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+        }
+
+        h1 {
+            color: purple;
+            margin: 10px 0;
+        }
+
+        img {
+            margin-top: 20px;
+            max-width: 90%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Bem-vindo ao Pirateflix!</h1>
+    <h1>Aqui é um Flix de Traillers!</h1>
+    <img th:src="@{/img/trailler.png}" alt="Trailer do Filme" width="500">
+</body>
+</html>

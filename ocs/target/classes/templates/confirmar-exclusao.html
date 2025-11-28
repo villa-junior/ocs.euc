@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Confirmar Exclusão</title>
+    <style>
+        body { font-family: Arial, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; }
+        .container { text-align: center; padding: 40px; border: 1px solid #ddd; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .acoes { margin-top: 20px; display: flex; gap: 10px; }
+        .btn { text-decoration: none; padding: 10px 20px; border-radius: 5px; color: white; border: none; cursor: pointer; }
+        .btn-confirmar { background-color: #DC3545; }
+        .btn-cancelar { background-color: #6c757d; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Tem certeza que deseja excluir o filme?</h2>
+    <h3 th:text="${filme.nome}">Nome do Filme</h3>
+
+    <form th:action="@{/filmes/excluir}" method="post">
+        <input type="hidden" name="id" th:value="${filme.id}">
+        <div class="acoes">
+            <button class="btn btn-confirmar" type="submit">Sim, Excluir</button>
+            <a class="btn btn-cancelar" href="/filmes/painel">Cancelar</a>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>
