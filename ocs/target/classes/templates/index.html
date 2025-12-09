@@ -1,35 +1,142 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Teste</title>
-    <style>
-        body {
-            margin: 0;
-            height: 100vh;
-            display: flex;
-            flex-direction: column; /* Coloca texto e imagem empilhados */
-            justify-content: center; /* Centraliza verticalmente */
-            align-items: center;     /* Centraliza horizontalmente */
-            text-align: center;
-            font-family: Arial, sans-serif;
-            background-color: #f9f9f9;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Observatório da Comunidade Surda</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f7f7f7;
+      color: #333;
+    }
+    header {
+      background: #1b3a57;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2rem;
+      font-weight: 600;
+    }
+    nav {
+      background: #153049;
+      padding: 10px;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
 
-        h1 {
-            color: purple;
-            margin: 10px 0;
-        }
+    .banner {
+      background: url('banner.jpg') center / cover no-repeat;
+      padding: 80px 20px;
+      text-align: center;
+      color: white;
+      background-color: #1b3a57;
+    }
+    .banner h2 {
+      font-size: 2.2rem;
+      margin-bottom: 10px;
+    }
+    .banner p {
+      font-size: 1.1rem;
+      max-width: 700px;
+      margin: 0 auto;
+    }
 
-        img {
-            margin-top: 20px;
-            max-width: 90%;
-            height: auto;
-        }
-    </style>
+    .section {
+      padding: 40px 20px;
+      max-width: 1000px;
+      margin: auto;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .card h3 {
+      margin-top: 0;
+    }
+
+    footer {
+      margin-top: 40px;
+      background: #1b3a57;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+  </style>
 </head>
 <body>
-    <h1>Bem-vindo ao Pirateflix!</h1>
-    <h1>Aqui é um Flix de Traillers!</h1>
-    <img th:src="@{/img/trailler.png}" alt="Trailer do Filme" width="500">
+  <header>
+    <h1>OCS.EUC - Observatório da Comunidade Surda</h1>
+  </header>
+
+  <nav>
+    <a href="#sobre">Sobre</a>
+    <a href="#obras">Acervo</a>
+    <a href="#pesquisas">Pesquisas</a>
+    <a href="#legislacao">Legislação</a>
+    <a href="#contato">Contato</a>
+  </nav>
+
+  <div class="banner">
+    <h2>Conhecimento acessível para fortalecer a comunidade surda</h2>
+    <p>Repositório de livros, artigos, pesquisas, legislações e materiais audiovisuais produzidos pela, sobre ou para a comunidade surda.</p>
+  </div>
+
+  <section id="sobre" class="section">
+    <h2>Sobre o Observatório</h2>
+    <p>O Observatório da Comunidade Surda é uma plataforma dedicada à reunião, organização e divulgação de produções acadêmicas, culturais e institucionais relacionadas à comunidade surda, com foco especial em Euclides da Cunha - BA e região. Nosso objetivo é democratizar o acesso ao conhecimento e apoiar ações de desenvolvimento regional por meio da ciência e tecnologia.</p>
+  </section>
+
+  <section id="obras" class="section">
+    <h2>Acervo de Obras</h2>
+    <div class="cards">
+      <div class="card"><h3>Livros</h3><p>Acesse obras completas em PDF relacionadas à comunidade surda.</p></div>
+      <div class="card"><h3>Artigos</h3><p>Publicações científicas de pesquisadores da área.</p></div>
+      <div class="card"><h3>Manuais</h3><p>Materiais instrucionais e educativos.</p></div>
+      <div class="card"><h3>Audiovisuais</h3><p>Vídeos, curtas, entrevistas e materiais em Libras.</p></div>
+    </div>
+  </section>
+
+  <section id="pesquisas" class="section">
+    <h2>Pesquisas</h2>
+    <p>Consulte pesquisas em andamento e concluídas, incluindo relatórios, artigos vinculados e materiais complementares.</p>
+    <div class="cards">
+      <div class="card"><h3>Pesquisas em andamento</h3><p>Visão geral das ações de pesquisa atuais.</p></div>
+      <div class="card"><h3>Pesquisas concluídas</h3><p>Resultados, artigos derivados e arquivos finais.</p></div>
+    </div>
+  </section>
+
+  <section id="legislacao" class="section">
+    <h2>Legislação</h2>
+    <p>Consulta unificada de leis, decretos e normativas relacionadas aos direitos da pessoa surda.</p>
+  </section>
+
+  <footer id="contato">
+    <p>© 2025 Observatório da Comunidade Surda — IFBA Campus Euclides da Cunha - BA</p>
+  </footer>
 </body>
 </html>
+
