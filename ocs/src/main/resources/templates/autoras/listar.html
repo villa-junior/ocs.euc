@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Autoras</title>
+  <style>
+    body { font-family: Arial; background: #f7f7f7; margin: 0; }
+    header { background: #1b3a57; color: white; padding: 20px; text-align: center; }
+    .section { max-width: 900px; margin: 30px auto; }
+    .card { background: white; padding: 20px; border-radius: 8px; margin-bottom: 15px; box-shadow: 0 2px 6px rgba(0,0,0,.1); }
+    a { color: #1b3a57; text-decoration: none; font-weight: bold; }
+    button { background: #c0392b; color: white; border: none; padding: 6px 10px; cursor: pointer; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Autoras</h1>
+  <a th:href="@{/autoras/cadastrar}" style="color:white;">Cadastrar nova</a>
+</header>
+
+<section class="section">
+  <div class="card" th:each="a : ${autoras}">
+    <p><strong>Nome:</strong> <span th:text="${a.nome}"></span></p>
+    <p><strong>Email:</strong> <span th:text="${a.email}"></span></p>
+    <p><strong>Instituição:</strong> <span th:text="${a.instituicao}"></span></p>
+
+    <a th:href="@{/autoras/editar/{id}(id=${a.id})}">Editar</a>
+
+    <form th:action="@{/autoras/excluir/{id}(id=${a.id})}" method="post" style="display:inline;">
+      <button type="submit">Excluir</button>
+    </form>
+  </div>
+</section>
+
+</body>
+</html>

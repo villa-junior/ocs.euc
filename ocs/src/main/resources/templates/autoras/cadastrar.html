@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Cadastrar Autora</title>
+    <style>
+        body { font-family: Arial; background: #f7f7f7; margin: 0; }
+        header { background: #1b3a57; color: white; padding: 20px; text-align: center; }
+        form { max-width: 500px; margin: 40px auto; background: white; padding: 20px; border-radius: 8px; }
+        input { width: 100%; padding: 8px; margin-bottom: 10px; }
+        button { background: #1b3a57; color: white; border: none; padding: 10px; width: 100%; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Cadastrar Autora</h1>
+</header>
+
+<form th:action="@{/autoras}" th:object="${autora}" method="post">
+    <input type="text" th:field="*{nome}" placeholder="Nome" required>
+    <input type="email" th:field="*{email}" placeholder="Email">
+    <input type="text" th:field="*{instituicao}" placeholder="Instituição">
+    <button type="submit">Salvar</button>
+</form>
+
+</body>
+</html>

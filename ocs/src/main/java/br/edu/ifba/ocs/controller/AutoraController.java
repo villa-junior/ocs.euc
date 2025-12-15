@@ -12,7 +12,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/autoras")
+@RequestMapping("/api/autoras")
 public class AutoraController {
 
 
