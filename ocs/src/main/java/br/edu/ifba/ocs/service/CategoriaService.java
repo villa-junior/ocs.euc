@@ -12,21 +12,21 @@ import java.util.Optional;
 public class CategoriaService {
 
     @Autowired
-    private CategoriaRepository repo;
+    private CategoriaRepository repository;
 
     public List<Categoria> listar() {
-        return repo.findAll();
+        return repository.findAll();
     }
 
     public Optional<Categoria> buscarPorId(Integer id) {
-        return repo.findById(id);
+        return repository.findById(id);
     }
 
     public Categoria salvar(Categoria categoria) {
-        return repo.save(categoria);
+        return repository.save(categoria);
     }
 
     public void deletar(Integer id) {
-        repo.deleteById(id);
+        repository.deleteById(id);
     }
 }

@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Observatório da Comunidade Surda</title>
+
   <style>
     body {
       margin: 0;
@@ -11,17 +12,14 @@
       background: #f7f7f7;
       color: #333;
     }
+
     header {
       background: #1b3a57;
       color: white;
       padding: 20px;
       text-align: center;
     }
-    header h1 {
-      margin: 0;
-      font-size: 2rem;
-      font-weight: 600;
-    }
+
     nav {
       background: #153049;
       padding: 10px;
@@ -29,30 +27,22 @@
       justify-content: center;
       gap: 20px;
     }
+
     nav a {
       color: white;
       text-decoration: none;
       font-weight: bold;
     }
+
     nav a:hover {
       text-decoration: underline;
     }
 
     .banner {
-      background: url('banner.jpg') center / cover no-repeat;
+      background-color: #1b3a57;
       padding: 80px 20px;
       text-align: center;
       color: white;
-      background-color: #1b3a57;
-    }
-    .banner h2 {
-      font-size: 2.2rem;
-      margin-bottom: 10px;
-    }
-    .banner p {
-      font-size: 1.1rem;
-      max-width: 700px;
-      margin: 0 auto;
     }
 
     .section {
@@ -61,21 +51,48 @@
       margin: auto;
     }
 
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 20px;
+  .cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  column-gap: 30px;
+  row-gap: 45px; /* mais espaço entre linhas */
+}
+
+
+    /* 🔹 CARD CLICÁVEL */
+    .card-link {
+      text-decoration: none;
+      color: inherit;
     }
 
     .card {
       background: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      padding: 30px 25px;
+      border-radius: 14px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      height: 100%;
+      border-left: 6px solid transparent;
     }
 
     .card h3 {
       margin-top: 0;
+      font-size: 1.4rem;
+      color: #1b3a57;
+    }
+
+    .card p {
+      color: #555;
+      font-size: 0.95rem;
+    }
+
+    /* ✨ HOVER */
+    .card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 28px rgba(27, 58, 87, 0.25);
+      border-left: 6px solid #1b3a57;
+      background: linear-gradient(135deg, #ffffff, #eef5fb);
     }
 
     footer {
@@ -87,87 +104,99 @@
     }
   </style>
 </head>
+
 <body>
-  <header>
-    <h1>OCS.EUC - Observatório da Comunidade Surda</h1>
-  </header>
 
-  <nav>
-    <a href="#sobre">Sobre</a>
-    <a href="#obras">Acervo</a>
-    <a href="#pesquisas">Pesquisas</a>
-    <a href="#legislacao">Legislação</a>
-    <a href="#contato">Contato</a>
-  </nav>
+<header>
+  <h1>OCS.EUC - Observatório da Comunidade Surda</h1>
+</header>
 
-  <div class="banner">
-    <h2>Conhecimento acessível para fortalecer a comunidade surda</h2>
-    <p>Repositório de livros, artigos, pesquisas, legislações e materiais audiovisuais produzidos pela, sobre ou para a comunidade surda.</p>
-  </div>
+<nav>
+  <a href="#sobre">Sobre</a>
+  <a href="#obras">Acervo</a>
+  <a href="#pesquisas">Pesquisas</a>
+  <a href="#legislacao">Legislação</a>
+</nav>
 
-  <section id="sobre" class="section">
-    <h2>Sobre o Observatório</h2>
-    <p>O Observatório da Comunidade Surda é uma plataforma dedicada à reunião, organização e divulgação de produções acadêmicas, culturais e institucionais relacionadas à comunidade surda, com foco especial em Euclides da Cunha - BA e região. Nosso objetivo é democratizar o acesso ao conhecimento e apoiar ações de desenvolvimento regional por meio da ciência e tecnologia.</p>
-  </section>
+<div class="banner">
+  <h2>Conhecimento acessível para fortalecer a comunidade surda</h2>
+  <p>Repositório de livros, artigos, pesquisas, legislações e materiais audiovisuais.</p>
+</div>
 
-  <section id="obras" class="section">
-    <h2>Acervo de Obras</h2>
-    <div class="cards">
+<section id="sobre" class="section">
+  <h2>Sobre o Observatório</h2>
+  <p>
+    Plataforma dedicada à divulgação de produções acadêmicas e culturais da comunidade surda.
+  </p>
+</section>
 
+<section id="obras" class="section">
+  <h2>Acervo de Obras</h2>
+
+  <div class="cards">
+
+    <a th:href="@{/obras/categoria/2}" class="card-link">
       <div class="card">
-        <h3><a th:href="@{/obras}">Livros</a></h3>
-        <p>Acesse obras completas em PDF relacionadas à comunidade surda.</p>
+        <h3>Livros</h3>
+        <p>Obras completas em PDF relacionadas à comunidade surda.</p>
       </div>
+    </a>
 
+    <a th:href="@{/obras/categoria/1}" class="card-link">
       <div class="card">
-        <h3><a th:href="@{/obras}">Artigos</a></h3>
-        <p>Publicações científicas de pesquisadores da área.</p>
+        <h3>Artigos</h3>
+        <p>Publicações científicas e acadêmicas.</p>
       </div>
+    </a>
 
+    <a th:href="@{/obras/categoria/3}" class="card-link">
       <div class="card">
-        <h3><a th:href="@{/obras}">Manuais</a></h3>
+        <h3>Manuais</h3>
         <p>Materiais instrucionais e educativos.</p>
       </div>
+    </a>
 
+    <a th:href="@{/obras/categoria/4}" class="card-link">
       <div class="card">
-        <h3><a th:href="@{/obras}">Audiovisuais</a></h3>
-        <p>Vídeos, curtas, entrevistas e materiais em Libras.</p>
+        <h3>Audiovisuais</h3>
+        <p>Vídeos, entrevistas e conteúdos em Libras.</p>
       </div>
+    </a>
 
+  </div>
+</section>
+
+<section id="pesquisas" class="section">
+  <h2>Pesquisas</h2>
+
+  <div class="cards">
+    <a th:href="@{/pesquisas}" class="card-link">
+      <div class="card">
+        <h3>Pesquisas em andamento</h3>
+      </div>
+    </a>
+
+    <a th:href="@{/pesquisas}" class="card-link">
+      <div class="card">
+        <h3>Pesquisas concluídas</h3>
+      </div>
+    </a>
+  </div>
+</section>
+
+<section id="legislacao" class="section">
+  <h2>Legislação</h2>
+
+  <a th:href="@{/legislacoes}" class="card-link">
+    <div class="card">
+      <h3>Acessar legislação</h3>
     </div>
-  </section>
+  </a>
+</section>
 
-  <section id="pesquisas" class="section">
-    <h2>Pesquisas</h2>
-    <p>Consulte pesquisas em andamento e concluídas, incluindo relatórios, artigos vinculados e materiais complementares.</p>
+<footer>
+  <p>© 2025 Observatório da Comunidade Surda — IFBA Euclides da Cunha</p>
+</footer>
 
-    <div class="cards">
-
-      <div class="card">
-        <h3><a th:href="@{/pesquisas}">Pesquisas em andamento</a></h3>
-        <p>Visão geral das ações de pesquisa atuais.</p>
-      </div>
-
-      <div class="card">
-        <h3><a th:href="@{/pesquisas}">Pesquisas concluídas</a></h3>
-        <p>Resultados, artigos derivados e arquivos finais.</p>
-      </div>
-
-    </div>
-  </section>
-
-
-  <section id="legislacao" class="section">
-    <h2>Legislação</h2>
-    <p>Consulta unificada de leis, decretos e normativas relacionadas aos direitos da pessoa surda.</p>
-
-    <h3><a th:href="@{/legislacoes}">Acessar legislação</a></h3>
-  </section>
-
-
-  <footer id="contato">
-    <p>© 2025 Observatório da Comunidade Surda — IFBA Campus Euclides da Cunha - BA</p>
-  </footer>
 </body>
 </html>
-

@@ -15,11 +15,13 @@ public class ObraController {
     @Autowired
     private ObraService service;
 
+    // LISTAR TODAS
     @GetMapping
     public List<Obra> listar() {
         return service.listar();
     }
 
+    // BUSCAR POR ID
     @GetMapping("/{id}")
     public ResponseEntity<Obra> buscar(@PathVariable Integer id) {
         return service.buscarPorId(id)
@@ -27,22 +29,32 @@ public class ObraController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    // CRIAR
     @PostMapping
     public Obra criar(@RequestBody Obra obra) {
         return service.salvar(obra);
     }
 
+    // ATUALIZAR
     @PutMapping("/{id}")
-    public ResponseEntity<Obra> atualizar(@PathVariable Integer id, @RequestBody Obra novaObra) {
+    public ResponseEntity<Obra> atualizar(
+            @PathVariable Integer id,
+            @RequestBody Obra novaObra) {
+
         return service.buscarPorId(id)
                 .map(obra -> {
                     obra.setTitulo(novaObra.getTitulo());
+                    obra.setResumo(novaObra.getResumo());
+                    obra.setPalavrasChave(novaObra.getPalavrasChave());
                     obra.setAnoPublicacao(novaObra.getAnoPublicacao());
+                    obra.setUrlArquivo(novaObra.getUrlArquivo());
+                    obra.setCategoria(novaObra.getCategoria());
                     return ResponseEntity.ok(service.salvar(obra));
                 })
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    // DELETAR
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(@PathVariable Integer id) {
         if (service.buscarPorId(id).isPresent()) {

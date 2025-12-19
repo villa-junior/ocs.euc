@@ -12,21 +12,31 @@ import java.util.Optional;
 public class ObraService {
 
     @Autowired
-    private ObraRepository repo;
+    private ObraRepository repository;
 
+    // LISTAR TODAS (usado pela API REST)
     public List<Obra> listar() {
-        return repo.findAll();
+        return repository.findAll();
+    }
+
+    // LISTAR ORDENADO (usado pelo Thymeleaf)
+    public List<Obra> listarOrdenadoPorAnoDesc() {
+        return repository.findAllByOrderByAnoPublicacaoDesc();
     }
 
     public Optional<Obra> buscarPorId(Integer id) {
-        return repo.findById(id);
+        return repository.findById(id);
     }
 
     public Obra salvar(Obra obra) {
-        return repo.save(obra);
+        return repository.save(obra);
     }
 
     public void deletar(Integer id) {
-        repo.deleteById(id);
+        repository.deleteById(id);
     }
+    public List<Obra> listarPorCategoria(Integer categoriaId) {
+        return repository.findByCategoriaIdOrderByAnoPublicacaoDesc(categoriaId);
+    }
+
 }

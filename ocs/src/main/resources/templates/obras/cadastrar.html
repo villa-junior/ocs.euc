@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Cadastrar Obra</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f7f7f7;
+            color: #333;
+        }
+
+        header {
+            background: #1b3a57;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        nav {
+            background: #153049;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 40px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 15px;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+
+        textarea {
+            min-height: 100px;
+        }
+
+        button {
+            margin-top: 25px;
+            width: 100%;
+            padding: 12px;
+            background: #1b3a57;
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #153049;
+        }
+
+        footer {
+            margin-top: 40px;
+            background: #1b3a57;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>OCS.EUC - Observatório da Comunidade Surda</h1>
+</header>
+
+<nav>
+    <a th:href="@{/}">Home</a>
+    <a th:href="@{/obras}">Obras</a>
+</nav>
+
+<div class="container">
+
+    <h2>Cadastrar Nova Obra</h2>
+
+    <form th:action="@{/obras}" th:object="${obra}" method="post">
+
+        <label>Título</label>
+        <input type="text" th:field="*{titulo}" required>
+
+        <label>Resumo</label>
+        <textarea th:field="*{resumo}" required></textarea>
+
+        <label>Palavras-chave</label>
+        <input type="text" th:field="*{palavrasChave}" required>
+
+        <label>Ano de Publicação</label>
+        <input type="number" th:field="*{anoPublicacao}" required>
+
+        <label>URL do Arquivo</label>
+        <input type="text" th:field="*{urlArquivo}" required>
+
+        <label>Categoria</label>
+        <select th:field="*{categoria.id}" required>
+            <option value="">-- Selecione uma categoria --</option>
+            <option th:each="c : ${categorias}"
+                    th:value="${c.id}"
+                    th:text="${c.nome}">
+            </option>
+        </select>
+
+        <button type="submit">Salvar Obra</button>
+
+    </form>
+
+</div>
+
+<footer>
+    © 2025 Observatório da Comunidade Surda — IFBA
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Obras</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f7f7f7;
+            color: #333;
+        }
+
+        header {
+            background: #1b3a57;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        nav {
+            background: #153049;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background: #f0f0f0;
+        }
+
+        a.btn {
+            background: #1b3a57;
+            color: white;
+            padding: 6px 10px;
+            border-radius: 4px;
+            text-decoration: none;
+        }
+
+        footer {
+            margin-top: 40px;
+            background: #1b3a57;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Acervo de Obras</h1>
+</header>
+
+<nav>
+    <a th:href="@{/}">Home</a>
+    <a th:href="@{/obras/cadastrar}">Cadastrar Obra</a>
+</nav>
+
+<div class="container">
+
+    <h2 th:text="${categoria != null ? categoria.nome : 'Todas as Obras'}"></h2>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Título</th>
+            <th>Ano</th>
+            <th>Categoria</th>
+            <th>Ações</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="o : ${obras}">
+            <td th:text="${o.titulo}"></td>
+            <td th:text="${o.anoPublicacao}"></td>
+
+
+            <td th:text="${o.categoria != null ? o.categoria.nome : 'Sem categoria'}"></td>
+
+            <td>
+                <a class="btn" th:href="@{/obras/editar/{id}(id=${o.id})}">Editar</a>
+                <a class="btn"
+                   th:href="@{/obras/excluir/{id}(id=${o.id})}"
+                   onclick="return confirm('Deseja excluir?')">
+                    Excluir
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+
+<footer>
+    © 2025 Observatório da Comunidade Surda — IFBA
+</footer>
+
+</body>
+</html>
