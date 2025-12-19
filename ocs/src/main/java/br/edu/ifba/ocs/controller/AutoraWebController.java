@@ -38,11 +38,13 @@ public class AutoraWebController {
 
     @GetMapping("/editar/{id}")
     public String editar(@PathVariable Integer id, Model model) {
-        model.addAttribute(
-                "autora",
-                service.buscarPorId(id).orElseThrow()
-        );
-        return "autoras/editar";
+
+        return service.buscarPorId(id)
+                .map(autora -> {
+                    model.addAttribute("autora", autora);
+                    return "autoras/editar";
+                })
+                .orElse("redirect:/autoras");
     }
 
 

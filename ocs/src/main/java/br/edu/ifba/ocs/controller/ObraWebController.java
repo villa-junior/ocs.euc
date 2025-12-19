@@ -3,10 +3,13 @@ package br.edu.ifba.ocs.controller;
 import br.edu.ifba.ocs.model.Obra;
 import br.edu.ifba.ocs.service.ObraService;
 import br.edu.ifba.ocs.service.CategoriaService;
+import br.edu.ifba.ocs.service.AutoraService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/obras")
@@ -18,6 +21,11 @@ public class ObraWebController {
     @Autowired
     private CategoriaService categoriaService;
 
+    @Autowired
+    private AutoraService autoraService; // 👈 novo
+
+
+
 
     @GetMapping
     public String listarTodas(Model model) {
@@ -26,7 +34,6 @@ public class ObraWebController {
         model.addAttribute("categoria", null);
         return "obras/listar";
     }
-
 
     @GetMapping("/categoria/{id}")
     public String listarPorCategoria(@PathVariable Integer id, Model model) {
@@ -38,20 +45,26 @@ public class ObraWebController {
     }
 
 
+
     @GetMapping("/cadastrar")
     public String cadastrar(Model model) {
         model.addAttribute("obra", new Obra());
         model.addAttribute("categorias",
                 categoriaService.listar());
+        model.addAttribute("autoras",
+                autoraService.listar()); // 👈 novo
         return "obras/cadastrar";
     }
 
-
     @PostMapping
-    public String salvar(@ModelAttribute Obra obra) {
-        Obra salva = obraService.salvar(obra);
+    public String salvar(
+            @ModelAttribute Obra obra,
+            @RequestParam(required = false) List<Integer> autorasIds
+    ) {
+        Obra salva = obraService.salvarComAutoras(obra, autorasIds);
         return "redirect:/obras/categoria/" + salva.getCategoria().getId();
     }
+
 
 
     @GetMapping("/editar/{id}")
@@ -60,17 +73,24 @@ public class ObraWebController {
                 obraService.buscarPorId(id).orElseThrow());
         model.addAttribute("categorias",
                 categoriaService.listar());
+        model.addAttribute("autoras",
+                autoraService.listar()); // 👈 novo
         return "obras/editar";
     }
 
-
     @PostMapping("/editar/{id}")
-    public String atualizar(@PathVariable Integer id,
-                            @ModelAttribute Obra obra) {
+    public String atualizar(
+            @PathVariable Integer id,
+            @ModelAttribute Obra obra,
+            @RequestParam(required = false) List<Integer> autorasIds
+    ) {
         obra.setId(id);
-        Obra atualizada = obraService.salvar(obra);
-        return "redirect:/obras/categoria/" + atualizada.getCategoria().getId();
+        Obra atualizada =
+                obraService.salvarComAutoras(obra, autorasIds);
+        return "redirect:/obras/categoria/" +
+                atualizada.getCategoria().getId();
     }
+
 
 
     @GetMapping("/excluir/{id}")

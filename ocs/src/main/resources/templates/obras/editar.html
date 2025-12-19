@@ -3,119 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Editar Obra</title>
-
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f7f7f7;
-            color: #333;
-        }
-
-        header {
-            background: #1b3a57;
-            color: white;
-            padding: 20px;
-            text-align: center;
-        }
-
-        /* 🔹 MENU TOPO */
-        nav {
-            background: #153049;
-            padding: 10px;
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-        }
-
-        nav a {
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-            padding: 6px 10px;
-            transition: transform 0.2s ease;
-        }
-
-        /* efeito gaveta */
-        nav a:hover {
-            transform: translateY(4px);
-        }
-
-        /* 🔹 CONTAINER */
-        .container {
-            max-width: 650px;
-            margin: 40px auto;
-            background: white;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.08);
-        }
-
-        h2 {
-            text-align: center;
-            margin-bottom: 25px;
-            color: #1b3a57;
-        }
-
-        label {
-            font-weight: bold;
-            display: block;
-            margin-top: 14px;
-            font-size: 0.95rem;
-        }
-
-        input, textarea, select {
-            width: 100%;
-            padding: 9px;
-            margin-top: 5px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            font-size: 14px;
-            transition: border-color 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        /* foco simples */
-        input:focus,
-        textarea:focus,
-        select:focus {
-            outline: none;
-            border-color: #1b3a57;
-            box-shadow: 0 0 0 2px rgba(27, 58, 87, 0.12);
-        }
-
-        textarea {
-            min-height: 90px;
-            resize: vertical;
-        }
-
-        /* 🔹 BOTÃO */
-        button {
-            margin-top: 25px;
-            width: 100%;
-            padding: 11px;
-            background: #1b3a57;
-            color: white;
-            font-size: 15px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: background 0.2s ease, transform 0.2s ease;
-        }
-
-        button:hover {
-            background: #153049;
-            transform: translateY(-2px);
-        }
-
-        footer {
-            margin-top: 40px;
-            background: #1b3a57;
-            color: white;
-            padding: 20px;
-            text-align: center;
-        }
-    </style>
+    <!-- CSS IDÊNTICO AO CADASTRAR -->
 </head>
+
 <body>
 
 <header>
@@ -123,46 +13,61 @@
 </header>
 
 <nav>
-    <a th:href="@{/}">Home</a>
+    <a th:href="@{/}">Início</a>
     <a th:href="@{/obras}">Obras</a>
+    <a th:href="@{/autoras}">Autoras</a>
 </nav>
 
-<div class="container">
-
+<section class="section">
     <h2>Editar Obra</h2>
 
     <form th:action="@{/obras/editar/{id}(id=${obra.id})}"
-          th:object="${obra}"
-          method="post">
+          th:object="${obra}" method="post">
 
         <label>Título</label>
-        <input type="text" th:field="*{titulo}" required>
+        <input type="text" th:field="*{titulo}">
 
         <label>Resumo</label>
-        <textarea th:field="*{resumo}" required></textarea>
+        <textarea th:field="*{resumo}"></textarea>
 
-        <label>Palavras-chave</label>
-        <input type="text" th:field="*{palavrasChave}" required>
-
-        <label>Ano de Publicação</label>
-        <input type="number" th:field="*{anoPublicacao}" required>
+        <label>Ano</label>
+        <input type="number" th:field="*{anoPublicacao}">
 
         <label>Categoria</label>
-        <select th:field="*{categoria.id}" required>
-            <option th:each="c : ${categorias}"
-                    th:value="${c.id}"
-                    th:text="${c.nome}">
+        <select th:field="*{categoria}">
+            <option th:each="cat : ${categorias}"
+                    th:value="${cat}"
+                    th:text="${cat.nome}">
             </option>
         </select>
 
-        <button type="submit">Atualizar Obra</button>
+        <hr>
+
+        <h3>Autoras</h3>
+
+        <a th:href="@{/autoras/cadastrar}" class="btn btn-sec">
+            + Cadastrar Autora
+        </a>
+
+        <div th:each="autora : ${autoras}">
+            <label>
+                <input type="checkbox"
+                       name="autorasIds"
+                       th:value="${autora.id}"
+                       th:checked="${autorasSelecionadas.contains(autora.id)}">
+                <span th:text="${autora.nome}"></span>
+            </label>
+        </div>
+
+        <br>
+
+        <button type="submit" class="btn">Atualizar</button>
 
     </form>
-
-</div>
+</section>
 
 <footer>
-    © 2025 Observatório da Comunidade Surda
+    <p>© 2025 Observatório da Comunidade Surda — IFBA Euclides da Cunha</p>
 </footer>
 
 </body>

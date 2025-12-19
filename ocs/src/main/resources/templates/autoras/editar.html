@@ -3,26 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <title>Editar Autora</title>
-    <style>
-        body { font-family: Arial; background: #f7f7f7; margin: 0; }
-        header { background: #1b3a57; color: white; padding: 20px; text-align: center; }
-        form { max-width: 500px; margin: 40px auto; background: white; padding: 20px; border-radius: 8px; }
-        input { width: 100%; padding: 8px; margin-bottom: 10px; }
-        button { background: #1b3a57; color: white; border: none; padding: 10px; width: 100%; }
-    </style>
 </head>
 <body>
 
-<header>
-    <h1>Editar Autora</h1>
-</header>
+<h2>Editar Autora</h2>
 
-<form th:action="@{/autoras/editar/{id}(id=${autora.id})}" th:object="${autora}" method="post">
-    <input type="text" th:field="*{nome}" required>
-    <input type="email" th:field="*{email}">
-    <input type="text" th:field="*{instituicao}">
+<form th:action="@{/autoras/editar/{id}(id=${autora.id})}"
+      th:object="${autora}" method="post">
+
+    <label>Nome</label><br>
+    <input type="text" th:field="*{nome}" required><br><br>
+
+    <label>Email</label><br>
+    <input type="email" th:field="*{email}"><br><br>
+
+    <label>Instituição</label><br>
+    <input type="text" th:field="*{instituicao}"><br><br>
+
+    <label>Lattes</label><br>
+    <input type="text" th:field="*{lattes}"><br><br>
+
     <button type="submit">Atualizar</button>
 </form>
+
+<br>
+<a th:href="@{/autoras}">Voltar</a>
 
 </body>
 </html>

@@ -6,116 +6,92 @@
 
     <style>
         body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f7f7f7;
-            color: #333;
+          margin: 0;
+          font-family: Arial, sans-serif;
+          background: #f7f7f7;
+          color: #333;
         }
 
         header {
-            background: #1b3a57;
-            color: white;
-            padding: 20px;
-            text-align: center;
+          background: #1b3a57;
+          color: white;
+          padding: 20px;
+          text-align: center;
         }
 
-        /* 🔹 MENU TOPO */
         nav {
-            background: #153049;
-            padding: 10px;
-            display: flex;
-            justify-content: center;
-            gap: 20px;
+          background: #153049;
+          padding: 10px;
+          display: flex;
+          justify-content: center;
+          gap: 20px;
         }
 
         nav a {
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-            padding: 6px 10px;
-            transition: transform 0.2s ease; /* animação simples */
+          color: white;
+          text-decoration: none;
+          font-weight: bold;
         }
 
-        /* efeito gaveta */
-        nav a:hover {
-            transform: translateY(4px);
-        }
-
-        /* 🔹 CONTAINER FORMULÁRIO */
-        .container {
-            max-width: 650px; /* mais compacto */
-            margin: 40px auto;
-            background: white;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.08);
-        }
-
-        h2 {
-            text-align: center;
-            margin-bottom: 25px;
-            color: #1b3a57;
+        .section {
+          padding: 40px 20px;
+          max-width: 950px;
+          margin: auto;
+          background: white;
+          border-radius: 12px;
+          box-shadow: 0 3px 8px rgba(0,0,0,0.07);
         }
 
         label {
-            font-weight: bold;
-            display: block;
-            margin-top: 14px;
-            font-size: 0.95rem;
+          font-weight: bold;
         }
 
         input, textarea, select {
-            width: 100%;
-            padding: 9px;
-            margin-top: 5px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            font-size: 14px;
-            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+          width: 100%;
+          padding: 8px;
+          margin-top: 6px;
+          margin-bottom: 16px;
+          border-radius: 6px;
+          border: 1px solid #ccc;
         }
 
-        /* foco simples e elegante */
-        input:focus,
-        textarea:focus,
-        select:focus {
-            outline: none;
-            border-color: #1b3a57;
-            box-shadow: 0 0 0 2px rgba(27, 58, 87, 0.12);
+        .autoras-box {
+          border: 1px solid #ddd;
+          border-radius: 10px;
+          padding: 15px;
+          max-height: 300px;
+          overflow-y: auto;
+          background: #fafafa;
         }
 
-        textarea {
-            min-height: 90px;
-            resize: vertical;
+        .autora-item {
+          padding: 6px;
         }
 
-        /* 🔹 BOTÃO */
-        button {
-            margin-top: 25px;
-            width: 100%;
-            padding: 11px;
-            background: #1b3a57;
-            color: white;
-            font-size: 15px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: background 0.2s ease, transform 0.2s ease;
+        .autora-item input:checked + span {
+          font-weight: bold;
+          color: #1b3a57;
         }
 
-        button:hover {
-            background: #153049;
-            transform: translateY(-2px); /* movimento mínimo */
+        .btn {
+          background: #1b3a57;
+          color: white;
+          padding: 10px 16px;
+          border-radius: 8px;
+          border: none;
+          cursor: pointer;
         }
 
         footer {
-            margin-top: 40px;
-            background: #1b3a57;
-            color: white;
-            padding: 20px;
-            text-align: center;
+          margin-top: 40px;
+          background: #1b3a57;
+          color: white;
+          padding: 20px;
+          text-align: center;
         }
     </style>
 </head>
+
 <body>
 
 <header>
@@ -123,48 +99,63 @@
 </header>
 
 <nav>
-    <a th:href="@{/}">Home</a>
+    <a th:href="@{/}">Início</a>
     <a th:href="@{/obras}">Obras</a>
+    <a th:href="@{/autoras}">Autoras</a>
 </nav>
 
-<div class="container">
+<section class="section">
+    <h2>Cadastrar Obra</h2>
 
-    <h2>Cadastrar Nova Obra</h2>
-
-    <form th:action="@{/obras}" th:object="${obra}" method="post">
+    <form th:action="@{/obras}" method="post">
 
         <label>Título</label>
-        <input type="text" th:field="*{titulo}" required>
+        <input type="text" name="titulo" required>
 
         <label>Resumo</label>
-        <textarea th:field="*{resumo}" required></textarea>
+        <textarea name="resumo"></textarea>
 
         <label>Palavras-chave</label>
-        <input type="text" th:field="*{palavrasChave}" required>
+        <input type="text" name="palavrasChave">
 
         <label>Ano de Publicação</label>
-        <input type="number" th:field="*{anoPublicacao}" required>
+        <input type="number" name="anoPublicacao" required>
 
         <label>URL do Arquivo</label>
-        <input type="text" th:field="*{urlArquivo}" required>
+        <input type="text" name="urlArquivo">
 
         <label>Categoria</label>
-        <select th:field="*{categoria.id}" required>
-            <option value="">-- Selecione uma categoria --</option>
-            <option th:each="c : ${categorias}"
-                    th:value="${c.id}"
-                    th:text="${c.nome}">
+        <select name="categoriaId" required>
+            <option value="">Selecione</option>
+            <option th:each="cat : ${categorias}"
+                    th:value="${cat.id}"
+                    th:text="${cat.nome}">
             </option>
         </select>
 
-        <button type="submit">Salvar Obra</button>
+        <hr>
 
+        <h3>Autoras</h3>
+
+        <div class="autoras-box">
+            <div class="autora-item" th:each="autora : ${autoras}">
+                <label>
+                    <input type="checkbox"
+                           name="autorasIds"
+                           th:value="${autora.id}">
+                    <span th:text="${autora.nome}"></span>
+                </label>
+            </div>
+        </div>
+
+        <br>
+
+        <button type="submit" class="btn">Salvar Obra</button>
     </form>
-
-</div>
+</section>
 
 <footer>
-    © 2025 Observatório da Comunidade Surda
+    <p>© 2025 Observatório da Comunidade Surda — IFBA Euclides da Cunha</p>
 </footer>
 
 </body>
