@@ -19,6 +19,7 @@
             text-align: center;
         }
 
+        /* 🔹 MENU TOPO */
         nav {
             background: #153049;
             padding: 10px;
@@ -31,59 +32,79 @@
             color: white;
             text-decoration: none;
             font-weight: bold;
+            padding: 6px 10px;
+            transition: transform 0.2s ease; /* animação simples */
         }
 
+        /* efeito gaveta */
         nav a:hover {
-            text-decoration: underline;
+            transform: translateY(4px);
         }
 
+        /* 🔹 CONTAINER FORMULÁRIO */
         .container {
-            max-width: 700px;
+            max-width: 650px; /* mais compacto */
             margin: 40px auto;
             background: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.08);
         }
 
         h2 {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
+            color: #1b3a57;
         }
 
         label {
             font-weight: bold;
             display: block;
-            margin-top: 15px;
+            margin-top: 14px;
+            font-size: 0.95rem;
         }
 
         input, textarea, select {
             width: 100%;
-            padding: 10px;
+            padding: 9px;
             margin-top: 5px;
             border-radius: 5px;
             border: 1px solid #ccc;
             font-size: 14px;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        /* foco simples e elegante */
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #1b3a57;
+            box-shadow: 0 0 0 2px rgba(27, 58, 87, 0.12);
         }
 
         textarea {
-            min-height: 100px;
+            min-height: 90px;
+            resize: vertical;
         }
 
+        /* 🔹 BOTÃO */
         button {
             margin-top: 25px;
             width: 100%;
-            padding: 12px;
+            padding: 11px;
             background: #1b3a57;
             color: white;
-            font-size: 16px;
+            font-size: 15px;
             border: none;
             border-radius: 6px;
             cursor: pointer;
+            transition: background 0.2s ease, transform 0.2s ease;
         }
 
         button:hover {
             background: #153049;
+            transform: translateY(-2px); /* movimento mínimo */
         }
 
         footer {
@@ -143,7 +164,7 @@
 </div>
 
 <footer>
-    © 2025 Observatório da Comunidade Surda — IFBA
+    © 2025 Observatório da Comunidade Surda
 </footer>
 
 </body>

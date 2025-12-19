@@ -12,21 +12,27 @@ import java.util.Optional;
 public class PesquisaService {
 
     @Autowired
-    private PesquisaRepository repo;
+    private PesquisaRepository repository;
 
-    public List<Pesquisa> listar() {
-        return repo.findAll();
+    // 🔹 LISTAR TODAS
+    public List<Pesquisa> listarTodas() {
+        return repository.findAll();
+    }
+
+    // 🔹 LISTAR POR STATUS
+    public List<Pesquisa> listarPorStatus(String status) {
+        return repository.findByStatusOrderByDataInicioDesc(status);
     }
 
     public Optional<Pesquisa> buscarPorId(Integer id) {
-        return repo.findById(id);
+        return repository.findById(id);
     }
 
     public Pesquisa salvar(Pesquisa pesquisa) {
-        return repo.save(pesquisa);
+        return repository.save(pesquisa);
     }
 
     public void deletar(Integer id) {
-        repo.deleteById(id);
+        repository.deleteById(id);
     }
 }

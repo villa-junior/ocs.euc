@@ -19,6 +19,7 @@
             text-align: center;
         }
 
+        /* 🔹 MENU TOPO */
         nav {
             background: #153049;
             padding: 10px;
@@ -31,59 +32,79 @@
             color: white;
             text-decoration: none;
             font-weight: bold;
+            padding: 6px 10px;
+            transition: transform 0.2s ease;
         }
 
+        /* efeito gaveta */
         nav a:hover {
-            text-decoration: underline;
+            transform: translateY(4px);
         }
 
+        /* 🔹 CONTAINER */
         .container {
-            max-width: 700px;
+            max-width: 650px;
             margin: 40px auto;
             background: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.08);
         }
 
         h2 {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
+            color: #1b3a57;
         }
 
         label {
             font-weight: bold;
             display: block;
-            margin-top: 15px;
+            margin-top: 14px;
+            font-size: 0.95rem;
         }
 
         input, textarea, select {
             width: 100%;
-            padding: 10px;
+            padding: 9px;
             margin-top: 5px;
             border-radius: 5px;
             border: 1px solid #ccc;
             font-size: 14px;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        /* foco simples */
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #1b3a57;
+            box-shadow: 0 0 0 2px rgba(27, 58, 87, 0.12);
         }
 
         textarea {
-            min-height: 100px;
+            min-height: 90px;
+            resize: vertical;
         }
 
+        /* 🔹 BOTÃO */
         button {
             margin-top: 25px;
             width: 100%;
-            padding: 12px;
+            padding: 11px;
             background: #1b3a57;
             color: white;
-            font-size: 16px;
+            font-size: 15px;
             border: none;
             border-radius: 6px;
             cursor: pointer;
+            transition: background 0.2s ease, transform 0.2s ease;
         }
 
         button:hover {
             background: #153049;
+            transform: translateY(-2px);
         }
 
         footer {
@@ -115,19 +136,19 @@
           method="post">
 
         <label>Título</label>
-        <input type="text" th:field="*{titulo}">
+        <input type="text" th:field="*{titulo}" required>
 
         <label>Resumo</label>
-        <textarea th:field="*{resumo}"></textarea>
+        <textarea th:field="*{resumo}" required></textarea>
 
         <label>Palavras-chave</label>
-        <input type="text" th:field="*{palavrasChave}">
+        <input type="text" th:field="*{palavrasChave}" required>
 
         <label>Ano de Publicação</label>
-        <input type="number" th:field="*{anoPublicacao}">
+        <input type="number" th:field="*{anoPublicacao}" required>
 
         <label>Categoria</label>
-        <select th:field="*{categoria.id}">
+        <select th:field="*{categoria.id}" required>
             <option th:each="c : ${categorias}"
                     th:value="${c.id}"
                     th:text="${c.nome}">
@@ -141,7 +162,7 @@
 </div>
 
 <footer>
-    © 2025 Observatório da Comunidade Surda — IFBA
+    © 2025 Observatório da Comunidade Surda
 </footer>
 
 </body>
