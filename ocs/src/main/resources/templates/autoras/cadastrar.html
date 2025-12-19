@@ -6,57 +6,60 @@
 
     <style>
         body {
-          margin: 0;
-          font-family: Arial, sans-serif;
-          background: #f7f7f7;
-          color: #333;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f7f7f7;
+            color: #333;
         }
 
         header {
-          background: #1b3a57;
-          color: white;
-          padding: 20px;
-          text-align: center;
+            background: #1b3a57;
+            color: white;
+            padding: 20px;
+            text-align: center;
         }
 
-        nav {
-          background: #153049;
-          padding: 10px;
-          display: flex;
-          justify-content: center;
-          gap: 20px;
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 14px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
         }
 
-        nav a {
-          color: white;
-          text-decoration: none;
-          font-weight: bold;
-        }
-
-        .section {
-          padding: 40px 20px;
-          max-width: 600px;
-          margin: auto;
-          background: white;
-          border-radius: 12px;
-          box-shadow: 0 3px 8px rgba(0,0,0,0.07);
+        label {
+            font-weight: bold;
         }
 
         input {
-          width: 100%;
-          padding: 8px;
-          margin-bottom: 15px;
-          border-radius: 6px;
-          border: 1px solid #ccc;
+            width: 100%;
+            padding: 10px;
+            margin-top: 6px;
+            margin-bottom: 18px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
         }
 
         .btn {
-          background: #1b3a57;
-          color: white;
-          padding: 10px 16px;
-          border-radius: 8px;
-          border: none;
-          cursor: pointer;
+            padding: 10px 18px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn-primary {
+            background: #1b3a57;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #333;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -64,40 +67,39 @@
 <body>
 
 <header>
-    <h1>OCS.EUC - Observatório da Comunidade Surda</h1>
+    <h1>Cadastrar Autora</h1>
 </header>
 
-<nav>
-    <a th:href="@{/}">Início</a>
-    <a th:href="@{/obras}">Obras</a>
-    <a th:href="@{/autoras}">Autoras</a>
-</nav>
+<div class="container">
 
-<section class="section">
-    <h2>Cadastrar Autora</h2>
+    <form th:action="@{/autoras}" method="post">
 
-    <form th:action="@{/autoras}" th:object="${autora}" method="post">
+        <input type="hidden" name="voltar" th:value="${voltar}">
 
         <label>Nome</label>
-        <input type="text" th:field="*{nome}" required>
+        <input type="text" name="nome" required>
 
         <label>Email</label>
-        <input type="email" th:field="*{email}">
+        <input type="email" name="email">
 
         <label>Instituição</label>
-        <input type="text" th:field="*{instituicao}">
+        <input type="text" name="instituicao">
 
         <label>Lattes</label>
-        <input type="text" th:field="*{lattes}">
+        <input type="text" name="lattes">
 
-        <button type="submit" class="btn">Salvar</button>
-
+        <button type="submit" class="btn btn-primary">
+            Salvar Autora
+        </button>
     </form>
-</section>
 
-<footer>
-    <p>© 2025 Observatório da Comunidade Surda — IFBA Euclides da Cunha</p>
-</footer>
+    <a th:if="${voltar != null}"
+       th:href="${voltar}"
+       class="btn btn-secondary">
+        ⬅ Voltar para cadastro da obra
+    </a>
+
+</div>
 
 </body>
 </html>

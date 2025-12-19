@@ -6,88 +6,91 @@
 
     <style>
         body {
-          margin: 0;
-          font-family: Arial, sans-serif;
-          background: #f7f7f7;
-          color: #333;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f7f7f7;
+            color: #333;
         }
 
         header {
-          background: #1b3a57;
-          color: white;
-          padding: 20px;
-          text-align: center;
+            background: #1b3a57;
+            color: white;
+            padding: 20px;
+            text-align: center;
         }
 
-        nav {
-          background: #153049;
-          padding: 10px;
-          display: flex;
-          justify-content: center;
-          gap: 20px;
+        .container {
+            max-width: 900px;
+            margin: 30px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 14px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
         }
 
-        nav a {
-          color: white;
-          text-decoration: none;
-          font-weight: bold;
-        }
-
-        .section {
-          padding: 40px 20px;
-          max-width: 950px;
-          margin: auto;
-          background: white;
-          border-radius: 12px;
-          box-shadow: 0 3px 8px rgba(0,0,0,0.07);
+        h2 {
+            color: #1b3a57;
+            margin-top: 0;
         }
 
         label {
-          font-weight: bold;
+            font-weight: bold;
         }
 
         input, textarea, select {
-          width: 100%;
-          padding: 8px;
-          margin-top: 6px;
-          margin-bottom: 16px;
-          border-radius: 6px;
-          border: 1px solid #ccc;
+            width: 100%;
+            padding: 10px;
+            margin-top: 6px;
+            margin-bottom: 18px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+
+        textarea {
+            resize: vertical;
         }
 
         .autoras-box {
-          border: 1px solid #ddd;
-          border-radius: 10px;
-          padding: 15px;
-          max-height: 300px;
-          overflow-y: auto;
-          background: #fafafa;
+            border: 1px solid #ccc;
+            padding: 15px;
+            border-radius: 10px;
+            max-height: 250px;
+            overflow-y: auto;
+            margin-bottom: 20px;
         }
 
         .autora-item {
-          padding: 6px;
+            padding: 6px 0;
+            border-bottom: 1px solid #eee;
         }
 
-        .autora-item input:checked + span {
-          font-weight: bold;
-          color: #1b3a57;
+        .autora-item:last-child {
+            border-bottom: none;
         }
 
         .btn {
-          background: #1b3a57;
-          color: white;
-          padding: 10px 16px;
-          border-radius: 8px;
-          border: none;
-          cursor: pointer;
+            padding: 10px 18px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
         }
 
-        footer {
-          margin-top: 40px;
-          background: #1b3a57;
-          color: white;
-          padding: 20px;
-          text-align: center;
+        .btn-primary {
+            background: #1b3a57;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #333;
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 12px;
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
         }
     </style>
 </head>
@@ -95,17 +98,12 @@
 <body>
 
 <header>
-    <h1>OCS.EUC - Observatório da Comunidade Surda</h1>
+    <h1>Cadastro de Obra</h1>
 </header>
 
-<nav>
-    <a th:href="@{/}">Início</a>
-    <a th:href="@{/obras}">Obras</a>
-    <a th:href="@{/autoras}">Autoras</a>
-</nav>
+<div class="container">
 
-<section class="section">
-    <h2>Cadastrar Obra</h2>
+    <h2>Dados da Obra</h2>
 
     <form th:action="@{/obras}" method="post">
 
@@ -113,13 +111,13 @@
         <input type="text" name="titulo" required>
 
         <label>Resumo</label>
-        <textarea name="resumo"></textarea>
+        <textarea name="resumo" rows="4"></textarea>
 
         <label>Palavras-chave</label>
         <input type="text" name="palavrasChave">
 
         <label>Ano de Publicação</label>
-        <input type="number" name="anoPublicacao" required>
+        <input type="number" name="anoPublicacao">
 
         <label>URL do Arquivo</label>
         <input type="text" name="urlArquivo">
@@ -127,18 +125,21 @@
         <label>Categoria</label>
         <select name="categoriaId" required>
             <option value="">Selecione</option>
-            <option th:each="cat : ${categorias}"
-                    th:value="${cat.id}"
-                    th:text="${cat.nome}">
+            <option th:each="c : ${categorias}"
+                    th:value="${c.id}"
+                    th:text="${c.nome}">
             </option>
         </select>
 
-        <hr>
+        <h2>Autoras</h2>
 
-        <h3>Autoras</h3>
+        <a th:href="@{/autoras/cadastrar(voltar='/obras/cadastrar')}"
+           class="btn btn-secondary">
+            ➕ Cadastrar Autora
+        </a>
 
         <div class="autoras-box">
-            <div class="autora-item" th:each="autora : ${autoras}">
+            <div th:each="autora : ${autoras}" class="autora-item">
                 <label>
                     <input type="checkbox"
                            name="autorasIds"
@@ -148,15 +149,13 @@
             </div>
         </div>
 
-        <br>
+        <button type="submit" class="btn btn-primary">
+            Salvar Obra
+        </button>
 
-        <button type="submit" class="btn">Salvar Obra</button>
     </form>
-</section>
 
-<footer>
-    <p>© 2025 Observatório da Comunidade Surda — IFBA Euclides da Cunha</p>
-</footer>
+</div>
 
 </body>
 </html>

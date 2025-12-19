@@ -14,6 +14,7 @@ public class AutoraWebController {
     @Autowired
     private AutoraService service;
 
+    /* ================= LISTAR ================= */
 
     @GetMapping
     public String listar(Model model) {
@@ -21,44 +22,29 @@ public class AutoraWebController {
         return "autoras/listar";
     }
 
+    /* ================= CADASTRAR ================= */
 
     @GetMapping("/cadastrar")
-    public String cadastrar(Model model) {
+    public String cadastrar(
+            @RequestParam(required = false) String voltar,
+            Model model
+    ) {
         model.addAttribute("autora", new Autora());
+        model.addAttribute("voltar", voltar);
         return "autoras/cadastrar";
     }
 
-
     @PostMapping
-    public String salvar(Autora autora) {
+    public String salvar(
+            @ModelAttribute Autora autora,
+            @RequestParam(required = false) String voltar
+    ) {
         service.salvar(autora);
-        return "redirect:/autoras";
-    }
 
+        if (voltar != null && !voltar.isBlank()) {
+            return "redirect:" + voltar;
+        }
 
-    @GetMapping("/editar/{id}")
-    public String editar(@PathVariable Integer id, Model model) {
-
-        return service.buscarPorId(id)
-                .map(autora -> {
-                    model.addAttribute("autora", autora);
-                    return "autoras/editar";
-                })
-                .orElse("redirect:/autoras");
-    }
-
-
-    @PostMapping("/editar/{id}")
-    public String atualizar(@PathVariable Integer id, Autora autora) {
-        autora.setId(id);
-        service.salvar(autora);
-        return "redirect:/autoras";
-    }
-
-
-    @PostMapping("/excluir/{id}")
-    public String excluir(@PathVariable Integer id) {
-        service.deletar(id);
         return "redirect:/autoras";
     }
 }
