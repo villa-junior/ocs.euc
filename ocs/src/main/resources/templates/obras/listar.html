@@ -19,7 +19,6 @@
             text-align: center;
         }
 
-        /* 🔹 MENU TOPO */
         nav {
             background: #153049;
             padding: 10px;
@@ -32,80 +31,72 @@
             color: white;
             text-decoration: none;
             font-weight: bold;
-            padding: 6px 10px;
-            transition: transform 0.2s ease;
         }
 
-        /* efeito gaveta */
-        nav a:hover {
-            transform: translateY(4px);
-        }
-
-        /* 🔹 CONTAINER */
         .container {
             max-width: 1000px;
-            margin: 40px auto;
+            margin: 30px auto;
             background: white;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+            padding: 30px;
+            border-radius: 14px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
         }
 
         h2 {
-            margin-bottom: 20px;
             color: #1b3a57;
+            margin-top: 0;
         }
 
-        /* 🔹 TABELA */
         table {
             width: 100%;
             border-collapse: collapse;
+            margin-top: 20px;
             font-size: 0.95rem;
         }
 
         th, td {
-            padding: 10px;
+            padding: 12px;
             border-bottom: 1px solid #e0e0e0;
             text-align: left;
+            vertical-align: top;
         }
 
         th {
             background: #f2f5f8;
             color: #1b3a57;
-            font-weight: bold;
         }
 
         tr:hover {
-            background: #f8fbfe; /* hover leve na linha */
+            background: #f8fbfe;
         }
 
-        /* 🔹 BOTÕES */
-        a.btn {
-            background: #1b3a57;
-            color: white;
+        .btn {
             padding: 6px 10px;
-            border-radius: 4px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
             text-decoration: none;
             font-size: 0.85rem;
-            margin-right: 6px;
-            transition: background 0.2s ease, transform 0.2s ease;
             display: inline-block;
         }
 
-        a.btn:hover {
-            background: #153049;
-            transform: translateY(-2px);
-        }
-
-        footer {
-            margin-top: 40px;
+        .btn-primary {
             background: #1b3a57;
             color: white;
-            padding: 20px;
-            text-align: center;
+        }
+
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
         }
     </style>
 </head>
+
 <body>
 
 <header>
@@ -127,6 +118,7 @@
             <th>Título</th>
             <th>Ano</th>
             <th>Categoria</th>
+            <th>Autoras</th>
             <th>Ações</th>
         </tr>
         </thead>
@@ -134,13 +126,30 @@
         <tbody>
         <tr th:each="o : ${obras}">
             <td th:text="${o.titulo}"></td>
+
             <td th:text="${o.anoPublicacao}"></td>
+
             <td th:text="${o.categoria != null ? o.categoria.nome : 'Sem categoria'}"></td>
+
             <td>
-                <a class="btn" th:href="@{/obras/editar/{id}(id=${o.id})}">Editar</a>
-                <a class="btn"
+                <span th:each="nome, stat : ${autorasPorObra[o.id]}">
+                    <span th:text="${nome}"></span>
+                    <span th:if="${!stat.last}">, </span>
+                </span>
+                <span th:if="${autorasPorObra[o.id] == null || autorasPorObra[o.id].isEmpty()}">
+                    —
+                </span>
+            </td>
+
+            <td>
+                <a class="btn btn-primary"
+                   th:href="@{/obras/editar/{id}(id=${o.id})}">
+                    Editar
+                </a>
+
+                <a class="btn btn-secondary"
                    th:href="@{/obras/excluir/{id}(id=${o.id})}"
-                   onclick="return confirm('Deseja excluir?')">
+                   onclick="return confirm('Deseja excluir esta obra?')">
                     Excluir
                 </a>
             </td>
@@ -150,9 +159,16 @@
 
 </div>
 
-<footer>
-    © 2025 Observatório da Comunidade Surda
-</footer>
+<div vw class="enabled">
+    <div vw-access-button class="active"></div>
+    <div vw-plugin-wrapper>
+        <div class="vw-plugin-top-wrapper"></div>
+    </div>
+</div>
+<script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+<script>
+    new window.VLibras.Widget('https://vlibras.gov.br/app');
+</script>
 
 </body>
 </html>

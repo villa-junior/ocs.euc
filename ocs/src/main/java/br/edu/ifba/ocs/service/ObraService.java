@@ -23,10 +23,10 @@ public class ObraService {
     private ObraAutoraRepository obraAutoraRepository;
 
 
+
     public List<Obra> listar() {
         return repository.findAll();
     }
-
 
     public List<Obra> listarOrdenadoPorAnoDesc() {
         return repository.findAllByOrderByAnoPublicacaoDesc();
@@ -41,30 +41,26 @@ public class ObraService {
     }
 
 
+
     public Obra salvar(Obra obra) {
         return repository.save(obra);
     }
 
-
     @Transactional
     public Obra salvarComAutoras(Obra obra, List<Integer> autorasIds) {
-
 
         if (obra.getDataRegistro() == null) {
             obra.setDataRegistro(LocalDate.now());
         }
-
 
         Obra salva = repository.save(obra);
 
 
         obraAutoraRepository.deleteByObraId(salva.getId());
 
-
         if (autorasIds == null || autorasIds.isEmpty()) {
             return salva;
         }
-
 
         for (Integer idAutora : autorasIds) {
 
@@ -86,7 +82,23 @@ public class ObraService {
     }
 
 
+    public List<Integer> buscarIdsAutoras(Integer obraId) {
+        return obraAutoraRepository.findAutoraIdsByObraId(obraId);
+    }
+
+
+    public List<String> buscarNomesAutoras(Integer obraId) {
+        return obraAutoraRepository.findNomesAutorasByObraId(obraId);
+    }
+
+
+
+    @Transactional
     public void deletar(Integer id) {
+
+        obraAutoraRepository.deleteByObraId(id);
+
+
         repository.deleteById(id);
     }
 }

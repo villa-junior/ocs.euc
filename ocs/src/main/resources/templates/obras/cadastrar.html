@@ -28,9 +28,8 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.08);
         }
 
-        h2 {
+        h2, h3 {
             color: #1b3a57;
-            margin-top: 0;
         }
 
         label {
@@ -46,26 +45,8 @@
             border: 1px solid #ccc;
         }
 
-        textarea {
-            resize: vertical;
-        }
-
-        .autoras-box {
-            border: 1px solid #ccc;
-            padding: 15px;
-            border-radius: 10px;
-            max-height: 250px;
-            overflow-y: auto;
-            margin-bottom: 20px;
-        }
-
-        .autora-item {
-            padding: 6px 0;
-            border-bottom: 1px solid #eee;
-        }
-
-        .autora-item:last-child {
-            border-bottom: none;
+        .section {
+            margin-bottom: 40px;
         }
 
         .btn {
@@ -74,6 +55,9 @@
             border: none;
             cursor: pointer;
             font-weight: bold;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
         }
 
         .btn-primary {
@@ -81,16 +65,72 @@
             color: white;
         }
 
-        .btn-secondary {
-            background: #e0e0e0;
-            color: #333;
-            text-decoration: none;
-            display: inline-block;
-            margin-bottom: 12px;
+        .btn-danger {
+            background: #c62828;
+            color: white;
         }
 
-        .btn-primary:hover {
+        .btn:hover {
             opacity: 0.9;
+        }
+
+        .autoras-selecionadas {
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 10px;
+            margin-top: 15px;
+        }
+
+        .autora-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .autora-item:last-child {
+            border-bottom: none;
+        }
+
+        .seletor {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 14px;
+            border: 1px solid #ccc;
+            background: #f9f9f9;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        #pesquisaAutora {
+            width: 100%;
+            padding: 12px;
+            font-size: 15px;
+            border-radius: 8px;
+            border: 1px solid #999;
+        }
+
+        .lista-pesquisa {
+            margin-top: 10px;
+            max-height: 220px;
+            overflow-y: auto;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        .item-autora {
+            padding: 10px;
+            cursor: pointer;
+            border-bottom: 1px solid #eee;
+        }
+
+        .item-autora:hover {
+            background: #1b3a57;
+            color: white;
         }
     </style>
 </head>
@@ -103,50 +143,78 @@
 
 <div class="container">
 
-    <h2>Dados da Obra</h2>
-
     <form th:action="@{/obras}" method="post">
 
-        <label>Título</label>
-        <input type="text" name="titulo" required>
+        <!-- DADOS DA OBRA -->
+        <div class="section">
+            <h2>Dados da Obra</h2>
 
-        <label>Resumo</label>
-        <textarea name="resumo" rows="4"></textarea>
+            <label>Título</label>
+            <input type="text" name="titulo" required>
 
-        <label>Palavras-chave</label>
-        <input type="text" name="palavrasChave">
+            <label>Resumo</label>
+            <textarea name="resumo"></textarea>
 
-        <label>Ano de Publicação</label>
-        <input type="number" name="anoPublicacao">
+            <label>Palavras-chave</label>
+            <input type="text" name="palavrasChave">
 
-        <label>URL do Arquivo</label>
-        <input type="text" name="urlArquivo">
+            <label>Ano de Publicação</label>
+            <input type="number" name="anoPublicacao">
 
-        <label>Categoria</label>
-        <select name="categoriaId" required>
-            <option value="">Selecione</option>
-            <option th:each="c : ${categorias}"
-                    th:value="${c.id}"
-                    th:text="${c.nome}">
-            </option>
-        </select>
+            <label>URL do Arquivo</label>
+            <input type="text" name="urlArquivo">
 
-        <h2>Autoras</h2>
+            <label>Categoria</label>
+            <select name="categoriaId" required>
+                <option value="">Selecione</option>
+                <option th:each="c : ${categorias}"
+                        th:value="${c.id}"
+                        th:text="${c.nome}">
+                </option>
+            </select>
+        </div>
 
-        <a th:href="@{/autoras/cadastrar(voltar='/obras/cadastrar')}"
-           class="btn btn-secondary">
-            ➕ Cadastrar Autora
-        </a>
 
-        <div class="autoras-box">
-            <div th:each="autora : ${autoras}" class="autora-item">
-                <label>
-                    <input type="checkbox"
-                           name="autorasIds"
-                           th:value="${autora.id}">
-                    <span th:text="${autora.nome}"></span>
-                </label>
+        <div class="section">
+            <h2>Selecionar Autoras</h2>
+
+
+            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                <button type="button" class="btn btn-primary" onclick="abrirSeletor()">
+                    Selecionar Autoras
+                </button>
+
+
+                <a th:href="@{/autoras/cadastrar}" class="btn btn-primary" style="background-color:#007bff;">
+                    Cadastrar Autora
+                </a>
             </div>
+
+            <div id="seletorAutoras" class="seletor hidden">
+
+                <input type="text"
+                       id="pesquisaAutora"
+                       placeholder="Digite o nome da autora..."
+                       autocomplete="off">
+
+                <div class="lista-pesquisa">
+                    <div th:each="a : ${autoras}"
+                         class="item-autora"
+                         th:data-id="${a.id}"
+                         th:data-nome="${a.nome}"
+                         th:text="${a.nome}"
+                         onclick="selecionarAutora(this)">
+                    </div>
+                </div>
+
+                <button type="button" class="btn btn-danger" onclick="fecharSeletor()">
+                    Fechar
+                </button>
+            </div>
+
+            <h3>Autoras selecionadas</h3>
+            <div id="listaAutoras" class="autoras-selecionadas"></div>
+            <div id="autorasHidden"></div>
         </div>
 
         <button type="submit" class="btn btn-primary">
@@ -156,6 +224,84 @@
     </form>
 
 </div>
+
+<script>
+    const autorasAdicionadas = new Set();
+
+    function abrirSeletor() {
+        document.getElementById("seletorAutoras").classList.remove("hidden");
+        document.getElementById("pesquisaAutora").focus();
+    }
+
+    function fecharSeletor() {
+        document.getElementById("seletorAutoras").classList.add("hidden");
+        document.getElementById("pesquisaAutora").value = "";
+        filtrar("");
+    }
+
+    document.getElementById("pesquisaAutora").addEventListener("input", e => {
+        filtrar(e.target.value.toLowerCase());
+    });
+
+    function filtrar(texto) {
+        document.querySelectorAll(".item-autora").forEach(item => {
+            const nome = item.dataset.nome.toLowerCase();
+            item.style.display = nome.includes(texto) ? "block" : "none";
+        });
+    }
+
+    function selecionarAutora(el) {
+        const id = el.dataset.id;
+        const nome = el.dataset.nome;
+
+        if (autorasAdicionadas.has(id)) return;
+
+        autorasAdicionadas.add(id);
+
+        const div = document.createElement("div");
+        div.className = "autora-item";
+        div.id = "autora-" + id;
+
+        div.innerHTML = `
+            <span>${nome}</span>
+            <button type="button"
+                    class="btn btn-danger"
+                    onclick="removerAutora('${id}')">
+                Remover
+            </button>
+        `;
+
+        document.getElementById("listaAutoras").appendChild(div);
+
+        const input = document.createElement("input");
+        input.type = "hidden";
+        input.name = "autorasIds";
+        input.value = id;
+        input.id = "hidden-" + id;
+
+        document.getElementById("autorasHidden").appendChild(input);
+    }
+
+    function removerAutora(id) {
+        autorasAdicionadas.delete(id);
+        document.getElementById("autora-" + id)?.remove();
+        document.getElementById("hidden-" + id)?.remove();
+    }
+</script>
+
+
+<div vw class="enabled">
+    <div vw-access-button class="active"></div>
+    <div vw-plugin-wrapper>
+        <div class="vw-plugin-top-wrapper"></div>
+    </div>
+</div>
+
+<script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+<script>
+    new window.VLibras.Widget('https://vlibras.gov.br/app');
+</script>
+
 
 </body>
 </html>

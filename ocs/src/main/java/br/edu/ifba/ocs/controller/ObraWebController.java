@@ -10,7 +10,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/obras")
@@ -25,13 +27,28 @@ public class ObraWebController {
     @Autowired
     private AutoraService autoraService;
 
-    /* ================= LISTAGEM ================= */
+
 
     @GetMapping
     public String listarTodas(Model model) {
-        model.addAttribute("obras",
-                obraService.listarOrdenadoPorAnoDesc());
+
+        List<Obra> obras = obraService.listarOrdenadoPorAnoDesc();
+
+        model.addAttribute("obras", obras);
         model.addAttribute("categoria", null);
+
+
+        Map<Integer, List<String>> autorasPorObra = new HashMap<>();
+
+        for (Obra o : obras) {
+            autorasPorObra.put(
+                    o.getId(),
+                    obraService.buscarNomesAutoras(o.getId())
+            );
+        }
+
+        model.addAttribute("autorasPorObra", autorasPorObra);
+
         return "obras/listar";
     }
 
@@ -40,15 +57,30 @@ public class ObraWebController {
 
         return categoriaService.buscarPorId(id)
                 .map(categoria -> {
-                    model.addAttribute("obras",
-                            obraService.listarPorCategoria(id));
+
+                    List<Obra> obras =
+                            obraService.listarPorCategoria(id);
+
+                    model.addAttribute("obras", obras);
                     model.addAttribute("categoria", categoria);
+
+                    Map<Integer, List<String>> autorasPorObra = new HashMap<>();
+
+                    for (Obra o : obras) {
+                        autorasPorObra.put(
+                                o.getId(),
+                                obraService.buscarNomesAutoras(o.getId())
+                        );
+                    }
+
+                    model.addAttribute("autorasPorObra", autorasPorObra);
+
                     return "obras/listar";
                 })
                 .orElse("redirect:/obras");
     }
 
-    /* ================= CADASTRAR ================= */
+
 
     @GetMapping("/cadastrar")
     public String cadastrar(Model model) {
@@ -77,24 +109,31 @@ public class ObraWebController {
 
         obra.setCategoria(categoria);
 
-        Obra salva =
-                obraService.salvarComAutoras(obra, autorasIds);
+        obraService.salvarComAutoras(obra, autorasIds);
 
         return "redirect:/obras/categoria/" + categoria.getId();
     }
 
-    /* ================= EDITAR ================= */
+
 
     @GetMapping("/editar/{id}")
     public String editar(@PathVariable Integer id, Model model) {
 
         return obraService.buscarPorId(id)
                 .map(obra -> {
+
                     model.addAttribute("obra", obra);
                     model.addAttribute("categorias",
                             categoriaService.listar());
                     model.addAttribute("autoras",
                             autoraService.listar());
+
+                    // 🔹 IDs das autoras para marcar checkboxes
+                    model.addAttribute(
+                            "autorasSelecionadas",
+                            obraService.buscarIdsAutoras(id)
+                    );
+
                     return "obras/editar";
                 })
                 .orElse("redirect:/obras");
@@ -119,13 +158,12 @@ public class ObraWebController {
         obra.setId(id);
         obra.setCategoria(categoria);
 
-        Obra atualizada =
-                obraService.salvarComAutoras(obra, autorasIds);
+        obraService.salvarComAutoras(obra, autorasIds);
 
         return "redirect:/obras/categoria/" + categoria.getId();
     }
 
-    /* ================= EXCLUIR ================= */
+
 
     @GetMapping("/excluir/{id}")
     public String excluir(@PathVariable Integer id) {

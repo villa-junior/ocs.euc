@@ -3,31 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <title>Editar Autora</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f7f7f7;
+            color: #333;
+        }
+
+        header {
+            background: #1b3a57;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 14px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 6px;
+            margin-bottom: 18px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+
+        .btn {
+            padding: 10px 18px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn-primary {
+            background: #1b3a57;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #333;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 10px;
+        }
+    </style>
 </head>
+
 <body>
 
-<h2>Editar Autora</h2>
+<header>
+    <h1>Editar Autora</h1>
+</header>
 
-<form th:action="@{/autoras/editar/{id}(id=${autora.id})}"
-      th:object="${autora}" method="post">
+<div class="container">
 
-    <label>Nome</label><br>
-    <input type="text" th:field="*{nome}" required><br><br>
+    <form th:action="@{/autoras/editar/{id}(id=${autora.id})}"
+          th:object="${autora}"
+          method="post">
 
-    <label>Email</label><br>
-    <input type="email" th:field="*{email}"><br><br>
+        <label>Nome</label>
+        <input type="text" name="nome" th:value="${autora.nome}" required>
 
-    <label>Instituição</label><br>
-    <input type="text" th:field="*{instituicao}"><br><br>
+        <label>Email</label>
+        <input type="email" name="email" th:value="${autora.email}">
 
-    <label>Lattes</label><br>
-    <input type="text" th:field="*{lattes}"><br><br>
+        <label>Instituição</label>
+        <input type="text" name="instituicao" th:value="${autora.instituicao}">
 
-    <button type="submit">Atualizar</button>
-</form>
+        <label>Lattes</label>
+        <input type="text" name="lattes" th:value="${autora.lattes}">
 
-<br>
-<a th:href="@{/autoras}">Voltar</a>
+
+        <button type="submit" class="btn btn-primary">
+            Atualizar Autora
+        </button>
+    </form>
+
+    <a th:href="@{/autoras}" class="btn btn-secondary">
+        ⬅ Voltar
+    </a>
+
+</div>
+
+
+<div vw class="enabled">
+    <div vw-access-button class="active"></div>
+    <div vw-plugin-wrapper>
+        <div class="vw-plugin-top-wrapper"></div>
+    </div>
+</div>
+
+<script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+<script>
+    new window.VLibras.Widget('https://vlibras.gov.br/app');
+</script>
+
 
 </body>
 </html>

@@ -20,7 +20,7 @@
       text-align: center;
     }
 
-    /* 🔹 MENU TOPO */
+
     nav {
       background: #153049;
       padding: 10px;
@@ -34,10 +34,10 @@
       text-decoration: none;
       font-weight: bold;
       padding: 6px 10px;
-      transition: transform 0.2s ease; /* animação simples */
+      transition: transform 0.2s ease;
     }
 
-    /* efeito gaveta */
+
     nav a:hover {
       transform: translateY(4px);
     }
@@ -55,7 +55,7 @@
       margin: auto;
     }
 
-    /* 🔹 GRID DE CARDS (menores) */
+
     .cards {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -68,7 +68,6 @@
       color: inherit;
     }
 
-    /* 🔹 CARD */
     .card {
       background: white;
       padding: 18px;
@@ -91,7 +90,7 @@
       color: #555;
     }
 
-    /* 🔹 HOVER SIMPLES E DISCRETO */
+
     .card:hover {
       transform: translateY(-4px);
       box-shadow: 0 6px 14px rgba(27, 58, 87, 0.18);
@@ -202,5 +201,15 @@
   <p>© 2025 Observatório da Comunidade Surda — IFBA Euclides da Cunha</p>
 </footer>
 
+<div vw class="enabled">
+  <div vw-access-button class="active"></div>
+  <div vw-plugin-wrapper>
+    <div class="vw-plugin-top-wrapper"></div>
+  </div>
+</div>
+<script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+<script>
+  new window.VLibras.Widget('https://vlibras.gov.br/app');
+</script>
 </body>
 </html>
