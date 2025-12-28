@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Cadastrar Pesquisa</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f7f7f7;
+            color: #333;
+        }
+
+        header {
+            background: #1b3a57;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        nav {
+            background: #153049;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 30px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 14px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+        }
+
+        h2 {
+            color: #1b3a57;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 6px;
+            margin-bottom: 18px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+
+        .btn {
+            padding: 10px 18px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn-primary {
+            background: #1b3a57;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>Cadastro de Pesquisa</h1>
+</header>
+
+<nav>
+    <a th:href="@{/}">Página Principal</a>
+</nav>
+
+<div class="container">
+
+    <form th:action="@{/pesquisas}" method="post" th:object="${pesquisa}">
+
+        <input type="hidden" th:field="*{id}" />
+
+        <label>Título</label>
+        <input type="text" th:field="*{titulo}" required />
+        <div th:errors="*{titulo}" style="color:red"></div>
+
+        <label>Descrição</label>
+        <textarea th:field="*{descricao}"></textarea>
+
+        <label>Status da Pesquisa</label>
+        <select th:field="*{status}" required>
+            <option value="">Selecione</option>
+            <option value="EM_ANDAMENTO">Em andamento</option>
+            <option value="CONCLUIDA">Concluída</option>
+        </select>
+        <div th:errors="*{status}" style="color:red"></div>
+
+        <label>Data de Início</label>
+        <input type="date"
+               th:field="*{dataInicio}"
+               th:attr="max=${hoje}"
+               required />
+        <div th:errors="*{dataInicio}" style="color:red"></div>
+
+        <label>Data de Fim</label>
+        <input type="date"
+               th:field="*{dataFim}"
+               th:attr="max=${hoje}" />
+        <div th:errors="*{dataFim}" style="color:red"></div>
+
+
+
+
+
+        <label>URL Participante</label>
+        <input type="url" th:field="*{urlParticipante}" />
+
+        <label>URL Organizador</label>
+        <input type="url" th:field="*{urlOrganizador}" />
+
+        <label>Arquivo de Resultados</label>
+        <input type="text" th:field="*{arquivoResultados}" />
+
+        <button type="submit" class="btn btn-primary">
+            Salvar Pesquisa
+        </button>
+
+    </form>
+
+
+</div>
+<div vw class="enabled">
+    <div vw-access-button class="active"></div>
+    <div vw-plugin-wrapper>
+        <div class="vw-plugin-top-wrapper"></div>
+    </div>
+</div>
+
+<script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+<script>
+    new window.VLibras.Widget('https://vlibras.gov.br/app');
+</script>
+</body>
+</html>

@@ -22,7 +22,7 @@ public class AutoraWebController {
         return "autoras/listar";
     }
 
-    /* ================= CADASTRAR ================= */
+
 
     @GetMapping("/cadastrar")
     public String cadastrar(
@@ -46,5 +46,11 @@ public class AutoraWebController {
         }
 
         return "redirect:/autoras";
+    }
+
+    @PostMapping("/excluir/{id}")
+    public String excluir(@PathVariable Integer id) {
+        service.deletar(id);
+        return "redirect:/";
     }
 }

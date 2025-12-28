@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Lista de Pesquisas</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f7f7f7;
+      color: #333;
+    }
+
+    header {
+      background: #1b3a57;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    nav {
+      background: #153049;
+      padding: 10px;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 30px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 14px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    }
+
+    h2 {
+      color: #1b3a57;
+      margin-top: 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      font-size: 0.95rem;
+    }
+
+    th, td {
+      padding: 12px;
+      border-bottom: 1px solid #e0e0e0;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: #f2f5f8;
+      color: #1b3a57;
+    }
+
+    tr:hover {
+      background: #f8fbfe;
+    }
+
+    .btn {
+      padding: 6px 10px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      text-decoration: none;
+      font-size: 0.85rem;
+      display: inline-block;
+    }
+
+    .btn-primary {
+      background: #1b3a57;
+      color: white;
+    }
+
+    .btn-secondary {
+      background: #e0e0e0;
+      color: #333;
+    }
+
+    .btn-primary:hover {
+      opacity: 0.9;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>Pesquisas</h1>
+</header>
+
+<nav>
+  <a th:href="@{/}">Página Principal</a>
+</nav>
+
+<div class="container">
+
+  <!-- TÍTULO DINÂMICO PELO STATUS -->
+  <h2 th:text="
+        ${status} == 'EM_ANDAMENTO'
+        ? 'Pesquisas em andamento'
+        : 'Pesquisas concluídas'
+    "></h2>
+
+  <!-- BOTÃO CADASTRAR -->
+  <a th:href="@{/pesquisas/cadastrar}"
+     class="btn btn-primary">
+    Cadastrar Pesquisa
+  </a>
+
+  <table>
+    <thead>
+    <tr>
+      <th>Título</th>
+      <th>Status</th>
+      <th>Início</th>
+      <th>Fim</th>
+      <th>Ações</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:each="p : ${pesquisas}">
+      <td th:text="${p.titulo}"></td>
+
+      <td th:text="
+                ${p.status} == 'EM_ANDAMENTO'
+                ? 'Em andamento'
+                : 'Concluída'
+            "></td>
+
+      <td th:text="${p.dataInicio}"></td>
+
+      <td th:text="${p.dataFim != null ? p.dataFim : '—'}"></td>
+
+      <td>
+        <a class="btn btn-primary"
+           th:href="@{/pesquisas/editar/{id}(id=${p.id})}">
+          Editar
+        </a>
+
+        <form th:action="@{/pesquisas/excluir/{id}(id=${p.id})}"
+              method="post"
+              style="display:inline">
+
+          <input type="hidden" name="status"
+                 th:value="${p.status}" />
+
+          <button type="submit"
+                  class="btn btn-secondary"
+                  onclick="return confirm('Deseja excluir esta pesquisa?')">
+            Excluir
+          </button>
+        </form>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+</div>
+
+<div vw class="enabled">
+  <div vw-access-button class="active"></div>
+  <div vw-plugin-wrapper>
+    <div class="vw-plugin-top-wrapper"></div>
+  </div>
+</div>
+
+<script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+<script>
+  new window.VLibras.Widget('https://vlibras.gov.br/app');
+</script>
+
+</body>
+</html>

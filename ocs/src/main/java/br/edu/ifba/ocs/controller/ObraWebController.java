@@ -165,9 +165,12 @@ public class ObraWebController {
 
 
 
-    @GetMapping("/excluir/{id}")
-    public String excluir(@PathVariable Integer id) {
+    @PostMapping("/excluir/{id}")
+    public String excluir(@PathVariable Integer id,
+                          @RequestParam Integer categoriaId) {
+
         obraService.deletar(id);
-        return "redirect:/obras";
+
+        return "redirect:/obras/categoria/" + categoriaId;
     }
 }

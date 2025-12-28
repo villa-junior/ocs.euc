@@ -14,12 +14,12 @@ public class PesquisaService {
     @Autowired
     private PesquisaRepository repository;
 
-    // 🔹 LISTAR TODAS
+
     public List<Pesquisa> listarTodas() {
         return repository.findAll();
     }
 
-    // 🔹 LISTAR POR STATUS
+
     public List<Pesquisa> listarPorStatus(String status) {
         return repository.findByStatusOrderByDataInicioDesc(status);
     }

@@ -104,13 +104,15 @@
 </header>
 
 <nav>
-    <a th:href="@{/}">Home</a>
-    <a th:href="@{/obras/cadastrar}">Cadastrar Obra</a>
+    <a th:href="@{/}">Pagina Principal</a>
 </nav>
 
 <div class="container">
 
     <h2 th:text="${categoria != null ? categoria.nome : 'Todas as Obras'}"></h2>
+    <a th:href="@{/obras/cadastrar}" type="button" class="btn btn-primary">
+        Cadastrar Obra
+    </a>
 
     <table>
         <thead>
@@ -147,11 +149,18 @@
                     Editar
                 </a>
 
-                <a class="btn btn-secondary"
-                   th:href="@{/obras/excluir/{id}(id=${o.id})}"
-                   onclick="return confirm('Deseja excluir esta obra?')">
-                    Excluir
-                </a>
+                <form th:action="@{/obras/excluir/{id}(id=${o.id})}"
+                      method="post"
+                      style="display:inline">
+
+                    <input type="hidden" name="categoriaId"
+                           th:value="${o.categoria.id}" />
+
+                    <button type="submit" class="btn btn-secondary">
+                        Excluir
+                    </button>
+                </form>
+
             </td>
         </tr>
         </tbody>

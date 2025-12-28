@@ -1,7 +1,10 @@
 package br.edu.ifba.ocs.model;
 
-
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.time.LocalDate;
 
 @Entity
@@ -19,9 +22,14 @@ public class Pesquisa {
 
     private String status;
 
+    @NotNull(message = "A data de início é obrigatória")
+    @PastOrPresent(message = "A data de início não pode ser futura")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     @Column(name = "data_inicio")
     private LocalDate dataInicio;
 
+    @PastOrPresent(message = "A data de fim não pode ser futura")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     @Column(name = "data_fim")
     private LocalDate dataFim;
 
@@ -40,43 +48,47 @@ public class Pesquisa {
 
     public Pesquisa() {}
 
-    public Integer getId() { return id; }
 
+
+    @PrePersist
+    @PreUpdate
+    private void validarDatas() {
+        if (dataInicio != null && dataFim != null && dataFim.isBefore(dataInicio)) {
+            throw new IllegalArgumentException(
+                    "A data de fim não pode ser anterior à data de início"
+            );
+        }
+    }
+
+
+
+    public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
 
     public String getTitulo() { return titulo; }
-
     public void setTitulo(String titulo) { this.titulo = titulo; }
 
     public String getDescricao() { return descricao; }
-
     public void setDescricao(String descricao) { this.descricao = descricao; }
 
     public String getStatus() { return status; }
-
     public void setStatus(String status) { this.status = status; }
 
     public LocalDate getDataInicio() { return dataInicio; }
-
     public void setDataInicio(LocalDate dataInicio) { this.dataInicio = dataInicio; }
 
     public LocalDate getDataFim() { return dataFim; }
-
     public void setDataFim(LocalDate dataFim) { this.dataFim = dataFim; }
 
     public String getUrlParticipante() { return urlParticipante; }
-
     public void setUrlParticipante(String urlParticipante) { this.urlParticipante = urlParticipante; }
 
     public String getUrlOrganizador() { return urlOrganizador; }
-
     public void setUrlOrganizador(String urlOrganizador) { this.urlOrganizador = urlOrganizador; }
 
     public String getArquivoResultados() { return arquivoResultados; }
-
     public void setArquivoResultados(String arquivoResultados) { this.arquivoResultados = arquivoResultados; }
 
     public Conta getConta() { return conta; }
-
     public void setConta(Conta conta) { this.conta = conta; }
 }

@@ -121,6 +121,26 @@
             background: #1b3a57;
             color: white;
         }
+        nav {
+            background: #153049;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 6px 10px;
+            transition: transform 0.2s ease;
+        }
+
+
+        nav a:hover {
+            transform: translateY(4px);
+        }
     </style>
 </head>
 
@@ -129,7 +149,10 @@
 <header>
     <h1>Editar Obra</h1>
 </header>
+<nav>
+    <a th:href="@{/}">Pagina Principal</a>
 
+</nav>
 <div class="container">
 
     <form th:action="@{/obras/editar/{id}(id=${obra.id})}" method="post">
