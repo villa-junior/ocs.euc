@@ -90,10 +90,6 @@
             background: #e0e0e0;
             color: #333;
         }
-
-        .btn-primary:hover {
-            opacity: 0.9;
-        }
     </style>
 </head>
 
@@ -104,21 +100,21 @@
 </header>
 
 <nav>
-    <a th:href="@{/}">Pagina Principal</a>
+    <a th:href="@{/}">Página Principal</a>
 </nav>
 
 <div class="container">
 
     <h2 th:text="${categoria != null ? categoria.nome : 'Todas as Obras'}"></h2>
-    <a th:href="@{/obras/cadastrar}" type="button" class="btn btn-primary">
+
+    <a th:href="@{/obras/cadastrar}" class="btn btn-primary">
         Cadastrar Obra
     </a>
 
     <table>
         <thead>
         <tr>
-            <th>Título</th>
-            <th>Ano</th>
+            <th>Obra</th>
             <th>Categoria</th>
             <th>Autoras</th>
             <th>Ações</th>
@@ -127,20 +123,58 @@
 
         <tbody>
         <tr th:each="o : ${obras}">
-            <td th:text="${o.titulo}"></td>
 
-            <td th:text="${o.anoPublicacao}"></td>
 
-            <td th:text="${o.categoria != null ? o.categoria.nome : 'Sem categoria'}"></td>
+            <td>
+
+
+                <a th:if="${o.urlArquivo != null and !#strings.isEmpty(o.urlArquivo)}"
+                   th:href="${o.urlArquivo}"
+                   target="_blank"
+                   style="color:#1b3a57; font-weight:bold; text-decoration:none;">
+                     <span th:text="${o.titulo}"></span>
+                </a>
+
+                <span th:if="${o.urlArquivo == null or #strings.isEmpty(o.urlArquivo)}"
+                      style="font-weight:bold;"
+                      th:text="${o.titulo}">
+                </span>
+
+
+                <div th:if="${o.resumo != null}"
+                     style="color:#666; font-size:0.85rem; margin-top:4px;">
+                    <span th:text="${#strings.abbreviate(o.resumo, 150)}"></span>
+                </div>
+
+
+                <div style="font-size:0.8rem; color:#888;">
+                    Ano de publicação:
+                    <span th:text="${o.anoPublicacao != null ? o.anoPublicacao : '—'}"></span>
+                </div>
+
+
+                <div th:if="${o.palavrasChave != null}"
+                     style="margin-top:4px;">
+                    <span th:each="palavra : ${#strings.arraySplit(o.palavrasChave, ',')}">
+                        <span style="background:#eef3f7;
+                                     padding:2px 6px;
+                                     border-radius:6px;
+                                     font-size:0.75rem;
+                                     margin-right:4px;">
+                            <span th:text="${palavra.trim()}"></span>
+                        </span>
+                    </span>
+                </div>
+
+            </td>
+
+            <td th:text="${o.categoria != null ? o.categoria.nome : '—'}"></td>
 
             <td>
                 <span th:each="nome, stat : ${autorasPorObra[o.id]}">
-                    <span th:text="${nome}"></span>
-                    <span th:if="${!stat.last}">, </span>
+                    <span th:text="${nome}"></span><span th:if="${!stat.last}">, </span>
                 </span>
-                <span th:if="${autorasPorObra[o.id] == null || autorasPorObra[o.id].isEmpty()}">
-                    —
-                </span>
+                <span th:if="${autorasPorObra[o.id] == null || autorasPorObra[o.id].isEmpty()}">—</span>
             </td>
 
             <td>
@@ -160,24 +194,13 @@
                         Excluir
                     </button>
                 </form>
-
             </td>
+
         </tr>
         </tbody>
     </table>
 
 </div>
-
-<div vw class="enabled">
-    <div vw-access-button class="active"></div>
-    <div vw-plugin-wrapper>
-        <div class="vw-plugin-top-wrapper"></div>
-    </div>
-</div>
-<script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
-<script>
-    new window.VLibras.Widget('https://vlibras.gov.br/app');
-</script>
 
 </body>
 </html>

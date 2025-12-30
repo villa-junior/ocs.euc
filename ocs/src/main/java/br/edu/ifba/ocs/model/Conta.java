@@ -2,6 +2,7 @@ package br.edu.ifba.ocs.model;
 
 
 import jakarta.persistence.*;
+import org.hibernate.validator.constraints.UUID;
 
 @Entity
 @Table(name = "conta")

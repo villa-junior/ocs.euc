@@ -30,6 +30,15 @@
     nav a:hover {
       transform: translateY(4px);
     }
+    .alerta-erro {
+      background-color: #fdecea;
+      color: #611a15;
+      border: 1px solid #f5c2c7;
+      padding: 12px;
+      margin: 15px;
+      border-radius: 6px;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
@@ -40,8 +49,10 @@
 </header>
 <nav>
   <a th:href="@{/}">Pagina Principal</a>
-
 </nav>
+<div th:if="${erro}" class="alerta-erro">
+  <p th:text="${erro}"></p>
+</div>
 <section class="section">
   <div class="card" th:each="a : ${autoras}">
     <p><strong>Nome:</strong> <span th:text="${a.nome}"></span></p>

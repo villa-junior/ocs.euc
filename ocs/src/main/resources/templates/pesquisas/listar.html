@@ -90,10 +90,6 @@
       background: #e0e0e0;
       color: #333;
     }
-
-    .btn-primary:hover {
-      opacity: 0.9;
-    }
   </style>
 </head>
 
@@ -109,43 +105,71 @@
 
 <div class="container">
 
-  <!-- TÍTULO DINÂMICO PELO STATUS -->
   <h2 th:text="
         ${status} == 'EM_ANDAMENTO'
         ? 'Pesquisas em andamento'
         : 'Pesquisas concluídas'
-    "></h2>
+    ">
+  </h2>
 
-  <!-- BOTÃO CADASTRAR -->
-  <a th:href="@{/pesquisas/cadastrar}"
-     class="btn btn-primary">
+  <a th:href="@{/pesquisas/cadastrar}" class="btn btn-primary">
     Cadastrar Pesquisa
   </a>
 
   <table>
     <thead>
     <tr>
-      <th>Título</th>
-      <th>Status</th>
-      <th>Início</th>
-      <th>Fim</th>
+      <th>Pesquisa</th>
+      <th>Anos</th>
       <th>Ações</th>
     </tr>
     </thead>
 
     <tbody>
     <tr th:each="p : ${pesquisas}">
-      <td th:text="${p.titulo}"></td>
 
-      <td th:text="
-                ${p.status} == 'EM_ANDAMENTO'
-                ? 'Em andamento'
-                : 'Concluída'
-            "></td>
 
-      <td th:text="${p.dataInicio}"></td>
+      <td>
 
-      <td th:text="${p.dataFim != null ? p.dataFim : '—'}"></td>
+        <a th:if="${p.arquivoResultados != null and !#strings.isEmpty(p.arquivoResultados)}"
+           th:href="${p.arquivoResultados}"
+           target="_blank"
+           style="color:#1b3a57; font-weight:bold; text-decoration:none;">
+
+           <span th:text="${p.titulo}"></span>
+        </a>
+
+        <span th:if="${p.arquivoResultados == null or #strings.isEmpty(p.arquivoResultados)}"
+              style="font-weight:bold;"
+              th:text="${p.titulo}">
+                </span>
+
+        <div style="font-size:0.8rem; margin-top:4px;">
+          <div th:if="${p.urlParticipante != null}">
+             Participante:
+            <a th:href="${p.urlParticipante}" target="_blank">acessar</a>
+          </div>
+
+          <div th:if="${p.urlOrganizador != null}">
+             Organizador:
+            <a th:href="${p.urlOrganizador}" target="_blank">acessar</a>
+          </div>
+        </div>
+
+      </td>
+
+
+      <td>
+                <span>
+                    Início:
+                    <span th:text="${p.dataInicio != null ? p.dataInicio.year : '—'}"></span>
+                </span>
+
+        <div th:if="${p.status == 'CONCLUIDA'}">
+          Conclusão:
+          <span th:text="${p.dataFim != null ? p.dataFim.year : '—'}"></span>
+        </div>
+      </td>
 
       <td>
         <a class="btn btn-primary"
@@ -162,28 +186,17 @@
 
           <button type="submit"
                   class="btn btn-secondary"
-                  onclick="return confirm('Deseja excluir esta pesquisa?')">
+                 >
             Excluir
           </button>
         </form>
       </td>
+
     </tr>
     </tbody>
   </table>
 
 </div>
-
-<div vw class="enabled">
-  <div vw-access-button class="active"></div>
-  <div vw-plugin-wrapper>
-    <div class="vw-plugin-top-wrapper"></div>
-  </div>
-</div>
-
-<script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
-<script>
-  new window.VLibras.Widget('https://vlibras.gov.br/app');
-</script>
 
 </body>
 </html>

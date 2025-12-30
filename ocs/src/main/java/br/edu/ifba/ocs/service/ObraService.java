@@ -24,6 +24,7 @@ public class ObraService {
 
 
 
+
     public List<Obra> listar() {
         return repository.findAll();
     }
@@ -93,12 +94,16 @@ public class ObraService {
 
 
 
+
     @Transactional
     public void deletar(Integer id) {
 
-        obraAutoraRepository.deleteByObraId(id);
+        Autora autora = autoraRepository.findById(id).orElseThrow(() -> new RuntimeException("Autora não encontrada"));
 
+        if (obraAutoraRepository.existsByAutora_Id(id)) {
+            throw new RuntimeException("Não é possível excluir a autora pois ela está vinculada a obras");
+        }
 
-        repository.deleteById(id);
+        autoraRepository.delete(autora);
     }
 }

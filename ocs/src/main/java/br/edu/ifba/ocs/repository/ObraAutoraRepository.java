@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface ObraAutoraRepository
         extends JpaRepository<ObraAutora, ObraAutoraId> {
-
+    boolean existsByAutora_Id(Integer id);
     @Modifying
     @Query("DELETE FROM ObraAutora oa WHERE oa.obra.id = :idObra")
     void deleteByObraId(@Param("idObra") Integer idObra);

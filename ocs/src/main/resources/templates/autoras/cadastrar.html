@@ -95,26 +95,27 @@
 </nav>
 <div class="container">
 
-    <form th:action="@{/autoras}" method="post">
+    <form th:action="@{/autoras}" th:object="${autora}" method="post">
 
         <input type="hidden" name="voltar" th:value="${voltar}">
 
         <label>Nome</label>
-        <input type="text" name="nome" required>
+        <input type="text" th:field="*{nome}" required>
 
         <label>Email</label>
-        <input type="email" name="email">
+        <input type="email" th:field="*{email}">
 
         <label>Instituição</label>
-        <input type="text" name="instituicao">
+        <input type="text" th:field="*{instituicao}">
 
         <label>Lattes</label>
-        <input type="text" name="lattes">
+        <input type="text" th:field="*{lattes}">
 
         <button type="submit" class="btn btn-primary">
             Salvar Autora
         </button>
     </form>
+
 
     <a th:if="${voltar != null}"
        th:href="${voltar}"

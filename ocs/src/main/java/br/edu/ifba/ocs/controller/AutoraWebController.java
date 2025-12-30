@@ -14,9 +14,9 @@ public class AutoraWebController {
     @Autowired
     private AutoraService service;
 
-    /* ================= LISTAR ================= */
 
-    @GetMapping
+
+    @GetMapping("/listar")
     public String listar(Model model) {
         model.addAttribute("autoras", service.listar());
         return "autoras/listar";
@@ -45,12 +45,19 @@ public class AutoraWebController {
             return "redirect:" + voltar;
         }
 
-        return "redirect:/autoras";
+        return "redirect:/autoras/listar";
     }
 
     @PostMapping("/excluir/{id}")
-    public String excluir(@PathVariable Integer id) {
-        service.deletar(id);
-        return "redirect:/";
+    public String excluir(@PathVariable Integer id, Model model) {
+        try {
+            service.deletar(id);
+            return "redirect:/autoras/listar";
+        } catch (RuntimeException e) {
+            model.addAttribute("erro", e.getMessage());
+            model.addAttribute("autoras", service.listar());
+            return "autoras/listar";
+        }
     }
+
 }
