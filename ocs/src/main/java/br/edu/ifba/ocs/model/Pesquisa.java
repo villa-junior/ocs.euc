@@ -2,25 +2,32 @@ package br.edu.ifba.ocs.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.PastOrPresent;
 import org.springframework.format.annotation.DateTimeFormat;
-
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "pesquisa")
 public class Pesquisa {
 
+    public enum Status {
+        EM_ANDAMENTO, CONCLUIDA
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_pesquisa")
     private Integer id;
 
+    @NotBlank(message = "Título é obrigatório")
     private String titulo;
 
     private String descricao;
 
-    private String status;
+    @NotNull(message = "Status é obrigatório")
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
     @NotNull(message = "A data de início é obrigatória")
     @PastOrPresent(message = "A data de início não pode ser futura")
@@ -42,53 +49,97 @@ public class Pesquisa {
     @Column(name = "arquivo_resultados")
     private String arquivoResultados;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_conta")
     private Conta conta;
 
     public Pesquisa() {}
 
-
-
     @PrePersist
     @PreUpdate
     private void validarDatas() {
         if (dataInicio != null && dataFim != null && dataFim.isBefore(dataInicio)) {
-            throw new IllegalArgumentException(
-                    "A data de fim não pode ser anterior à data de início"
-            );
+            throw new IllegalArgumentException("A data de fim não pode ser anterior à data de início.");
         }
     }
 
+    public String getTitulo() {
+        return titulo;
+    }
 
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
+    }
 
-    public Integer getId() { return id; }
-    public void setId(Integer id) { this.id = id; }
+    public String getDescricao() {
+        return descricao;
+    }
 
-    public String getTitulo() { return titulo; }
-    public void setTitulo(String titulo) { this.titulo = titulo; }
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
 
-    public String getDescricao() { return descricao; }
-    public void setDescricao(String descricao) { this.descricao = descricao; }
+    public Integer getId() {
+        return id;
+    }
 
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-    public LocalDate getDataInicio() { return dataInicio; }
-    public void setDataInicio(LocalDate dataInicio) { this.dataInicio = dataInicio; }
+    public Status getStatus() {
+        return status;
+    }
 
-    public LocalDate getDataFim() { return dataFim; }
-    public void setDataFim(LocalDate dataFim) { this.dataFim = dataFim; }
+    public void setStatus(Status status) {
+        this.status = status;
+    }
 
-    public String getUrlParticipante() { return urlParticipante; }
-    public void setUrlParticipante(String urlParticipante) { this.urlParticipante = urlParticipante; }
+    public LocalDate getDataInicio() {
+        return dataInicio;
+    }
 
-    public String getUrlOrganizador() { return urlOrganizador; }
-    public void setUrlOrganizador(String urlOrganizador) { this.urlOrganizador = urlOrganizador; }
+    public void setDataInicio(LocalDate dataInicio) {
+        this.dataInicio = dataInicio;
+    }
 
-    public String getArquivoResultados() { return arquivoResultados; }
-    public void setArquivoResultados(String arquivoResultados) { this.arquivoResultados = arquivoResultados; }
+    public LocalDate getDataFim() {
+        return dataFim;
+    }
 
-    public Conta getConta() { return conta; }
-    public void setConta(Conta conta) { this.conta = conta; }
+    public void setDataFim(LocalDate dataFim) {
+        this.dataFim = dataFim;
+    }
+
+    public String getUrlParticipante() {
+        return urlParticipante;
+    }
+
+    public void setUrlParticipante(String urlParticipante) {
+        this.urlParticipante = urlParticipante;
+    }
+
+    public String getUrlOrganizador() {
+        return urlOrganizador;
+    }
+
+    public void setUrlOrganizador(String urlOrganizador) {
+        this.urlOrganizador = urlOrganizador;
+    }
+
+    public String getArquivoResultados() {
+        return arquivoResultados;
+    }
+
+    public void setArquivoResultados(String arquivoResultados) {
+        this.arquivoResultados = arquivoResultados;
+    }
+
+    public Conta getConta() {
+        return conta;
+    }
+
+    public void setConta(Conta conta) {
+        this.conta = conta;
+    }
 }

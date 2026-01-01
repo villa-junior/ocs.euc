@@ -75,21 +75,19 @@
 </head>
 
 <body>
-
 <header>
     <h1>Cadastro de Pesquisa</h1>
 </header>
-
-<nav>
-    <a th:href="@{/}">Página Principal</a>
-</nav>
-
+<nav><a th:href="@{/}">Página Principal</a></nav>
 <div class="container">
 
+
+    <div th:if="${mensagem}" style="color:green" th:text="${mensagem}"></div>
+
+    <div th:if="${erro}" style="color:red" th:text="${erro}"></div>
+
     <form th:action="@{/pesquisas}" method="post" th:object="${pesquisa}">
-
         <input type="hidden" th:field="*{id}" />
-
         <label>Título</label>
         <input type="text" th:field="*{titulo}" required />
         <div th:errors="*{titulo}" style="color:red"></div>
@@ -100,10 +98,10 @@
         <label>Status da Pesquisa</label>
         <select th:field="*{status}" required>
             <option value="">Selecione</option>
-            <option value="EM_ANDAMENTO">Em andamento</option>
-            <option value="CONCLUIDA">Concluída</option>
+            <option th:value="${T(br.edu.ifba.ocs.model.Pesquisa.Status).EM_ANDAMENTO}">Em andamento</option>
+            <option th:value="${T(br.edu.ifba.ocs.model.Pesquisa.Status).CONCLUIDA}">Concluída</option>
         </select>
-        <div th:errors="*{status}" style="color:red"></div>
+        <div th:if="${#fields.hasErrors('status')}" th:errors="*{status}" style="color:red"></div>
 
         <label>Data de Início</label>
         <input type="date"
@@ -112,16 +110,15 @@
                required />
         <div th:errors="*{dataInicio}" style="color:red"></div>
 
-        <label>Data de Fim</label>
+        <label>Data de Fim <span style="font-weight:normal; font-size:0.87em; color:#888;">
+    (preencha apenas se o status for "Concluída")
+</span></label>
+
+
         <input type="date"
                th:field="*{dataFim}"
                th:attr="max=${hoje}" />
         <div th:errors="*{dataFim}" style="color:red"></div>
-
-
-
-
-
         <label>URL Participante</label>
         <input type="url" th:field="*{urlParticipante}" />
 
@@ -131,24 +128,8 @@
         <label>Arquivo de Resultados</label>
         <input type="text" th:field="*{arquivoResultados}" />
 
-        <button type="submit" class="btn btn-primary">
-            Salvar Pesquisa
-        </button>
-
+        <button type="submit" class="btn btn-primary">Salvar Pesquisa</button>
     </form>
-
-
 </div>
-<div vw class="enabled">
-    <div vw-access-button class="active"></div>
-    <div vw-plugin-wrapper>
-        <div class="vw-plugin-top-wrapper"></div>
-    </div>
-</div>
-
-<script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
-<script>
-    new window.VLibras.Widget('https://vlibras.gov.br/app');
-</script>
 </body>
 </html>

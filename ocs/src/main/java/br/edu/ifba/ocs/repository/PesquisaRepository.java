@@ -1,12 +1,13 @@
 package br.edu.ifba.ocs.repository;
 
 import br.edu.ifba.ocs.model.Pesquisa;
+import br.edu.ifba.ocs.model.Pesquisa.Status;
 import org.springframework.data.jpa.repository.JpaRepository;
-
 import java.util.List;
 
 public interface PesquisaRepository extends JpaRepository<Pesquisa, Integer> {
+    List<Pesquisa> findByStatusOrderByDataInicioDesc(Status status);
 
 
-    List<Pesquisa> findByStatusOrderByDataInicioDesc(String status);
+    List<Pesquisa> findByTituloContainingIgnoreCase(String termo);
 }

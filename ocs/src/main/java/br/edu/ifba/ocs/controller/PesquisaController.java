@@ -1,7 +1,9 @@
 package br.edu.ifba.ocs.controller;
 
 import br.edu.ifba.ocs.model.Pesquisa;
+import br.edu.ifba.ocs.model.Pesquisa.Status;
 import br.edu.ifba.ocs.service.PesquisaService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,24 +17,20 @@ public class PesquisaController {
     @Autowired
     private PesquisaService service;
 
-
     @GetMapping
     public List<Pesquisa> listarTodas() {
         return service.listarTodas();
     }
 
-
     @GetMapping("/andamento")
     public List<Pesquisa> listarAndamento() {
-        return service.listarPorStatus("ANDAMENTO");
+        return service.listarPorStatus(Status.EM_ANDAMENTO);
     }
-
 
     @GetMapping("/concluida")
     public List<Pesquisa> listarConcluida() {
-        return service.listarPorStatus("CONCLUIDA");
+        return service.listarPorStatus(Status.CONCLUIDA);
     }
-
 
     @GetMapping("/{id}")
     public ResponseEntity<Pesquisa> buscar(@PathVariable Integer id) {
@@ -41,17 +39,20 @@ public class PesquisaController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-
     @PostMapping
-    public Pesquisa criar(@RequestBody Pesquisa pesquisa) {
-        return service.salvar(pesquisa);
+    public ResponseEntity<?> criar(@Valid @RequestBody Pesquisa pesquisa) {
+        try {
+            Pesquisa salva = service.salvar(pesquisa);
+            return ResponseEntity.ok(salva);
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        }
     }
 
-
     @PutMapping("/{id}")
-    public ResponseEntity<Pesquisa> atualizar(
+    public ResponseEntity<?> atualizar(
             @PathVariable Integer id,
-            @RequestBody Pesquisa novaPesquisa) {
+            @Valid @RequestBody Pesquisa novaPesquisa) {
 
         return service.buscarPorId(id)
                 .map(pesquisa -> {
@@ -64,17 +65,25 @@ public class PesquisaController {
                     pesquisa.setUrlOrganizador(novaPesquisa.getUrlOrganizador());
                     pesquisa.setArquivoResultados(novaPesquisa.getArquivoResultados());
 
-                    return ResponseEntity.ok(service.salvar(pesquisa));
+                    try {
+                        Pesquisa atualizada = service.salvar(pesquisa);
+                        return ResponseEntity.ok(atualizada);
+                    } catch (IllegalArgumentException ex) {
+                        return ResponseEntity.badRequest().body(ex.getMessage());
+                    }
                 })
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // 🔹 DELETAR PESQUISA
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletar(@PathVariable Integer id) {
+    public ResponseEntity<?> deletar(@PathVariable Integer id) {
         if (service.buscarPorId(id).isPresent()) {
-            service.deletar(id);
-            return ResponseEntity.noContent().build();
+            try {
+                service.deletar(id);
+                return ResponseEntity.noContent().build();
+            } catch (IllegalArgumentException ex) {
+                return ResponseEntity.badRequest().body(ex.getMessage());
+            }
         }
         return ResponseEntity.notFound().build();
     }
