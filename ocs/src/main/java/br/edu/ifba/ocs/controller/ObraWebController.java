@@ -1,10 +1,9 @@
 package br.edu.ifba.ocs.controller;
 
 import br.edu.ifba.ocs.model.Obra;
-import br.edu.ifba.ocs.model.Categoria;
-import br.edu.ifba.ocs.service.ObraService;
-import br.edu.ifba.ocs.service.CategoriaService;
 import br.edu.ifba.ocs.service.AutoraService;
+import br.edu.ifba.ocs.service.CategoriaService;
+import br.edu.ifba.ocs.service.ObraService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,13 +33,10 @@ public class ObraWebController {
     public String listarTodas(Model model) {
 
         List<Obra> obras = obraService.listarOrdenadoPorAnoDesc();
-
         model.addAttribute("obras", obras);
         model.addAttribute("categoria", null);
 
-
         Map<UUID, List<String>> autorasPorObra = new HashMap<>();
-
         for (Obra o : obras) {
             autorasPorObra.put(
                     o.getId(),
@@ -49,7 +45,6 @@ public class ObraWebController {
         }
 
         model.addAttribute("autorasPorObra", autorasPorObra);
-
         return "obras/listar";
     }
 
@@ -59,14 +54,12 @@ public class ObraWebController {
         return categoriaService.buscarPorId(id)
                 .map(categoria -> {
 
-                    List<Obra> obras =
-                            obraService.listarPorCategoria(id);
+                    List<Obra> obras = obraService.listarPorCategoria(id);
 
                     model.addAttribute("obras", obras);
                     model.addAttribute("categoria", categoria);
 
                     Map<UUID, List<String>> autorasPorObra = new HashMap<>();
-
                     for (Obra o : obras) {
                         autorasPorObra.put(
                                 o.getId(),
@@ -75,7 +68,6 @@ public class ObraWebController {
                     }
 
                     model.addAttribute("autorasPorObra", autorasPorObra);
-
                     return "obras/listar";
                 })
                 .orElse("redirect:/obras");
@@ -85,34 +77,31 @@ public class ObraWebController {
 
     @GetMapping("/cadastrar")
     public String cadastrar(Model model) {
+
         model.addAttribute("obra", new Obra());
-        model.addAttribute("categorias",
-                categoriaService.listar());
-        model.addAttribute("autoras",
-                autoraService.listar());
+        model.addAttribute("categorias", categoriaService.listar());
+        model.addAttribute("autoras", autoraService.listar());
+
         return "obras/cadastrar";
     }
 
     @PostMapping
     public String salvar(
             @ModelAttribute Obra obra,
-            @RequestParam UUID categoriaId,
             @RequestParam(required = false) List<UUID> autorasIds
     ) {
 
-        Categoria categoria = categoriaService
-                .buscarPorId(categoriaId)
-                .orElse(null);
-
-        if (categoria == null) {
+        if (obra.getCategoria() == null || obra.getCategoria().getId() == null) {
             return "redirect:/obras/cadastrar";
         }
 
-        obra.setCategoria(categoria);
+        obraService.salvarComAutoras(
+                obra,
+                obra.getCategoria().getId(),
+                autorasIds
+        );
 
-        obraService.salvarComAutoras(obra, categoriaId, autorasIds);
-
-        return "redirect:/obras/categoria/" + categoria.getId();
+        return "redirect:/obras/categoria/" + obra.getCategoria().getId();
     }
 
 
@@ -124,18 +113,15 @@ public class ObraWebController {
                 .map(obra -> {
 
                     model.addAttribute("obra", obra);
-                    model.addAttribute("categorias",
-                            categoriaService.listar());
-                    model.addAttribute("autoras",
-                            autoraService.listar());
+                    model.addAttribute("categorias", categoriaService.listar());
+                    model.addAttribute("autoras", autoraService.listar());
 
-                    // 🔹 IDs das autoras para marcar checkboxes
                     model.addAttribute(
                             "autorasSelecionadas",
                             obraService.buscarIdsAutoras(id)
                     );
 
-                    return "obras/editar";
+                    return "obras/cadastrar"; // reutiliza o mesmo formulário
                 })
                 .orElse("redirect:/obras");
     }
@@ -144,34 +130,30 @@ public class ObraWebController {
     public String atualizar(
             @PathVariable UUID id,
             @ModelAttribute Obra obra,
-            @RequestParam UUID categoriaId,
             @RequestParam(required = false) List<UUID> autorasIds
     ) {
 
-        Categoria categoria = categoriaService
-                .buscarPorId(categoriaId)
-                .orElse(null);
-
-        if (categoria == null) {
+        if (obra.getCategoria() == null || obra.getCategoria().getId() == null) {
             return "redirect:/obras";
         }
 
         obra.setId(id);
-        obra.setCategoria(categoria);
 
-        obraService.salvarComAutoras(obra, categoriaId, autorasIds);
+        obraService.salvarComAutoras(
+                obra,
+                obra.getCategoria().getId(),
+                autorasIds
+        );
 
-        return "redirect:/obras/categoria/" + categoria.getId();
+        return "redirect:/obras/categoria/" + obra.getCategoria().getId();
     }
 
 
 
     @PostMapping("/excluir/{id}")
-    public String excluir(@PathVariable UUID id,
-                          @RequestParam UUID categoriaId) {
+    public String excluir(@PathVariable UUID id) {
 
         obraService.deletar(id);
-
-        return "redirect:/obras/categoria/" + categoriaId;
+        return "redirect:/obras";
     }
 }

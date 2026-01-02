@@ -2,32 +2,34 @@ package br.edu.ifba.ocs.service;
 
 import br.edu.ifba.ocs.model.Legislacao;
 import br.edu.ifba.ocs.repository.LegislacaoRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
 public class LegislacaoService {
 
-    @Autowired
-    private LegislacaoRepository repo;
+    private final LegislacaoRepository repository;
 
-    public List<Legislacao> listar() {
-        return repo.findAll();
+    public LegislacaoService(LegislacaoRepository repository) {
+        this.repository = repository;
     }
 
-    public Optional<Legislacao> buscarPorId(UUID id) {
-        return repo.findById(id);
+    public List<Legislacao> listarTodas() {
+        return repository.findAll();
     }
 
     public Legislacao salvar(Legislacao legislacao) {
-        return repo.save(legislacao);
+        return repository.save(legislacao);
     }
 
-    public void deletar(UUID id) {
-        repo.deleteById(id);
+    public Legislacao buscarPorId(UUID id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Legislação não encontrada"));
+    }
+
+    public void excluir(UUID id) {
+        repository.deleteById(id);
     }
 }

@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>Lista de Pesquisas</title>
+  <title>Legislações</title>
 
   <style>
     body {
@@ -96,7 +96,7 @@
 <body>
 
 <header>
-  <h1>Pesquisas</h1>
+  <h1>Legislações</h1>
 </header>
 
 <nav>
@@ -104,88 +104,77 @@
 </nav>
 
 <div class="container">
-  <h2 th:text="${status.equals(T(br.edu.ifba.ocs.model.Pesquisa.Status).EM_ANDAMENTO)
-        ? 'Pesquisas em andamento'
-        : 'Pesquisas concluídas'}">
-  </h2>
-  <a th:href="@{/pesquisas/cadastrar}" class="btn btn-primary">Cadastrar Pesquisa</a>
+  <h2>Legislações</h2>
+
+  <a th:href="@{/legislacoes/cadastrar}" class="btn btn-primary">
+    Cadastrar Legislação
+  </a>
 
   <table>
-    <thead>
-    <tr>
-      <th>Pesquisa</th>
-      <th>Anos</th>
-      <th>Ações</th>
-    </tr>
-    </thead>
+
+
     <tbody>
-    <tr th:if="${#lists.isEmpty(pesquisas)}">
-      <td colspan="3">Nenhuma pesquisa encontrada.</td>
+    <tr th:if="${#lists.isEmpty(legislacoes)}">
+      <td colspan="3">Nenhuma legislação encontrada.</td>
     </tr>
-    <tr th:each="p : ${pesquisas}">
+
+    <tr th:each="l : ${legislacoes}">
+
 
       <td>
+        <strong th:text="${l.numero}">Lei nº</strong>
 
-        <a th:if="${p.arquivoResultados != null and !#strings.isEmpty(p.arquivoResultados)}"
-           th:href="${p.arquivoResultados}"
-           target="_blank"
-           style="color:#1b3a57; font-weight:bold; text-decoration:none;">
-
-           <span th:text="${p.titulo}"></span>
-        </a>
-
-        <span th:if="${p.arquivoResultados == null or #strings.isEmpty(p.arquivoResultados)}"
-              style="font-weight:bold;"
-              th:text="${p.titulo}">
-                </span>
-
-        <div style="font-size:0.8rem; margin-top:4px;">
-          <div th:if="${p.urlParticipante != null}">
-             Participante:
-            <a th:href="${p.urlParticipante}" target="_blank">acessar</a>
-          </div>
-
-          <div th:if="${p.urlOrganizador != null}">
-             Organizador:
-            <a th:href="${p.urlOrganizador}" target="_blank">acessar</a>
-          </div>
+        <div style="font-size:0.85rem; margin-top:6px;"
+             th:text="${l.descricao}">
         </div>
 
+        <div th:if="${l.urlArquivo != null}"
+             style="margin-top:6px;">
+          <a th:href="${l.urlArquivo}"
+             target="_blank"
+             style="color:#1b3a57; font-weight:bold;">
+            Acessar documento
+          </a>
+        </div>
       </td>
 
 
       <td>
-       <span>
-    Início:
-    <span th:text="${p.dataInicio != null ? p.dataInicio.year : '—'}"></span>
-</span>
+        <span th:text="${#temporals.format(l.data, 'dd/MM/yyyy')}"></span>
+      </td>
 
-        <div th:if="${p.status == T(br.edu.ifba.ocs.model.Pesquisa.Status).CONCLUIDA}">
-          Conclusão:
-          <span th:text="${p.dataFim != null ? p.dataFim.year : '—'}"></span>
-        </div>
 
       <td>
-        <a class="btn btn-primary"
-           th:href="@{/pesquisas/editar/{id}(id=${p.id})}">
-          Editar
-        </a>
 
-        <form th:action="@{/pesquisas/excluir/{id}(id=${p.id})}"
+        <
+        <form th:action="@{/legislacoes/editar}"
               method="post"
               style="display:inline">
 
-          <input type="hidden" name="status"
-                 th:value="${p.status}" />
+          <input type="hidden" name="id"
+                 th:value="${l.id}" />
 
           <button type="submit"
-                  class="btn btn-secondary"
-                 >
+                  class="btn btn-primary">
+            Editar
+          </button>
+        </form>
+
+
+        <form th:action="@{/legislacoes/{id}(id=${l.id})}"
+              method="post"
+              style="display:inline"
+              onsubmit="return confirm('Deseja realmente excluir esta legislação?');">
+
+          <input type="hidden" name="_method" value="DELETE"/>
+
+          <button type="submit"
+                  class="btn btn-secondary">
             Excluir
           </button>
         </form>
-      </td>
 
+      </td>
     </tr>
     </tbody>
   </table>
@@ -198,6 +187,7 @@
     <div class="vw-plugin-top-wrapper"></div>
   </div>
 </div>
+
 <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
 <script>
   new window.VLibras.Widget('https://vlibras.gov.br/app');

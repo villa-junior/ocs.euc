@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Cadastrar Legislação</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f7f7f7;
+      color: #333;
+    }
+
+    header {
+      background: #1b3a57;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    nav {
+      background: #153049;
+      padding: 10px;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 30px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 14px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    }
+
+    h2 {
+      color: #1b3a57;
+      margin-top: 0;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+      color: #1b3a57;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 0.95rem;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    .acoes {
+      margin-top: 25px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn {
+      padding: 8px 14px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+
+    .btn-primary {
+      background: #1b3a57;
+      color: white;
+    }
+
+
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>Legislação</h1>
+</header>
+
+<nav>
+  <a th:href="@{/}">Página Principal</a>
+
+</nav>
+
+<div class="container">
+  <h2 th:text="${legislacao.id == null ? 'Cadastrar Legislação' : 'Editar Legislação'}">
+    Cadastrar Legislação
+  </h2>
+
+  <form th:action="@{/legislacoes/salvar}"
+        th:object="${legislacao}"
+        method="post">
+
+
+    <input type="hidden" th:field="*{id}" />
+
+    <label for="numero">Número da Legislação</label>
+    <input type="text"
+           id="numero"
+           th:field="*{numero}"
+           placeholder="Ex: Lei nº 10.436/2002"
+           required />
+
+    <label for="data">Data</label>
+    <input type="date"
+           id="data"
+           th:field="*{data}"
+           required />
+
+    <label for="descricao">Descrição</label>
+    <textarea id="descricao"
+              th:field="*{descricao}"
+              rows="4"
+              placeholder="Resumo ou descrição da legislação">
+    </textarea>
+
+    <label for="urlArquivo">Link do Documento</label>
+    <input type="url"
+           id="urlArquivo"
+           th:field="*{urlArquivo}"
+           placeholder="https://..." />
+
+    <div class="acoes">
+      <button type="submit"
+              class="btn btn-primary">
+        Salvar
+      </button>
+
+
+    </div>
+
+  </form>
+</div>
+
+<div vw class="enabled">
+  <div vw-access-button class="active"></div>
+  <div vw-plugin-wrapper>
+    <div class="vw-plugin-top-wrapper"></div>
+  </div>
+</div>
+
+<script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+<script>
+  new window.VLibras.Widget('https://vlibras.gov.br/app');
+</script>
+
+</body>
+</html>

@@ -27,9 +27,6 @@ public class ObraService {
     private CategoriaRepository categoriaRepository;
 
 
-
-
-
     public List<Obra> listar() {
         return repository.findAll();
     }
@@ -45,7 +42,6 @@ public class ObraService {
     public List<Obra> listarPorCategoria(UUID categoriaId) {
         return repository.findByCategoriaIdOrderByAnoPublicacaoDesc(categoriaId);
     }
-
 
 
     public Obra salvar(Obra obra) {
@@ -94,7 +90,6 @@ public class ObraService {
     }
 
 
-
     public List<UUID> buscarIdsAutoras(UUID obraId) {
         return obraAutoraRepository.findAutoraIdsByObraId(obraId);
     }
@@ -105,17 +100,15 @@ public class ObraService {
     }
 
 
-
-
     @Transactional
-    public void deletar(UUID id) {
+    public void deletar(UUID obraId) {
 
-        Autora autora = autoraRepository.findById(id).orElseThrow(() -> new RuntimeException("Autora não encontrada"));
+        Obra obra = repository.findById(obraId)
+                .orElseThrow(() -> new RuntimeException("Obra não encontrada"));
 
-        if (obraAutoraRepository.existsByAutora_Id(id)) {
-            throw new RuntimeException("Não é possível excluir a autora pois ela está vinculada a obras");
-        }
+        obraAutoraRepository.deleteByObraId(obraId);
 
-        autoraRepository.delete(autora);
+        // Remove a obra
+        repository.delete(obra);
     }
 }
