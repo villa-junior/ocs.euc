@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class PesquisaService {
@@ -22,7 +23,7 @@ public class PesquisaService {
         return repository.findByStatusOrderByDataInicioDesc(status);
     }
 
-    public Optional<Pesquisa> buscarPorId(Integer id) {
+    public Optional<Pesquisa> buscarPorId(UUID id) {
         return repository.findById(id);
     }
 
@@ -30,7 +31,7 @@ public class PesquisaService {
 
         return repository.save(pesquisa);
     }
-    public void deletar(Integer id) {
+    public void deletar(UUID id) {
         if (!repository.existsById(id)) {
             throw new IllegalArgumentException("Pesquisa não encontrada para exclusão.");
         }

@@ -1,34 +1,40 @@
 package br.edu.ifba.ocs.model;
 
-
-
 import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.UUID;
 
 @Embeddable
 public class ObraAutoraId implements Serializable {
 
-    @Column(name = "id_obra")
-    private Integer idObra;
+    @Column(name = "id_obra", columnDefinition = "CHAR(36)")
+    @JdbcTypeCode(SqlTypes.CHAR)
+    private UUID idObra;
 
-    @Column(name = "id_autora")
-    private Integer idAutora;
+    @Column(name = "id_autora", columnDefinition = "CHAR(36)")
+    @JdbcTypeCode(SqlTypes.CHAR)
+    private UUID idAutora;
 
     public ObraAutoraId() {}
 
-    public ObraAutoraId(Integer idObra, Integer idAutora) {
+    public ObraAutoraId(UUID idObra, UUID idAutora) {
         this.idObra = idObra;
         this.idAutora = idAutora;
     }
 
-    public Integer getIdObra() { return idObra; }
+    public UUID getIdObra() {
+        return idObra;
+    }
 
-    public void setIdObra(Integer idObra) { this.idObra = idObra; }
+    public void setIdObra(UUID idObra) {this.idObra = idObra;}
 
-    public Integer getIdAutora() { return idAutora; }
+    public UUID getIdAutora() {return idAutora;}
 
-    public void setIdAutora(Integer idAutora) { this.idAutora = idAutora; }
+    public void setIdAutora(UUID idAutora) {this.idAutora = idAutora;}
 
     @Override
     public boolean equals(Object o) {

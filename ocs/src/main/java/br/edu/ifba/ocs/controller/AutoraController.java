@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 import java.util.List;
+import java.util.UUID;
 
 
 @RestController
@@ -27,7 +28,7 @@ public class AutoraController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<Autora> buscar(@PathVariable Integer id) {
+    public ResponseEntity<Autora> buscar(@PathVariable UUID id) {
         return service.buscarPorId(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -41,7 +42,7 @@ public class AutoraController {
 
 
     @PutMapping("/{id}")
-    public ResponseEntity<Autora> atualizar(@PathVariable Integer id, @RequestBody Autora novaAutora) {
+    public ResponseEntity<Autora> atualizar(@PathVariable UUID id, @RequestBody Autora novaAutora) {
         return service.buscarPorId(id)
                 .map(autora -> {
                     autora.setNome(novaAutora.getNome());
@@ -54,7 +55,7 @@ public class AutoraController {
 
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletar(@PathVariable Integer id) {
+    public ResponseEntity<Void> deletar(@PathVariable UUID id) {
         if (service.buscarPorId(id).isPresent()) {
             service.deletar(id);
             return ResponseEntity.noContent().build();

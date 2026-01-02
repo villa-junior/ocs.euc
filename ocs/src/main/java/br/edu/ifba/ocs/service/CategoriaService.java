@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class CategoriaService {
@@ -18,7 +19,7 @@ public class CategoriaService {
         return repository.findAll();
     }
 
-    public Optional<Categoria> buscarPorId(Integer id) {
+    public Optional<Categoria> buscarPorId(UUID id) {
         return repository.findById(id);
     }
 
@@ -26,7 +27,7 @@ public class CategoriaService {
         return repository.save(categoria);
     }
 
-    public void deletar(Integer id) {
+    public void deletar(UUID id) {
         repository.deleteById(id);
     }
 }

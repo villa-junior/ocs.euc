@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/categorias")
@@ -21,7 +22,7 @@ public class CategoriaController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Categoria> buscar(@PathVariable Integer id) {
+    public ResponseEntity<Categoria> buscar(@PathVariable UUID id) {
         return service.buscarPorId(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -33,7 +34,7 @@ public class CategoriaController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Categoria> atualizar(@PathVariable Integer id, @RequestBody Categoria novaCategoria) {
+    public ResponseEntity<Categoria> atualizar(@PathVariable UUID id, @RequestBody Categoria novaCategoria) {
         return service.buscarPorId(id)
                 .map(categoria -> {
                     categoria.setNome(novaCategoria.getNome());
@@ -43,7 +44,7 @@ public class CategoriaController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletar(@PathVariable Integer id) {
+    public ResponseEntity<Void> deletar(@PathVariable UUID id) {
         if (service.buscarPorId(id).isPresent()) {
             service.deletar(id);
             return ResponseEntity.noContent().build();

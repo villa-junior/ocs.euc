@@ -1,9 +1,8 @@
 package br.edu.ifba.ocs.model;
 
-
-
-
 import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Entity
 @Table(name = "obra_autora")
@@ -14,11 +13,13 @@ public class ObraAutora {
 
     @ManyToOne
     @MapsId("idObra")
+    @JdbcTypeCode(SqlTypes.CHAR)
     @JoinColumn(name = "id_obra")
     private Obra obra;
 
     @ManyToOne
     @MapsId("idAutora")
+    @JdbcTypeCode(SqlTypes.CHAR)
     @JoinColumn(name = "id_autora")
     private Autora autora;
 

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class LegislacaoService {
@@ -18,7 +19,7 @@ public class LegislacaoService {
         return repo.findAll();
     }
 
-    public Optional<Legislacao> buscarPorId(Integer id) {
+    public Optional<Legislacao> buscarPorId(UUID id) {
         return repo.findById(id);
     }
 
@@ -26,7 +27,7 @@ public class LegislacaoService {
         return repo.save(legislacao);
     }
 
-    public void deletar(Integer id) {
+    public void deletar(UUID id) {
         repo.deleteById(id);
     }
 }

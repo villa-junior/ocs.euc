@@ -10,6 +10,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @Controller
 @RequestMapping("/pesquisas")
 public class PesquisaWebController {
@@ -63,7 +65,7 @@ public class PesquisaWebController {
     }
 
     @GetMapping("/editar/{id}")
-    public String editar(@PathVariable Integer id, Model model) {
+    public String editar(@PathVariable UUID id, Model model) {
         Pesquisa pesquisa = service.buscarPorId(id).orElse(null);
         if (pesquisa == null) {
             model.addAttribute("erro", "Pesquisa não encontrada");
@@ -77,7 +79,7 @@ public class PesquisaWebController {
 
     @PostMapping("/excluir/{id}")
     public String excluir(
-            @PathVariable Integer id,
+            @PathVariable UUID id,
             @RequestParam Status status,
             Model model
     ) {

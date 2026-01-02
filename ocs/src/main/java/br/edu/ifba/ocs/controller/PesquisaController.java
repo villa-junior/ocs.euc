@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/pesquisas")
@@ -33,7 +34,7 @@ public class PesquisaController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Pesquisa> buscar(@PathVariable Integer id) {
+    public ResponseEntity<Pesquisa> buscar(@PathVariable UUID id) {
         return service.buscarPorId(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -51,7 +52,7 @@ public class PesquisaController {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> atualizar(
-            @PathVariable Integer id,
+            @PathVariable UUID id,
             @Valid @RequestBody Pesquisa novaPesquisa) {
 
         return service.buscarPorId(id)
@@ -76,7 +77,7 @@ public class PesquisaController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deletar(@PathVariable Integer id) {
+    public ResponseEntity<?> deletar(@PathVariable UUID id) {
         if (service.buscarPorId(id).isPresent()) {
             try {
                 service.deletar(id);

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/obras")
@@ -38,7 +39,7 @@ public class ObraWebController {
         model.addAttribute("categoria", null);
 
 
-        Map<Integer, List<String>> autorasPorObra = new HashMap<>();
+        Map<UUID, List<String>> autorasPorObra = new HashMap<>();
 
         for (Obra o : obras) {
             autorasPorObra.put(
@@ -53,7 +54,7 @@ public class ObraWebController {
     }
 
     @GetMapping("/categoria/{id}")
-    public String listarPorCategoria(@PathVariable Integer id, Model model) {
+    public String listarPorCategoria(@PathVariable UUID id, Model model) {
 
         return categoriaService.buscarPorId(id)
                 .map(categoria -> {
@@ -64,7 +65,7 @@ public class ObraWebController {
                     model.addAttribute("obras", obras);
                     model.addAttribute("categoria", categoria);
 
-                    Map<Integer, List<String>> autorasPorObra = new HashMap<>();
+                    Map<UUID, List<String>> autorasPorObra = new HashMap<>();
 
                     for (Obra o : obras) {
                         autorasPorObra.put(
@@ -95,8 +96,8 @@ public class ObraWebController {
     @PostMapping
     public String salvar(
             @ModelAttribute Obra obra,
-            @RequestParam Integer categoriaId,
-            @RequestParam(required = false) List<Integer> autorasIds
+            @RequestParam UUID categoriaId,
+            @RequestParam(required = false) List<UUID> autorasIds
     ) {
 
         Categoria categoria = categoriaService
@@ -109,7 +110,7 @@ public class ObraWebController {
 
         obra.setCategoria(categoria);
 
-        obraService.salvarComAutoras(obra, autorasIds);
+        obraService.salvarComAutoras(obra, categoriaId, autorasIds);
 
         return "redirect:/obras/categoria/" + categoria.getId();
     }
@@ -117,7 +118,7 @@ public class ObraWebController {
 
 
     @GetMapping("/editar/{id}")
-    public String editar(@PathVariable Integer id, Model model) {
+    public String editar(@PathVariable UUID id, Model model) {
 
         return obraService.buscarPorId(id)
                 .map(obra -> {
@@ -141,10 +142,10 @@ public class ObraWebController {
 
     @PostMapping("/editar/{id}")
     public String atualizar(
-            @PathVariable Integer id,
+            @PathVariable UUID id,
             @ModelAttribute Obra obra,
-            @RequestParam Integer categoriaId,
-            @RequestParam(required = false) List<Integer> autorasIds
+            @RequestParam UUID categoriaId,
+            @RequestParam(required = false) List<UUID> autorasIds
     ) {
 
         Categoria categoria = categoriaService
@@ -158,7 +159,7 @@ public class ObraWebController {
         obra.setId(id);
         obra.setCategoria(categoria);
 
-        obraService.salvarComAutoras(obra, autorasIds);
+        obraService.salvarComAutoras(obra, categoriaId, autorasIds);
 
         return "redirect:/obras/categoria/" + categoria.getId();
     }
@@ -166,8 +167,8 @@ public class ObraWebController {
 
 
     @PostMapping("/excluir/{id}")
-    public String excluir(@PathVariable Integer id,
-                          @RequestParam Integer categoriaId) {
+    public String excluir(@PathVariable UUID id,
+                          @RequestParam UUID categoriaId) {
 
         obraService.deletar(id);
 

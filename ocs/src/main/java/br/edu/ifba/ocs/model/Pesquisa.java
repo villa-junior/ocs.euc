@@ -4,8 +4,11 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.PastOrPresent;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Entity
 @Table(name = "pesquisa")
@@ -16,9 +19,10 @@ public class Pesquisa {
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_pesquisa")
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @JdbcTypeCode(SqlTypes.CHAR)
+    @Column(name = "id_pesquisa", length = 36)
+    private UUID id;
 
     @NotBlank(message = "Título é obrigatório")
     private String titulo;
@@ -50,6 +54,7 @@ public class Pesquisa {
     private String arquivoResultados;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JdbcTypeCode(SqlTypes.CHAR)
     @JoinColumn(name = "id_conta")
     private Conta conta;
 
@@ -79,13 +84,9 @@ public class Pesquisa {
         this.descricao = descricao;
     }
 
-    public Integer getId() {
-        return id;
-    }
+    public UUID getId() {return id;}
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    public void setId(UUID id) {this.id = id;}
 
     public Status getStatus() {
         return status;

@@ -4,11 +4,12 @@ import br.edu.ifba.ocs.model.Obra;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.UUID;
 
-public interface ObraRepository extends JpaRepository<Obra, Integer> {
+public interface ObraRepository extends JpaRepository<Obra, UUID> {
 
     List<Obra> findAllByOrderByAnoPublicacaoDesc();
-    List<Obra> findByCategoriaId(Integer idCategoria);
+    List<Obra> findByCategoriaId(UUID idCategoria);
 
-    List<Obra> findByCategoriaIdOrderByAnoPublicacaoDesc(Integer categoriaId);
+    List<Obra> findByCategoriaIdOrderByAnoPublicacaoDesc(UUID categoriaId);
 }

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class ObraService {
@@ -22,6 +23,10 @@ public class ObraService {
     @Autowired
     private ObraAutoraRepository obraAutoraRepository;
 
+    @Autowired
+    private CategoriaRepository categoriaRepository;
+
+
 
 
 
@@ -33,11 +38,11 @@ public class ObraService {
         return repository.findAllByOrderByAnoPublicacaoDesc();
     }
 
-    public Optional<Obra> buscarPorId(Integer id) {
+    public Optional<Obra> buscarPorId(UUID id) {
         return repository.findById(id);
     }
 
-    public List<Obra> listarPorCategoria(Integer categoriaId) {
+    public List<Obra> listarPorCategoria(UUID categoriaId) {
         return repository.findByCategoriaIdOrderByAnoPublicacaoDesc(categoriaId);
     }
 
@@ -48,47 +53,54 @@ public class ObraService {
     }
 
     @Transactional
-    public Obra salvarComAutoras(Obra obra, List<Integer> autorasIds) {
+    public Obra salvarComAutoras(
+            Obra obra,
+            UUID categoriaId,
+            List<UUID> autorasIds
+    ) {
+
+        Categoria categoria = categoriaRepository.findById(categoriaId)
+                .orElseThrow(() -> new RuntimeException("Categoria não encontrada"));
+
+        obra.setCategoria(categoria);
 
         if (obra.getDataRegistro() == null) {
             obra.setDataRegistro(LocalDate.now());
         }
 
-        Obra salva = repository.save(obra);
-
+        Obra salva = repository.saveAndFlush(obra);
 
         obraAutoraRepository.deleteByObraId(salva.getId());
 
-        if (autorasIds == null || autorasIds.isEmpty()) {
-            return salva;
-        }
+        if (autorasIds != null) {
+            for (UUID idAutora : autorasIds) {
 
-        for (Integer idAutora : autorasIds) {
+                Autora autora = autoraRepository.findById(idAutora)
+                        .orElseThrow();
 
-            Autora autora =
-                    autoraRepository.findById(idAutora).orElseThrow();
+                ObraAutora oa = new ObraAutora();
+                oa.setId(new ObraAutoraId(
+                        salva.getId(),
+                        autora.getId()
+                ));
+                oa.setObra(salva);
+                oa.setAutora(autora);
 
-            ObraAutora oa = new ObraAutora();
-            oa.setObra(salva);
-            oa.setAutora(autora);
-            oa.setId(new ObraAutoraId(
-                    salva.getId(),
-                    autora.getId()
-            ));
-
-            obraAutoraRepository.save(oa);
+                obraAutoraRepository.save(oa);
+            }
         }
 
         return salva;
     }
 
 
-    public List<Integer> buscarIdsAutoras(Integer obraId) {
+
+    public List<UUID> buscarIdsAutoras(UUID obraId) {
         return obraAutoraRepository.findAutoraIdsByObraId(obraId);
     }
 
 
-    public List<String> buscarNomesAutoras(Integer obraId) {
+    public List<String> buscarNomesAutoras(UUID obraId) {
         return obraAutoraRepository.findNomesAutorasByObraId(obraId);
     }
 
@@ -96,7 +108,7 @@ public class ObraService {
 
 
     @Transactional
-    public void deletar(Integer id) {
+    public void deletar(UUID id) {
 
         Autora autora = autoraRepository.findById(id).orElseThrow(() -> new RuntimeException("Autora não encontrada"));
 

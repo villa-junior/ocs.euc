@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/obras")
@@ -23,7 +24,7 @@ public class ObraController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<Obra> buscar(@PathVariable Integer id) {
+    public ResponseEntity<Obra> buscar(@PathVariable UUID id) {
         return service.buscarPorId(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -38,7 +39,7 @@ public class ObraController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Obra> atualizar(
-            @PathVariable Integer id,
+            @PathVariable UUID id,
             @RequestBody Obra novaObra) {
 
         return service.buscarPorId(id)
@@ -56,7 +57,7 @@ public class ObraController {
 
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletar(@PathVariable Integer id) {
+    public ResponseEntity<Void> deletar(@PathVariable UUID id) {
         if (service.buscarPorId(id).isPresent()) {
             service.deletar(id);
             return ResponseEntity.noContent().build();

@@ -4,27 +4,28 @@ package br.edu.ifba.ocs.model;
 
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
+import java.util.UUID;
 
 @Entity
 @Table(name = "categoria")
 public class Categoria {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_categoria")
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @JdbcTypeCode(SqlTypes.CHAR)
+    @Column(name = "id_categoria", length = 36)
+    private UUID id;
 
     private String nome;
 
     public Categoria() {}
 
-    public Integer getId() {
-        return id;
-    }
+    public UUID getId() {return id;}
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    public void setId(UUID id) {this.id = id;}
 
     public String getNome() {
         return nome;

@@ -7,6 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @Controller
 @RequestMapping("/autoras")
 public class AutoraWebController {
@@ -49,7 +51,7 @@ public class AutoraWebController {
     }
 
     @PostMapping("/excluir/{id}")
-    public String excluir(@PathVariable Integer id, Model model) {
+    public String excluir(@PathVariable UUID id, Model model) {
         try {
             service.deletar(id);
             return "redirect:/autoras/listar";

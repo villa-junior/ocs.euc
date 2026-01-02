@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class AutoraService {
@@ -23,7 +24,7 @@ public class AutoraService {
         return repository.findAll();
     }
 
-    public Optional<Autora> buscarPorId(Integer id) {
+    public Optional<Autora> buscarPorId(UUID id) {
         return repository.findById(id);
     }
 
@@ -32,7 +33,7 @@ public class AutoraService {
     }
 
     @Transactional
-    public void deletar(Integer id) {
+    public void deletar(UUID id) {
 
         Autora autora = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Autora não encontrada"));

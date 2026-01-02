@@ -6,13 +6,14 @@ import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface ObraAutoraRepository
         extends JpaRepository<ObraAutora, ObraAutoraId> {
-    boolean existsByAutora_Id(Integer id);
+    boolean existsByAutora_Id(UUID id);
     @Modifying
     @Query("DELETE FROM ObraAutora oa WHERE oa.obra.id = :idObra")
-    void deleteByObraId(@Param("idObra") Integer idObra);
+    void deleteByObraId(@Param("idObra") UUID idObra);
 
 
     @Query("""
@@ -20,7 +21,7 @@ public interface ObraAutoraRepository
         FROM ObraAutora oa
         WHERE oa.obra.id = :idObra
     """)
-    List<Integer> findAutoraIdsByObraId(@Param("idObra") Integer idObra);
+    List<UUID> findAutoraIdsByObraId(@Param("idObra") UUID idObra);
 
 
     @Query("""
@@ -29,5 +30,5 @@ public interface ObraAutoraRepository
         JOIN oa.autora a
         WHERE oa.obra.id = :idObra
     """)
-    List<String> findNomesAutorasByObraId(@Param("idObra") Integer idObra);
+    List<String> findNomesAutorasByObraId(@Param("idObra") UUID idObra);
 }
