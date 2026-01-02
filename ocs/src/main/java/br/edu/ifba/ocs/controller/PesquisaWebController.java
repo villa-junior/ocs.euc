@@ -40,6 +40,14 @@ public class PesquisaWebController {
             Model model
     ) {
 
+        if (pesquisa.getDataInicio() != null &&
+                pesquisa.getDataFim() != null &&
+                pesquisa.getDataFim().isBefore(pesquisa.getDataInicio()))
+        {
+            result.rejectValue("dataFim", "dataFim.invalida", "A data de fim não pode ser anterior à data de início.");
+        }
+
+
         if (pesquisa.getStatus() == Status.EM_ANDAMENTO && pesquisa.getDataFim() != null) {
             result.rejectValue("dataFim", "dataFim.invalida", "Pesquisa em andamento NÃO pode ter data de fim preenchida!");
         }
@@ -49,19 +57,10 @@ public class PesquisaWebController {
             return "pesquisas/cadastrar";
         }
 
-
-        try {
-            service.salvar(pesquisa);
-            model.addAttribute("mensagem", "Pesquisa salva com sucesso!");
-            return "redirect:/pesquisas/" + pesquisa.getStatus();
-        } catch (IllegalArgumentException ex) {
-
-            result.rejectValue("dataFim", "dataFim.invalida", ex.getMessage());
-            model.addAttribute("hoje", java.time.LocalDate.now());
-            return "pesquisas/cadastrar";
-        }
+        service.salvar(pesquisa);
+        model.addAttribute("mensagem", "Pesquisa salva com sucesso!");
+        return "redirect:/pesquisas/" + pesquisa.getStatus();
     }
-
 
     @GetMapping("/editar/{id}")
     public String editar(@PathVariable Integer id, Model model) {

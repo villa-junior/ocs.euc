@@ -71,6 +71,15 @@
             background: #1b3a57;
             color: white;
         }
+        .alerta-erro {
+            background-color: #fdecea;
+            color: #611a15;
+            border: 1px solid #f5c2c7;
+            padding: 12px;
+            margin: 15px;
+            border-radius: 6px;
+            font-weight: bold;
+        }
     </style>
 </head>
 
@@ -78,6 +87,7 @@
 <header>
     <h1>Cadastro de Pesquisa</h1>
 </header>
+
 <nav><a th:href="@{/}">Página Principal</a></nav>
 <div class="container">
 
@@ -87,6 +97,11 @@
     <div th:if="${erro}" style="color:red" th:text="${erro}"></div>
 
     <form th:action="@{/pesquisas}" method="post" th:object="${pesquisa}">
+        <div th:if="${#fields.hasAnyErrors()}" class="alerta-erro">
+            <ul>
+                <li th:each="err : ${#fields.errors()}" th:text="${err}"></li>
+            </ul>
+        </div>
         <input type="hidden" th:field="*{id}" />
         <label>Título</label>
         <input type="text" th:field="*{titulo}" required />
@@ -108,7 +123,7 @@
                th:field="*{dataInicio}"
                th:attr="max=${hoje}"
                required />
-        <div th:errors="*{dataInicio}" style="color:red"></div>
+
 
         <label>Data de Fim <span style="font-weight:normal; font-size:0.87em; color:#888;">
     (preencha apenas se o status for "Concluída")
@@ -118,7 +133,8 @@
         <input type="date"
                th:field="*{dataFim}"
                th:attr="max=${hoje}" />
-        <div th:errors="*{dataFim}" style="color:red"></div>
+
+
         <label>URL Participante</label>
         <input type="url" th:field="*{urlParticipante}" />
 
@@ -131,5 +147,16 @@
         <button type="submit" class="btn btn-primary">Salvar Pesquisa</button>
     </form>
 </div>
+
+<div vw class="enabled">
+    <div vw-access-button class="active"></div>
+    <div vw-plugin-wrapper>
+        <div class="vw-plugin-top-wrapper"></div>
+    </div>
+</div>
+<script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+<script>
+    new window.VLibras.Widget('https://vlibras.gov.br/app');
+</script>
 </body>
 </html>
