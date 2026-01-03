@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 <head>
     <meta charset="UTF-8">
     <title>Lista de Obras</title>
@@ -107,7 +109,10 @@
 
     <h2 th:text="${categoria != null ? categoria.nome : 'Todas as Obras'}"></h2>
 
-    <a th:href="@{/obras/cadastrar}" class="btn btn-primary">
+
+    <a sec:authorize="hasRole('ADMIN')"
+       th:href="@{/obras/cadastrar}"
+       class="btn btn-primary">
         Cadastrar Obra
     </a>
 
@@ -117,22 +122,20 @@
             <th>Obra</th>
             <th>Categoria</th>
             <th>Autoras</th>
-            <th>Ações</th>
+
+            <th sec:authorize="hasRole('ADMIN')">Ações</th>
         </tr>
         </thead>
 
         <tbody>
         <tr th:each="o : ${obras}">
 
-
             <td>
-
-
                 <a th:if="${o.urlArquivo != null and !#strings.isEmpty(o.urlArquivo)}"
                    th:href="${o.urlArquivo}"
                    target="_blank"
                    style="color:#1b3a57; font-weight:bold; text-decoration:none;">
-                     <span th:text="${o.titulo}"></span>
+                    <span th:text="${o.titulo}"></span>
                 </a>
 
                 <span th:if="${o.urlArquivo == null or #strings.isEmpty(o.urlArquivo)}"
@@ -140,21 +143,17 @@
                       th:text="${o.titulo}">
                 </span>
 
-
                 <div th:if="${o.resumo != null}"
                      style="color:#666; font-size:0.85rem; margin-top:4px;">
                     <span th:text="${#strings.abbreviate(o.resumo, 150)}"></span>
                 </div>
-
 
                 <div style="font-size:0.8rem; color:#888;">
                     Ano de publicação:
                     <span th:text="${o.anoPublicacao != null ? o.anoPublicacao : '—'}"></span>
                 </div>
 
-
-                <div th:if="${o.palavrasChave != null}"
-                     style="margin-top:4px;">
+                <div th:if="${o.palavrasChave != null}" style="margin-top:4px;">
                     <span th:each="palavra : ${#strings.arraySplit(o.palavrasChave, ',')}">
                         <span style="background:#eef3f7;
                                      padding:2px 6px;
@@ -165,7 +164,6 @@
                         </span>
                     </span>
                 </div>
-
             </td>
 
             <td th:text="${o.categoria != null ? o.categoria.nome : '—'}"></td>
@@ -177,7 +175,8 @@
                 <span th:if="${autorasPorObra[o.id] == null || autorasPorObra[o.id].isEmpty()}">—</span>
             </td>
 
-            <td>
+
+            <td sec:authorize="hasRole('ADMIN')">
                 <a class="btn btn-primary"
                    th:href="@{/obras/editar/{id}(id=${o.id})}">
                     Editar
@@ -201,12 +200,15 @@
     </table>
 
 </div>
+
+
 <div vw class="enabled">
     <div vw-access-button class="active"></div>
     <div vw-plugin-wrapper>
         <div class="vw-plugin-top-wrapper"></div>
     </div>
 </div>
+
 <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
 <script>
     new window.VLibras.Widget('https://vlibras.gov.br/app');

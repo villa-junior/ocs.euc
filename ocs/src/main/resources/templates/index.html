@@ -1,219 +1,295 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Observatório da Comunidade Surda</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Observatório da Comunidade Surda</title>
 
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f7f7f7;
-      color: #333;
-    }
+    <style>
+        body {
+          margin: 0;
+          font-family: Arial, sans-serif;
+          background: #f7f7f7;
+          color: #333;
+        }
 
-    header {
-      background: #1b3a57;
-      color: white;
-      padding: 20px;
-      text-align: center;
-    }
+        /* ===== HEADER ===== */
+        header {
+          background: #1b3a57;
+          color: white;
+          padding: 20px;
+        }
 
+        .header-top {
+          display: grid;
+          grid-template-columns: 1fr auto 1fr;
+          align-items: center;
+        }
 
-    nav {
-      background: #153049;
-      padding: 10px;
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-    }
+        .header-top h1 {
+          grid-column: 2;
+          margin: 0;
+          text-align: center;
+          font-size: 1.8rem;
+        }
 
-    nav a {
-      color: white;
-      text-decoration: none;
-      font-weight: bold;
-      padding: 6px 10px;
-      transition: transform 0.2s ease;
-    }
+        .auth-buttons {
+          grid-column: 3;
+          display: flex;
+          justify-content: flex-end;
+          gap: 12px;
+        }
 
+        .auth-buttons a,
+        .auth-buttons button {
+          text-decoration: none;
+          padding: 8px 16px;
+          border-radius: 20px;
+          font-weight: bold;
+          font-size: 0.9rem;
+          border: 2px solid transparent;
+          cursor: pointer;
+          transition: all 0.25s ease;
+          background: none;
+        }
 
-    nav a:hover {
-      transform: translateY(4px);
-    }
+        .btn-entrar {
+          color: white;
+          border-color: white;
+        }
 
-    .banner {
-      background-color: #1b3a57;
-      padding: 60px 20px;
-      text-align: center;
-      color: white;
-    }
+        .btn-entrar:hover {
+          background: white;
+          color: #1b3a57;
+        }
 
-    .section {
-      padding: 40px 20px;
-      max-width: 1000px;
-      margin: auto;
-    }
+        .btn-cadastrar {
+          background: #2d5f8b;
+          color: white;
+        }
 
+        .btn-cadastrar:hover {
+          background: #244c6f;
+          transform: translateY(-1px);
+        }
 
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      column-gap: 20px;
-      row-gap: 30px;
-    }
+        .btn-logout {
+          background: #b00020;
+          color: white;
+          border-color: #b00020;
+        }
 
-    .card-link {
-      text-decoration: none;
-      color: inherit;
-    }
+        .btn-logout:hover {
+          background: #7a0016;
+        }
 
-    .card {
-      background: white;
-      padding: 18px;
-      border-radius: 12px;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.07);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-      cursor: pointer;
-      height: 100%;
-      border-left: 4px solid transparent;
-    }
+        /* ===== NAV ===== */
+        nav {
+          background: #153049;
+          padding: 10px;
+          display: flex;
+          justify-content: center;
+          gap: 20px;
+        }
 
-    .card h3 {
-      margin-top: 0;
-      font-size: 1.2rem;
-      color: #1b3a57;
-    }
+        nav a {
+          color: white;
+          text-decoration: none;
+          font-weight: bold;
+          padding: 6px 10px;
+          transition: transform 0.2s ease;
+        }
 
-    .card p {
-      font-size: 0.9rem;
-      color: #555;
-    }
+        nav a:hover {
+          transform: translateY(3px);
+        }
 
+        /* ===== BANNER ===== */
+        .banner {
+          background-color: #1b3a57;
+          padding: 60px 20px;
+          text-align: center;
+          color: white;
+        }
 
-    .card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 6px 14px rgba(27, 58, 87, 0.18);
-      border-left: 4px solid #1b3a57;
-      background: #f4f8fc;
-    }
+        /* ===== SECTIONS ===== */
+        .section {
+          padding: 40px 20px;
+          max-width: 1000px;
+          margin: auto;
+        }
 
-    footer {
-      margin-top: 40px;
-      background: #1b3a57;
-      color: white;
-      padding: 20px;
-      text-align: center;
-    }
-  </style>
+        .cards {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+          gap: 30px;
+        }
+
+        .card-link {
+          text-decoration: none;
+          color: inherit;
+        }
+
+        .card {
+          background: white;
+          padding: 18px;
+          border-radius: 12px;
+          box-shadow: 0 3px 8px rgba(0,0,0,0.07);
+          transition: transform 0.2s ease, box-shadow 0.2s ease;
+          cursor: pointer;
+          height: 100%;
+          border-left: 4px solid transparent;
+        }
+
+        .card h3 {
+          margin-top: 0;
+          font-size: 1.2rem;
+          color: #1b3a57;
+        }
+
+        .card p {
+          font-size: 0.9rem;
+          color: #555;
+        }
+
+        .card:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 6px 14px rgba(27, 58, 87, 0.18);
+          border-left: 4px solid #1b3a57;
+          background: #f4f8fc;
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+          margin-top: 40px;
+          background: #1b3a57;
+          color: white;
+          padding: 20px;
+          text-align: center;
+        }
+    </style>
 </head>
 
 <body>
 
 <header>
-  <h1>OCS.EUC - Observatório da Comunidade Surda</h1>
+    <div class="header-top">
+
+        <h1>OCS.EUC - Observatório da Comunidade Surda</h1>
+
+        <div class="auth-buttons">
+
+            <div sec:authorize="!isAuthenticated()">
+                <a th:href="@{/login}" class="btn-entrar">Entrar</a>
+                <a th:href="@{/contas/nova}" class="btn-cadastrar">Cadastrar</a>
+            </div>
+
+            <div sec:authorize="isAuthenticated()">
+                <form th:action="@{/logout}" method="post" style="display:inline">
+                    <button type="submit" class="btn-logout">Sair</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
 </header>
 
 <nav>
-  <a href="#sobre">Sobre</a>
-  <a href="#obras">Acervo</a>
-  <a href="#pesquisas">Pesquisas</a>
-  <a href="#legislacao">Legislação</a>
+    <a href="#sobre">Sobre</a>
+    <a href="#obras">Acervo</a>
+    <a href="#pesquisas">Pesquisas</a>
+    <a href="#legislacao">Legislação</a>
 </nav>
 
 <div class="banner">
-  <h2>Conhecimento acessível para fortalecer a comunidade surda</h2>
-  <p>Repositório de livros, artigos, pesquisas, legislações e materiais audiovisuais.</p>
+    <h2>Conhecimento acessível para fortalecer a comunidade surda</h2>
+    <p>Repositório de livros, artigos, pesquisas, legislações e materiais audiovisuais.</p>
 </div>
 
 <section id="sobre" class="section">
-  <h2>Sobre o Observatório</h2>
-    <p>O Observatório da Comunidade Surda é uma plataforma dedicada à reunião, organização e divulgação de produções acadêmicas, culturais e institucionais relacionadas à comunidade surda, com foco especial em Euclides da Cunha - BA e região. Nosso objetivo é democratizar o acesso ao conhecimento e apoiar ações de desenvolvimento regional por meio da ciência e tecnologia.</p>
-  <a th:href="@{/sobre}" class="card-link">
-    <div class="card">
-      <h3>Mais Informações</h3>
-    </div>
-  </a>
+    <h2>Sobre o Observatório</h2>
+    <p>
+        O Observatório da Comunidade Surda é uma plataforma dedicada à reunião,
+        organização e divulgação de produções acadêmicas, culturais e institucionais.
+    </p>
+    <a th:href="@{/sobre}" class="card-link">
+        <div class="card">
+            <h3>Mais Informações</h3>
+        </div>
+    </a>
 </section>
 
 <section id="obras" class="section">
-  <h2>Acervo de Obras</h2>
+    <h2>Acervo de Obras</h2>
 
-  <div class="cards">
+    <div class="cards">
+        <a th:href="@{/obras/categoria/048f53a5-e8d8-11f0-aa61-5e6bbc2bdd97}" class="card-link">
+            <div class="card">
+                <h3>Livros</h3>
+                <p>Obras completas em PDF.</p>
+            </div>
+        </a>
 
-    <a th:href="@{/obras/categoria/a4407733-e77b-11f0-aa61-5e6bbc2bdd97}" class="card-link">
-      <div class="card">
-        <h3>Livros</h3>
-        <p>Obras completas em PDF relacionadas à comunidade surda.</p>
-      </div>
-    </a>
+        <a th:href="@{/obras/categoria/04900713-e8d8-11f0-aa61-5e6bbc2bdd97}" class="card-link">
+            <div class="card">
+                <h3>Artigos</h3>
+                <p>Publicações científicas.</p>
+            </div>
+        </a>
 
-    <a th:href="@{/obras/categoria/a4408133-e77b-11f0-aa61-5e6bbc2bdd97}" class="card-link">
-      <div class="card">
-        <h3>Artigos</h3>
-        <p>Publicações científicas e acadêmicas.</p>
-      </div>
-    </a>
+        <a th:href="@{/obras/categoria/0490181d-e8d8-11f0-aa61-5e6bbc2bdd97}" class="card-link">
+            <div class="card">
+                <h3>Manuais</h3>
+                <p>Materiais educativos.</p>
+            </div>
+        </a>
 
-    <a th:href="@{/obras/categoria/a44082b7-e77b-11f0-aa61-5e6bbc2bdd97}" class="card-link">
-      <div class="card">
-        <h3>Manuais</h3>
-        <p>Materiais instrucionais e educativos.</p>
-      </div>
-    </a>
-
-    <a th:href="@{/obras/categoria/a4408302-e77b-11f0-aa61-5e6bbc2bdd97}" class="card-link">
-      <div class="card">
-        <h3>Audiovisuais</h3>
-        <p>Vídeos, entrevistas e conteúdos em Libras.</p>
-      </div>
-    </a>
-
-  </div>
+        <a th:href="@{/obras/categoria/04902238-e8d8-11f0-aa61-5e6bbc2bdd97}" class="card-link">
+            <div class="card">
+                <h3>Audiovisuais</h3>
+                <p>Conteúdos em Libras.</p>
+            </div>
+        </a>
+    </div>
 </section>
 
 <section id="pesquisas" class="section">
-  <h2>Pesquisas</h2>
-
-  <div class="cards">
-    <a th:href="@{/pesquisas/EM_ANDAMENTO}" class="card-link">
-      <div class="card">
-        <h3>Pesquisas em andamento</h3>
-      </div>
-    </a>
-
-    <a th:href="@{/pesquisas/CONCLUIDA}" class="card-link">
-      <div class="card">
-        <h3>Pesquisas concluídas</h3>
-      </div>
-    </a>
-  </div>
+    <h2>Pesquisas</h2>
+    <div class="cards">
+        <a th:href="@{/pesquisas/EM_ANDAMENTO}" class="card-link">
+            <div class="card"><h3>Em andamento</h3></div>
+        </a>
+        <a th:href="@{/pesquisas/CONCLUIDA}" class="card-link">
+            <div class="card"><h3>Concluídas</h3></div>
+        </a>
+    </div>
 </section>
 
 <section id="legislacao" class="section">
-  <h2>Legislação</h2>
-
-  <a th:href="@{/legislacoes}" class="card-link">
-    <div class="card">
-      <h3>Acessar legislação</h3>
-    </div>
-  </a>
+    <h2>Legislação</h2>
+    <a th:href="@{/legislacoes}" class="card-link">
+        <div class="card">
+            <h3>Acessar legislação</h3>
+        </div>
+    </a>
 </section>
 
-
 <footer>
-  <p>© 2025 Observatório da Comunidade Surda — IFBA Euclides da Cunha</p>
+    <p>© 2025 Observatório da Comunidade Surda — IFBA Euclides da Cunha</p>
 </footer>
 
 <div vw class="enabled">
-  <div vw-access-button class="active"></div>
-  <div vw-plugin-wrapper>
-    <div class="vw-plugin-top-wrapper"></div>
-  </div>
+    <div vw-access-button class="active"></div>
+    <div vw-plugin-wrapper>
+        <div class="vw-plugin-top-wrapper"></div>
+    </div>
 </div>
+
 <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
 <script>
-  new window.VLibras.Widget('https://vlibras.gov.br/app');
+    new window.VLibras.Widget('https://vlibras.gov.br/app');
 </script>
+
 </body>
 </html>

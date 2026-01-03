@@ -53,11 +53,10 @@ public class Pesquisa {
     @Column(name = "arquivo_resultados")
     private String arquivoResultados;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JdbcTypeCode(SqlTypes.CHAR)
-    @JoinColumn(name = "id_conta")
+    @JoinColumn(name = "id_conta", nullable = false)
     private Conta conta;
-
     public Pesquisa() {}
 
     @PrePersist

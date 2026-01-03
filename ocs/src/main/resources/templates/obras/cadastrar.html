@@ -165,7 +165,7 @@
 
 <nav>
     <a th:href="@{/}">Página Principal</a>
-    <a th:href="@{/obras}">Obras</a>
+
 </nav>
 
 <div class="container">
@@ -175,7 +175,7 @@
           method="post"
           th:object="${obra}">
 
-        <!-- ERROS (sempre dentro do form) -->
+
         <div th:if="${#fields.hasAnyErrors()}" class="alerta-erro">
             <ul>
                 <li th:each="err : ${#fields.errors()}" th:text="${err}"></li>
@@ -224,7 +224,7 @@
             </select>
         </div>
 
-        <!-- SELEÇÃO DE AUTORAS (JS MANTIDO) -->
+
         <div class="section">
             <h3>Selecionar Autoras</h3>
 

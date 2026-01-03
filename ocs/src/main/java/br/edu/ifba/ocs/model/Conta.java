@@ -1,6 +1,5 @@
 package br.edu.ifba.ocs.model;
 
-
 import jakarta.persistence.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
@@ -25,7 +24,9 @@ public class Conta {
     @Column(name = "senha_hash")
     private String senhaHash;
 
-    private String perfil;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Perfil perfil;
 
     private String instituicao;
 
@@ -35,43 +36,23 @@ public class Conta {
 
     public void setId(UUID id) {this.id = id;}
 
-    public String getNome() {
-        return nome;
-    }
+    public String getNome() {return nome;}
 
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
+    public void setNome(String nome) {this.nome = nome;}
 
-    public String getEmail() {
-        return email;
-    }
+    public String getEmail() {return email;}
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+    public void setEmail(String email) {this.email = email;}
 
-    public String getSenhaHash() {
-        return senhaHash;
-    }
+    public String getSenhaHash() {return senhaHash;}
 
-    public void setSenhaHash(String senhaHash) {
-        this.senhaHash = senhaHash;
-    }
+    public void setSenhaHash(String senhaHash) {this.senhaHash = senhaHash;}
 
-    public String getPerfil() {
-        return perfil;
-    }
+    public String getInstituicao() {return instituicao;}
 
-    public void setPerfil(String perfil) {
-        this.perfil = perfil;
-    }
+    public void setInstituicao(String instituicao) {this.instituicao = instituicao;}
 
-    public String getInstituicao() {
-        return instituicao;
-    }
+    public Perfil getPerfil() {return perfil;}
 
-    public void setInstituicao(String instituicao) {
-        this.instituicao = instituicao;
-    }
+    public void setPerfil(Perfil perfil) {this.perfil = perfil;}
 }

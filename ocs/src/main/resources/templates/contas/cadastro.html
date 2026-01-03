@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Login - OCS</title>
+    <title>Cadastrar Conta - OCS</title>
 
     <style>
         body {
@@ -20,8 +20,8 @@
         }
 
         .container {
-            max-width: 420px;
-            margin: 60px auto;
+            max-width: 520px;
+            margin: 40px auto;
             background: white;
             padding: 30px;
             border-radius: 14px;
@@ -30,16 +30,18 @@
 
         h2 {
             color: #1b3a57;
+            margin-top: 0;
             text-align: center;
         }
 
         label {
-            margin-top: 15px;
             display: block;
+            margin-top: 15px;
             font-weight: bold;
+            color: #1b3a57;
         }
 
-        input {
+        input, select {
             width: 100%;
             padding: 10px;
             margin-top: 6px;
@@ -49,24 +51,32 @@
 
         .btn {
             margin-top: 25px;
-            width: 100%;
-            padding: 10px;
+            padding: 10px 16px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
             font-weight: bold;
+            width: 100%;
+        }
+
+        .btn-primary {
             background: #1b3a57;
             color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            background: #153049;
         }
 
         .alerta-erro {
-            background: #fdecea;
+            background-color: #fdecea;
             color: #611a15;
+            border: 1px solid #f5c2c7;
             padding: 12px;
+            margin-bottom: 20px;
             border-radius: 6px;
-            margin-bottom: 15px;
-            text-align: center;
             font-weight: bold;
+            text-align: center;
         }
     </style>
 </head>
@@ -79,30 +89,38 @@
 
 <div class="container">
 
-    <h2>Login</h2>
+    <h2>Cadastrar Conta</h2>
 
-    <div th:if="${param.error}" class="alerta-erro">
-        E-mail ou senha inválidos
-    </div>
+    <div th:if="${erro}" class="alerta-erro" th:text="${erro}"></div>
 
-    <div th:if="${param.logout}" class="alerta-erro">
-        Logout realizado com sucesso
-    </div>
+    <form th:action="@{/contas/salvar}" th:object="${conta}" method="post">
 
+        <label>Nome</label>
+        <input type="text" th:field="*{nome}" required>
 
-    <form th:action="@{/login}" method="post">
+        <label>Email</label>
+        <input type="email" th:field="*{email}" required>
 
-        <label for="username">E-mail</label>
-        <input type="text" id="username" name="username" required>
+        <label>Senha</label>
+        <input type="password" th:field="*{senha}" required>
 
-        <label for="password">Senha</label>
-        <input type="password" id="password" name="password" required>
+        <label>Perfil</label>
+        <select th:field="*{perfil}" required>
+            <option value="">Selecione</option>
+            <option th:each="p : ${perfis}"
+                    th:value="${p}"
+                    th:text="${p}">
+            </option>
+        </select>
 
-        <button type="submit" class="btn">
-            Entrar
+        <label>Instituição</label>
+        <input type="text" th:field="*{instituicao}">
+
+        <button type="submit" class="btn btn-primary">
+            Cadastrar
         </button>
-    </form>
 
+    </form>
 </div>
 
 <div vw class="enabled">
