@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin - Pesquisadores Pendentes</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f7f7f7;
+            margin: 0;
+        }
+
+        header {
+            background: #1b3a57;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background: #1b3a57;
+            color: white;
+        }
+
+
+        .btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+
+        .btn-aprovar {
+            background: #2e7d32;
+            color: white;
+        }
+
+        .btn-rejeitar {
+            background: #c62828;
+            color: white;
+        }
+    </style>
+</head>
+
+
+<body>
+
+<header>
+    <h1>Administração - Pesquisadores</h1>
+</header>
+
+<div class="container">
+
+    <h2>Pesquisadores pendentes de validação</h2>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Email</th>
+            <th>Instituição</th>
+            <th>Ações</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="p : ${pesquisadores}">
+            <td th:text="${p.nome}"></td>
+            <td th:text="${p.email}"></td>
+            <td th:text="${p.instituicao}"></td>
+            <td>
+                <form th:action="@{/admin/pesquisadores/{id}/aprovar(id=${p.id})}"
+                      method="post" style="display:inline">
+                    <button class="btn btn-aprovar">Aprovar</button>
+                </form>
+
+                <form th:action="@{/admin/pesquisadores/{id}/rejeitar(id=${p.id})}"
+                      method="post" style="display:inline">
+                    <button class="btn btn-rejeitar">Rejeitar</button>
+                </form>
+            </td>
+        </tr>
+
+        <tr th:if="${#lists.isEmpty(pesquisadores)}">
+            <td colspan="4">Nenhum pesquisador pendente.</td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+<div vw class="enabled">
+    <div vw-access-button class="active"></div>
+    <div vw-plugin-wrapper>
+        <div class="vw-plugin-top-wrapper"></div>
+    </div>
+</div>
+
+<script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+<script>
+    new window.VLibras.Widget('https://vlibras.gov.br/app');
+</script>
+
+</body>
+</html>

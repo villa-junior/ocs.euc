@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Pesquisas</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f7f7f7;
+            color: #333;
+        }
+
+        header {
+            background: #1b3a57;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        nav {
+            background: #153049;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 30px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 14px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+        }
+
+        h2 {
+            color: #1b3a57;
+            margin-top: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 0.95rem;
+        }
+
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #e0e0e0;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        th {
+            background: #f2f5f8;
+            color: #1b3a57;
+        }
+
+        tr:hover {
+            background: #f8fbfe;
+        }
+
+        .btn {
+            padding: 6px 10px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            text-decoration: none;
+            font-size: 0.85rem;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: #1b3a57;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #333;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>Pesquisas</h1>
+</header>
+
+<nav>
+    <a th:href="@{/}">Página Principal</a>
+</nav>
+
+<div class="container">
+
+    <h2 th:text="${status == T(br.edu.ifba.ocs.model.Pesquisa.Status).EM_ANDAMENTO
+        ? 'Pesquisas em andamento'
+        : 'Pesquisas concluídas'}">
+    </h2>
+
+
+    <div sec:authorize="hasAnyRole('ADMIN','PESQUISADOR')">
+        <a th:href="@{/pesquisas/cadastrar}" class="btn btn-primary">
+            Cadastrar Pesquisa
+        </a>
+    </div>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Pesquisa</th>
+            <th>Anos</th>
+            <th sec:authorize="hasAnyRole('ADMIN','PESQUISADOR')">Ações</th>
+        </tr>
+        </thead>
+
+        <tbody>
+
+        <tr th:if="${#lists.isEmpty(pesquisas)}">
+            <td colspan="3">Nenhuma pesquisa encontrada.</td>
+        </tr>
+
+        <tr th:each="p : ${pesquisas}">
+
+
+            <td>
+                <a th:if="${p.arquivoResultados != null and !#strings.isEmpty(p.arquivoResultados)}"
+                   th:href="${p.arquivoResultados}"
+                   target="_blank"
+                   style="color:#1b3a57; font-weight:bold; text-decoration:none;">
+                    <span th:text="${p.titulo}"></span>
+                </a>
+
+                <span th:if="${p.arquivoResultados == null or #strings.isEmpty(p.arquivoResultados)}"
+                      style="font-weight:bold;"
+                      th:text="${p.titulo}">
+                </span>
+
+                <div style="font-size:0.8rem; margin-top:4px;">
+                    <div th:if="${p.urlParticipante != null}">
+                        Participante:
+                        <a th:href="${p.urlParticipante}" target="_blank">acessar</a>
+                    </div>
+
+                    <div th:if="${p.urlOrganizador != null}">
+                        Organizador:
+                        <a th:href="${p.urlOrganizador}" target="_blank">acessar</a>
+                    </div>
+                </div>
+            </td>
+
+
+            <td>
+                <div>
+                    Início:
+                    <span th:text="${p.dataInicio != null ? p.dataInicio.year : '—'}"></span>
+                </div>
+
+                <div th:if="${p.status == T(br.edu.ifba.ocs.model.Pesquisa.Status).CONCLUIDA}">
+                    Conclusão:
+                    <span th:text="${p.dataFim != null ? p.dataFim.year : '—'}"></span>
+                </div>
+            </td>
+
+            <td sec:authorize="hasAnyRole('ADMIN','PESQUISADOR')">
+
+                <div sec:authorize="hasRole('ADMIN')">
+                    <a class="btn btn-primary"
+                       th:href="@{/pesquisas/editar/{id}(id=${p.id})}">
+                        Editar
+                    </a>
+
+                    <form th:action="@{/pesquisas/excluir/{id}(id=${p.id})}"
+                          method="post"
+                          style="display:inline">
+                        <input type="hidden" name="status" th:value="${p.status}" />
+                        <button type="submit" class="btn btn-secondary"
+                                onclick="return confirm('Deseja excluir esta pesquisa?')">
+                            Excluir
+                        </button>
+                    </form>
+                </div>
+
+
+                <div sec:authorize="hasRole('PESQUISADOR')"
+                     th:if="${p.conta != null and idContaLogada != null and p.conta.id == idContaLogada}">
+
+                    <a class="btn btn-primary"
+                       th:href="@{/pesquisas/editar/{id}(id=${p.id})}">
+                        Editar
+                    </a>
+
+                    <form th:action="@{/pesquisas/excluir/{id}(id=${p.id})}"
+                          method="post"
+                          style="display:inline">
+                        <input type="hidden" name="status" th:value="${p.status}" />
+                        <button type="submit" class="btn btn-secondary"
+                                onclick="return confirm('Deseja excluir esta pesquisa?')">
+                            Excluir
+                        </button>
+                    </form>
+                </div>
+
+            </td>
+
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+
+<div vw class="enabled">
+    <div vw-access-button class="active"></div>
+    <div vw-plugin-wrapper>
+        <div class="vw-plugin-top-wrapper"></div>
+    </div>
+</div>
+
+<script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+<script>
+    new window.VLibras.Widget('https://vlibras.gov.br/app');
+</script>
+
+</body>
+</html>

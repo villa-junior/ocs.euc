@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Obras</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f7f7f7;
+            color: #333;
+        }
+
+        header {
+            background: #1b3a57;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        nav {
+            background: #153049;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 30px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 14px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+        }
+
+        h2 {
+            color: #1b3a57;
+            margin-top: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 0.95rem;
+        }
+
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #e0e0e0;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        th {
+            background: #f2f5f8;
+            color: #1b3a57;
+        }
+
+        tr:hover {
+            background: #f8fbfe;
+        }
+
+        .btn {
+            padding: 6px 10px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            text-decoration: none;
+            font-size: 0.85rem;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: #1b3a57;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #333;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>Acervo de Obras</h1>
+</header>
+
+<nav>
+    <a th:href="@{/}">Página Principal</a>
+</nav>
+
+<div class="container">
+
+    <h2 th:text="${categoria != null ? categoria.nome : 'Todas as Obras'}"></h2>
+
+
+    <a sec:authorize="hasRole('ADMIN')"
+       th:href="@{/obras/cadastrar}"
+       class="btn btn-primary">
+        Cadastrar Obra
+    </a>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Obra</th>
+            <th>Categoria</th>
+            <th>Autoras</th>
+
+            <th sec:authorize="hasRole('ADMIN')">Ações</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="o : ${obras}">
+
+            <td>
+                <a th:if="${o.urlArquivo != null and !#strings.isEmpty(o.urlArquivo)}"
+                   th:href="${o.urlArquivo}"
+                   target="_blank"
+                   style="color:#1b3a57; font-weight:bold; text-decoration:none;">
+                    <span th:text="${o.titulo}"></span>
+                </a>
+
+                <span th:if="${o.urlArquivo == null or #strings.isEmpty(o.urlArquivo)}"
+                      style="font-weight:bold;"
+                      th:text="${o.titulo}">
+                </span>
+
+                <div th:if="${o.resumo != null}"
+                     style="color:#666; font-size:0.85rem; margin-top:4px;">
+                    <span th:text="${#strings.abbreviate(o.resumo, 150)}"></span>
+                </div>
+
+                <div style="font-size:0.8rem; color:#888;">
+                    Ano de publicação:
+                    <span th:text="${o.anoPublicacao != null ? o.anoPublicacao : '—'}"></span>
+                </div>
+
+                <div th:if="${o.palavrasChave != null}" style="margin-top:4px;">
+                    <span th:each="palavra : ${#strings.arraySplit(o.palavrasChave, ',')}">
+                        <span style="background:#eef3f7;
+                                     padding:2px 6px;
+                                     border-radius:6px;
+                                     font-size:0.75rem;
+                                     margin-right:4px;">
+                            <span th:text="${palavra.trim()}"></span>
+                        </span>
+                    </span>
+                </div>
+            </td>
+
+            <td th:text="${o.categoria != null ? o.categoria.nome : '—'}"></td>
+
+            <td>
+                <span th:each="nome, stat : ${autorasPorObra[o.id]}">
+                    <span th:text="${nome}"></span><span th:if="${!stat.last}">, </span>
+                </span>
+                <span th:if="${autorasPorObra[o.id] == null || autorasPorObra[o.id].isEmpty()}">—</span>
+            </td>
+
+
+            <td sec:authorize="hasRole('ADMIN')">
+                <a class="btn btn-primary"
+                   th:href="@{/obras/editar/{id}(id=${o.id})}">
+                    Editar
+                </a>
+
+                <form th:action="@{/obras/excluir/{id}(id=${o.id})}"
+                      method="post"
+                      style="display:inline">
+
+                    <input type="hidden" name="categoriaId"
+                           th:value="${o.categoria.id}" />
+
+                    <button type="submit" class="btn btn-secondary">
+                        Excluir
+                    </button>
+                </form>
+            </td>
+
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+
+
+<div vw class="enabled">
+    <div vw-access-button class="active"></div>
+    <div vw-plugin-wrapper>
+        <div class="vw-plugin-top-wrapper"></div>
+    </div>
+</div>
+
+<script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+<script>
+    new window.VLibras.Widget('https://vlibras.gov.br/app');
+</script>
+
+</body>
+</html>

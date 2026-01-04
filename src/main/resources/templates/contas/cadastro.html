@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Cadastrar Conta - OCS</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f7f7f7;
+            color: #333;
+        }
+
+        header {
+            background: #1b3a57;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 520px;
+            margin: 40px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 14px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+        }
+
+        h2 {
+            color: #1b3a57;
+            margin-top: 0;
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+            color: #1b3a57;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 6px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+
+        .btn {
+            margin-top: 25px;
+            padding: 10px 16px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            width: 100%;
+        }
+
+        .btn-primary {
+            background: #1b3a57;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #153049;
+        }
+
+        .alerta-erro {
+            background-color: #fdecea;
+            color: #611a15;
+            border: 1px solid #f5c2c7;
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            font-weight: bold;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>OCS</h1>
+</header>
+
+<div class="container">
+
+    <h2>Cadastrar Conta</h2>
+
+    <div th:if="${erro}" class="alerta-erro" th:text="${erro}"></div>
+
+    <form th:action="@{/contas/salvar}" th:object="${conta}" method="post">
+
+        <label>Nome</label>
+        <input type="text" th:field="*{nome}" required>
+
+        <label>Email</label>
+        <input type="email" th:field="*{email}" required>
+
+        <label>Senha</label>
+        <input type="password" th:field="*{senha}" required>
+
+        <label>Perfil</label>
+        <select th:field="*{perfilDesejado}" required>
+            <option value="">Selecione</option>
+            <option th:each="p : ${perfis}"
+                    th:value="${p.name()}"
+                    th:text="${p}">
+            </option>
+        </select>
+
+
+        </select>
+
+        <label>Instituição</label>
+        <input type="text" th:field="*{instituicao}">
+
+        <button type="submit" class="btn btn-primary">
+            Cadastrar
+        </button>
+
+    </form>
+</div>
+
+<div vw class="enabled">
+    <div vw-access-button class="active"></div>
+    <div vw-plugin-wrapper>
+        <div class="vw-plugin-top-wrapper"></div>
+    </div>
+</div>
+
+<script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+<script>
+    new window.VLibras.Widget('https://vlibras.gov.br/app');
+</script>
+
+</body>
+</html>

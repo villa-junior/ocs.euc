@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - OCS</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f7f7f7;
+            color: #333;
+        }
+
+        header {
+            background: #1b3a57;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 420px;
+            margin: 60px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 14px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+        }
+
+        h2 {
+            color: #1b3a57;
+            text-align: center;
+        }
+
+        label {
+            margin-top: 15px;
+            display: block;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 6px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+
+        .btn {
+            margin-top: 25px;
+            width: 100%;
+            padding: 10px;
+            font-weight: bold;
+            background: #1b3a57;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .alerta-erro {
+            background: #fdecea;
+            color: #611a15;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            text-align: center;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>OCS</h1>
+</header>
+
+<div class="container">
+
+    <h2>Login</h2>
+
+
+    <div th:if="${param.pedidoEmAnalise}" class="alerta-erro">
+        Seu cadastro como pesquisador está em análise pelo administrador.
+    </div>
+
+
+    <div th:if="${param.error}" class="alerta-erro">
+        E-mail ou senha inválidos, ou cadastro ainda não validado.
+    </div>
+
+    <!-- 🟢 LOGOUT -->
+    <div th:if="${param.logout}" class="alerta-erro">
+        Logout realizado com sucesso.
+    </div>
+
+    <form th:action="@{/login}" method="post">
+
+        <label for="username">E-mail</label>
+        <input type="text" id="username" name="username" required>
+
+        <label for="password">Senha</label>
+        <input type="password" id="password" name="password" required>
+
+        <button type="submit" class="btn">
+            Entrar
+        </button>
+    </form>
+
+</div>
+
+<div vw class="enabled">
+    <div vw-access-button class="active"></div>
+    <div vw-plugin-wrapper>
+        <div class="vw-plugin-top-wrapper"></div>
+    </div>
+</div>
+
+<script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+<script>
+    new window.VLibras.Widget('https://vlibras.gov.br/app');
+</script>
+
+</body>
+</html>
