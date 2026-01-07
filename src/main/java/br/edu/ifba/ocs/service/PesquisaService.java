@@ -34,15 +34,38 @@ public class PesquisaService {
     }
 
     public void deletar(UUID id, Conta contaLogada) {
+
         Pesquisa pesquisa = repository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Pesquisa não encontrada"));
+                .orElseThrow(() ->
+                        new IllegalArgumentException("Pesquisa não encontrada"));
+
+
+        if (pesquisa.getConta() == null) {
+            if (contaLogada.getPerfil() != br.edu.ifba.ocs.model.Perfil.admin) {
+                throw new SecurityException(
+                        "Você não tem permissão para excluir esta pesquisa"
+                );
+            }
+            repository.delete(pesquisa);
+            return;
+        }
+
+
+        if (contaLogada.getPerfil() == br.edu.ifba.ocs.model.Perfil.admin) {
+            repository.delete(pesquisa);
+            return;
+        }
+
 
         if (!pesquisa.getConta().getId().equals(contaLogada.getId())) {
-            throw new SecurityException("Você não tem permissão para excluir esta pesquisa");
+            throw new SecurityException(
+                    "Você não tem permissão para excluir esta pesquisa"
+            );
         }
 
         repository.delete(pesquisa);
     }
+
 
     public Pesquisa editar(UUID id, Pesquisa dados, Conta contaLogada) {
         Pesquisa pesquisa = repository.findById(id)

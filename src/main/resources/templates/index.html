@@ -196,6 +196,34 @@
             border-radius: 12px;
             font-size: 0.7rem;
         }
+
+        .admin-area {
+            grid-column: 1;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+
+        .btn-admin {
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            border: 2px solid white;
+            background: none;
+            color: white;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .btn-admin:hover {
+            background: white;
+            color: #1b3a57;
+        }
+
+
     </style>
 </head>
 
@@ -204,15 +232,19 @@
 <header>
     <div class="header-top">
 
+
+        <div class="admin-area" sec:authorize="hasRole('ADMIN')">
+            <a th:href="@{/admin/pesquisadores}" class="btn-admin">Pedidos para pesquisadores</a>
+        </div>
+
+
         <h1>OCS.EUC - Observatório da Comunidade Surda</h1>
+
 
         <div class="auth-area">
 
             <div sec:authorize="isAuthenticated()" class="user-info">
-                <span class="user-name">
-                    Olá, <strong th:text="${#authentication.principal.conta.nome}"></strong>
-                </span>
-
+                <span>Olá, <strong th:text="${#authentication.principal.conta.nome}"></strong></span>
                 <div class="roles">
                     <span sec:authorize="hasRole('ADMIN')">ADMIN</span>
                     <span sec:authorize="hasRole('PESQUISADOR')">PESQUISADOR</span>
@@ -251,28 +283,21 @@
 </div>
 
 
-<div sec:authorize="hasRole('ADMIN')" class="section">
-    <h2>Painel Administrativo</h2>
-    <div class="cards">
-        <a th:href="@{/admin/pesquisadores}" class="card-link">
-            <div class="card">
-                <h3>Pedidos de Pesquisador</h3>
-                <p>Visualize e valide novos pesquisadores.</p>
-            </div>
-        </a>
 
-    </div>
-</div>
 
 <section id="sobre" class="section">
     <h2>Sobre o Observatório</h2>
     <p>
-        O Observatório da Comunidade Surda é uma plataforma dedicada à reunião,
-        organização e divulgação de produções acadêmicas, culturais e institucionais.
+        O Observatório da Comunidade Surda é uma plataforma dedicada à organização,
+        análise e difusão de produções acadêmicas, culturais e institucionais
+        relacionadas à comunidade surda.
     </p>
     <a th:href="@{/sobre}" class="card-link">
         <div class="card">
-            <h3>Mais Informações</h3>
+            <h3>Sobre</h3><p>
+            Informações institucionais sobre os objetivos, a estrutura e a atuação
+            do Observatório da Comunidade Surda no ensino, na pesquisa e na extensão.
+        </p>
         </div>
     </a>
 </section>
@@ -281,16 +306,28 @@
     <h2>Acervo de Obras</h2>
     <div class="cards">
         <a th:href="@{/obras/categoria/048f53a5-e8d8-11f0-aa61-5e6bbc2bdd97}" class="card-link">
-            <div class="card"><h3>Livros</h3><p>Obras completas em PDF.</p></div>
+            <div class="card">
+                <h3>Livros</h3>
+                <p>Obras completas que subsidiam estudos teóricos e históricos.</p>
+            </div>
         </a>
         <a th:href="@{/obras/categoria/04900713-e8d8-11f0-aa61-5e6bbc2bdd97}" class="card-link">
-            <div class="card"><h3>Artigos</h3><p>Publicações científicas.</p></div>
+            <div class="card">
+                <h3>Artigos</h3>
+                <p>Produções científicas publicadas em periódicos e eventos.</p>
+            </div>
         </a>
         <a th:href="@{/obras/categoria/0490181d-e8d8-11f0-aa61-5e6bbc2bdd97}" class="card-link">
-            <div class="card"><h3>Manuais</h3><p>Materiais educativos.</p></div>
+            <div class="card">
+                <h3>Manuais</h3>
+                <p>Materiais didáticos e guias de orientação prática.</p>
+            </div>
         </a>
         <a th:href="@{/obras/categoria/04902238-e8d8-11f0-aa61-5e6bbc2bdd97}" class="card-link">
-            <div class="card"><h3>Audiovisuais</h3><p>Conteúdos em Libras.</p></div>
+            <div class="card">
+                <h3>Audiovisuais</h3>
+                <p>Conteúdos visuais com foco em Libras e acessibilidade.</p>
+            </div>
         </a>
     </div>
 </section>
@@ -299,10 +336,16 @@
     <h2>Pesquisas</h2>
     <div class="cards">
         <a th:href="@{/pesquisas/public/EM_ANDAMENTO}" class="card-link">
-            <div class="card"><h3>Em andamento</h3></div>
+            <div class="card">
+                <h3>Em andamento</h3>
+                <p>Estudos em fase de coleta ou análise de dados, com possibilidade de participação.</p>
+            </div>
         </a>
         <a th:href="@{/pesquisas/public/CONCLUIDA}" class="card-link">
-            <div class="card"><h3>Concluídas</h3></div>
+            <div class="card">
+                <h3>Concluídas</h3>
+                <p>Pesquisas finalizadas com resultados disponíveis para consulta pública.</p>
+            </div>
         </a>
     </div>
 </section>
@@ -310,8 +353,16 @@
 <section id="legislacao" class="section">
     <h2>Legislação</h2>
     <a th:href="@{/legislacoes}" class="card-link">
-        <div class="card"><h3>Acessar legislação</h3></div>
+        <div class="card">
+            <h3>Acessar legislação</h3>
+            <p>
+                Marcos legais que orientam políticas públicas, garantem direitos e
+                fundamentam as análises e produções do Observatório.
+            </p>
+        </div>
     </a>
+
+
 </section>
 
 <footer>

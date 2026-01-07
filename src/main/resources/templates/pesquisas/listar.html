@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 <head>
     <meta charset="UTF-8">
-    <title>Lista de Pesquisas</title>
+    <title>Pesquisas do Observatório</title>
 
     <style>
         body {
@@ -16,7 +17,7 @@
         header {
             background: #1b3a57;
             color: white;
-            padding: 20px;
+            padding: 24px;
             text-align: center;
         }
 
@@ -25,7 +26,6 @@
             padding: 10px;
             display: flex;
             justify-content: center;
-            gap: 20px;
         }
 
         nav a {
@@ -48,48 +48,95 @@
             margin-top: 0;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            font-size: 0.95rem;
+        .pesquisas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-top: 30px;
         }
 
-        th, td {
-            padding: 12px;
-            border-bottom: 1px solid #e0e0e0;
-            text-align: left;
-            vertical-align: top;
+        .pesquisa-card {
+            background: #ffffff;
+            border-radius: 14px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
         }
 
-        th {
-            background: #f2f5f8;
+        .pesquisa-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 22px rgba(27,58,87,0.18);
+        }
+
+        .pesquisa-titulo {
+            font-size: 1.15rem;
+            font-weight: bold;
             color: #1b3a57;
+            margin-bottom: 8px;
         }
 
-        tr:hover {
-            background: #f8fbfe;
+        .pesquisa-descricao {
+            font-size: 0.9rem;
+            color: #555;
+            line-height: 1.5;
+            margin-bottom: 14px;
+        }
+
+        .pesquisa-meta {
+            font-size: 0.8rem;
+            color: #777;
+            margin-bottom: 6px;
+        }
+
+        .pesquisa-acoes {
+            margin-top: auto;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
         .btn {
-            padding: 6px 10px;
-            border-radius: 6px;
-            border: none;
-            cursor: pointer;
+            padding: 8px 16px;
+            border-radius: 18px;
+            font-size: 0.8rem;
             font-weight: bold;
             text-decoration: none;
-            font-size: 0.85rem;
-            display: inline-block;
+            border: none;
+            cursor: pointer;
         }
 
-        .btn-primary {
+        .btn-participar {
             background: #1b3a57;
             color: white;
         }
 
-        .btn-secondary {
-            background: #e0e0e0;
-            color: #333;
+        .btn-organizador {
+            background: #e6eef6;
+            color: #1b3a57;
+        }
+
+        .btn-resultados {
+            background: #eef3f7;
+            color: #1b3a57;
+        }
+
+        .btn-editar {
+            background: #e6eef6;
+            color: #1b3a57;
+        }
+
+        .btn-excluir {
+            background: #fbeaea;
+            color: #b00020;
+        }
+
+        .btn-cadastrar {
+            background: #1b3a57;
+            color: white;
+            display: inline-block;
+            margin-bottom: 20px;
         }
     </style>
 </head>
@@ -97,128 +144,160 @@
 <body>
 
 <header>
-    <h1>Pesquisas</h1>
+    <h1>OCS.EUC - Observatório da Comunidade Surda</h1>
+
+    <h2 th:text="${status.name() == 'EM_ANDAMENTO'
+        ? 'Pesquisas em andamento'
+        : 'Pesquisas concluídas'}"
+        style="color:#e0e0e0; font-size:1.5rem; margin:8px 0 0 0; display:block;">
+    </h2>
+
+    <br>
+
+    <p style="margin:0; font-size:0.9rem;">
+        Pesquisas acadêmicas e institucionais
+    </p>
 </header>
 
+
 <nav>
-    <a th:href="@{/}">Página Principal</a>
+    <a th:href="@{/}">Página Inicial</a>
 </nav>
 
 <div class="container">
 
-    <h2 th:text="${status == T(br.edu.ifba.ocs.model.Pesquisa.Status).EM_ANDAMENTO
+
+        <h2 th:text="${status.name() == 'EM_ANDAMENTO'
         ? 'Pesquisas em andamento'
         : 'Pesquisas concluídas'}">
-    </h2>
+        </h2>
 
 
+
+    <div th:if="${status.equals(T(br.edu.ifba.ocs.model.Pesquisa.Status).EM_ANDAMENTO)}"
+         style="margin-bottom:24px; font-size:0.95rem; color:#555; line-height:1.6;">
+
+        <p>
+            As pesquisas em andamento estão em fase de desenvolvimento, coleta ou análise
+            de dados. Quando disponível, o Observatório divulga o convite para participação
+            voluntária, conforme indicado pelo pesquisador responsável.
+        </p>
+
+        <p>
+            A participação é aberta ao público e ocorre por meio de formulários externos,
+            garantindo autonomia e responsabilidade ética aos pesquisadores.
+        </p>
+    </div>
+
+
+    <div th:if="${status == T(br.edu.ifba.ocs.model.Pesquisa.Status).CONCLUIDA}"
+         style="margin-bottom:24px; font-size:0.95rem; color:#555; line-height:1.6;">
+
+        <p>
+            As pesquisas concluídas correspondem a estudos finalizados, com resultados
+            sistematizados e disponibilizados para consulta pública.
+        </p>
+
+        <p>
+            O acesso aos resultados reforça o compromisso do Observatório com a transparência,
+            a difusão do conhecimento e o retorno social da pesquisa.
+        </p>
+    </div>
     <div sec:authorize="hasAnyRole('ADMIN','PESQUISADOR')">
-        <a th:href="@{/pesquisas/cadastrar}" class="btn btn-primary">
-            Cadastrar Pesquisa
+        <a th:href="@{/pesquisas/cadastrar}"
+           class="btn btn-cadastrar">
+            Cadastrar pesquisa
         </a>
     </div>
 
-    <table>
-        <thead>
-        <tr>
-            <th>Pesquisa</th>
-            <th>Anos</th>
-            <th sec:authorize="hasAnyRole('ADMIN','PESQUISADOR')">Ações</th>
-        </tr>
-        </thead>
+    <div class="pesquisa-grid">
 
-        <tbody>
+        <div class="pesquisa-card" th:each="p : ${pesquisas}">
 
-        <tr th:if="${#lists.isEmpty(pesquisas)}">
-            <td colspan="3">Nenhuma pesquisa encontrada.</td>
-        </tr>
+            <div class="pesquisa-titulo" th:text="${p.titulo}"></div>
 
-        <tr th:each="p : ${pesquisas}">
+            <div class="pesquisa-descricao" th:text="${p.descricao}"></div>
+
+            <div class="pesquisa-meta">
+                <strong>Início:</strong>
+                <span th:text="${p.dataInicio != null ? p.dataInicio.year : '—'}"></span>
+            </div>
+
+            <div class="pesquisa-meta"
+                 th:if="${p.status == T(br.edu.ifba.ocs.model.Pesquisa.Status).CONCLUIDA}">
+                <strong>Conclusão:</strong>
+                <span th:text="${p.dataFim != null ? p.dataFim.year : '—'}"></span>
+            </div>
+
+            <div class="pesquisa-acoes">
 
 
-            <td>
-                <a th:if="${p.arquivoResultados != null and !#strings.isEmpty(p.arquivoResultados)}"
-                   th:href="${p.arquivoResultados}"
+                <a th:if="${p.status == T(br.edu.ifba.ocs.model.Pesquisa.Status).EM_ANDAMENTO
+                            and p.urlParticipante != null}"
+                   th:href="${p.urlParticipante}"
                    target="_blank"
-                   style="color:#1b3a57; font-weight:bold; text-decoration:none;">
-                    <span th:text="${p.titulo}"></span>
+                   class="btn btn-participar">
+                    Participar
                 </a>
 
-                <span th:if="${p.arquivoResultados == null or #strings.isEmpty(p.arquivoResultados)}"
-                      style="font-weight:bold;"
-                      th:text="${p.titulo}">
-                </span>
 
-                <div style="font-size:0.8rem; margin-top:4px;">
-                    <div th:if="${p.urlParticipante != null}">
-                        Participante:
-                        <a th:href="${p.urlParticipante}" target="_blank">acessar</a>
-                    </div>
-
-                    <div th:if="${p.urlOrganizador != null}">
-                        Organizador:
-                        <a th:href="${p.urlOrganizador}" target="_blank">acessar</a>
-                    </div>
-                </div>
-            </td>
+                <a th:if="${p.urlOrganizador != null}"
+                   th:href="${p.urlOrganizador}"
+                   target="_blank"
+                   class="btn btn-organizador">
+                    Organização responsável
+                </a>
 
 
-            <td>
-                <div>
-                    Início:
-                    <span th:text="${p.dataInicio != null ? p.dataInicio.year : '—'}"></span>
-                </div>
+                <a th:if="${p.status == T(br.edu.ifba.ocs.model.Pesquisa.Status).CONCLUIDA
+                            and p.arquivoResultados != null}"
+                   th:href="${p.arquivoResultados}"
+                   target="_blank"
+                   class="btn btn-participar">
+                    Ver resultados
+                </a>
 
-                <div th:if="${p.status == T(br.edu.ifba.ocs.model.Pesquisa.Status).CONCLUIDA}">
-                    Conclusão:
-                    <span th:text="${p.dataFim != null ? p.dataFim.year : '—'}"></span>
-                </div>
-            </td>
 
-            <td sec:authorize="hasAnyRole('ADMIN','PESQUISADOR')">
-
-                <div sec:authorize="hasRole('ADMIN')">
-                    <a class="btn btn-primary"
-                       th:href="@{/pesquisas/editar/{id}(id=${p.id})}">
+                <div sec:authorize="hasRole('ADMIN')" style="display:flex; gap:8px;">
+                    <a th:href="@{/pesquisas/editar/{id}(id=${p.id})}"
+                       class="btn btn-editar">
                         Editar
                     </a>
 
-                    <form th:action="@{/pesquisas/excluir/{id}(id=${p.id})}"
-                          method="post"
-                          style="display:inline">
-                        <input type="hidden" name="status" th:value="${p.status}" />
-                        <button type="submit" class="btn btn-secondary"
-                                onclick="return confirm('Deseja excluir esta pesquisa?')">
-                            Excluir
-                        </button>
+
+                    <form th:action="@{/pesquisas/excluir/{id}(id=${p.id})}" method="post" style="display:flex; gap:8px;">
+                        <input type="hidden" name="status" th:value="${status}" />
+                        <button type="submit"  class="btn btn-excluir">Excluir </button>
                     </form>
+
+
                 </div>
 
 
                 <div sec:authorize="hasRole('PESQUISADOR')"
-                     th:if="${p.conta != null and idContaLogada != null and p.conta.id == idContaLogada}">
+                     th:if="${p.conta != null and p.conta.id == idContaLogada}"
+                     style="display:flex; gap:8px;">
 
-                    <a class="btn btn-primary"
-                       th:href="@{/pesquisas/editar/{id}(id=${p.id})}">
+                    <a th:href="@{/pesquisas/editar/{id}(id=${p.id})}"
+                       class="btn btn-editar">
                         Editar
                     </a>
 
                     <form th:action="@{/pesquisas/excluir/{id}(id=${p.id})}"
-                          method="post"
-                          style="display:inline">
-                        <input type="hidden" name="status" th:value="${p.status}" />
-                        <button type="submit" class="btn btn-secondary"
+                          method="post">
+                        <button type="submit"
+                                class="btn btn-excluir"
                                 onclick="return confirm('Deseja excluir esta pesquisa?')">
                             Excluir
                         </button>
                     </form>
                 </div>
 
-            </td>
+            </div>
 
-        </tr>
-        </tbody>
-    </table>
+        </div>
+
+    </div>
 
 </div>
 

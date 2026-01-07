@@ -6,11 +6,14 @@ import br.edu.ifba.ocs.security.ContaDetails;
 import br.edu.ifba.ocs.service.PesquisaService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -21,6 +24,7 @@ public class PesquisaWebController {
 
     @Autowired
     private PesquisaService service;
+
 
 
     @GetMapping("/public/{status}")
@@ -39,7 +43,6 @@ public class PesquisaWebController {
         return "pesquisas/listar";
     }
 
-
     @GetMapping("/{status}")
     public String listarPrivado(
             @PathVariable Status status,
@@ -56,6 +59,8 @@ public class PesquisaWebController {
         return "pesquisas/listar";
     }
 
+
+
     @GetMapping("/cadastrar")
     public String cadastrar(Model model) {
         model.addAttribute("pesquisa", new Pesquisa());
@@ -70,6 +75,90 @@ public class PesquisaWebController {
             Model model,
             @AuthenticationPrincipal ContaDetails usuarioLogado
     ) {
+
+        validarDatas(pesquisa, result);
+
+        if (result.hasErrors()) {
+            model.addAttribute("hoje", LocalDate.now());
+            return "pesquisas/cadastrar";
+        }
+
+        pesquisa.setConta(usuarioLogado.getConta());
+        service.salvar(pesquisa);
+
+        return "redirect:/pesquisas/" + pesquisa.getStatus();
+    }
+
+
+
+    @GetMapping("/editar/{id}")
+    public String editar(
+            @PathVariable UUID id,
+            Model model,
+            @AuthenticationPrincipal ContaDetails usuarioLogado
+    ) {
+        Pesquisa pesquisa = buscarPesquisaOuFalhar(id);
+        validarPermissao(pesquisa, usuarioLogado);
+
+        model.addAttribute("pesquisa", pesquisa);
+        model.addAttribute("hoje", LocalDate.now());
+        return "pesquisas/cadastrar";
+    }
+
+    @PostMapping("/editar/{id}")
+    public String salvarEdicao(
+            @PathVariable UUID id,
+            @Valid @ModelAttribute("pesquisa") Pesquisa pesquisa,
+            BindingResult result,
+            Model model,
+            @AuthenticationPrincipal ContaDetails usuarioLogado
+    ) {
+
+        validarDatas(pesquisa, result);
+
+        if (result.hasErrors()) {
+            model.addAttribute("hoje", LocalDate.now());
+            return "pesquisas/cadastrar";
+        }
+
+        service.editar(id, pesquisa, usuarioLogado.getConta());
+        return "redirect:/pesquisas/" + pesquisa.getStatus();
+    }
+
+
+
+    @PostMapping("/excluir/{id}")
+    public String excluir(@PathVariable UUID id,
+                          @RequestParam(required = false) Status status,
+                          @AuthenticationPrincipal ContaDetails usuarioLogado) {
+
+        service.deletar(id, usuarioLogado.getConta());
+
+        return "redirect:/pesquisas/" + status;
+    }
+
+
+
+
+    private Pesquisa buscarPesquisaOuFalhar(UUID id) {
+        return service.buscarPorId(id)
+                .orElseThrow(() -> new IllegalArgumentException("Pesquisa não encontrada"));
+    }
+
+    private void validarPermissao(Pesquisa pesquisa, ContaDetails usuarioLogado) {
+
+        boolean ehDono = pesquisa.getConta() != null &&
+                pesquisa.getConta().getId().equals(usuarioLogado.getConta().getId());
+
+        boolean ehAdmin = usuarioLogado.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+
+        if (!ehDono && !ehAdmin) {
+            throw new AccessDeniedException("Você não tem permissão para esta ação.");
+        }
+    }
+
+    private void validarDatas(Pesquisa pesquisa, BindingResult result) {
 
         if (pesquisa.getDataInicio() != null &&
                 pesquisa.getDataFim() != null &&
@@ -89,71 +178,5 @@ public class PesquisaWebController {
                     "Pesquisa em andamento NÃO pode ter data de fim."
             );
         }
-
-        if (result.hasErrors()) {
-            model.addAttribute("hoje", LocalDate.now());
-            return "pesquisas/cadastrar";
-        }
-
-        pesquisa.setConta(usuarioLogado.getConta());
-        service.salvar(pesquisa);
-
-        return "redirect:/pesquisas/" + pesquisa.getStatus();
-    }
-
-
-    @GetMapping("/editar/{id}")
-    public String editar(
-            @PathVariable UUID id,
-            Model model,
-            @AuthenticationPrincipal ContaDetails usuarioLogado
-    ) {
-        Pesquisa pesquisa = service.buscarPorId(id)
-                .orElseThrow(() -> new IllegalArgumentException("Pesquisa não encontrada"));
-
-        if (pesquisa.getConta() == null ||
-                !pesquisa.getConta().getId().equals(usuarioLogado.getConta().getId())) {
-            throw new IllegalArgumentException("Você não tem permissão para editar esta pesquisa.");
-        }
-
-        model.addAttribute("pesquisa", pesquisa);
-        model.addAttribute("hoje", LocalDate.now());
-        return "pesquisas/cadastrar";
-    }
-
-    @PostMapping("/editar/{id}")
-    public String salvarEdicao(
-            @PathVariable UUID id,
-            @Valid @ModelAttribute("pesquisa") Pesquisa pesquisa,
-            BindingResult result,
-            Model model,
-            @AuthenticationPrincipal ContaDetails usuarioLogado
-    ) {
-        if (result.hasErrors()) {
-            model.addAttribute("hoje", LocalDate.now());
-            return "pesquisas/cadastrar";
-        }
-
-        service.editar(id, pesquisa, usuarioLogado.getConta());
-        return "redirect:/pesquisas/" + pesquisa.getStatus();
-    }
-
-
-    @PostMapping("/excluir/{id}")
-    public String excluir(
-            @PathVariable UUID id,
-            @RequestParam Status status,
-            @AuthenticationPrincipal ContaDetails usuarioLogado
-    ) {
-        Pesquisa pesquisa = service.buscarPorId(id)
-                .orElseThrow(() -> new IllegalArgumentException("Pesquisa não encontrada"));
-
-        if (pesquisa.getConta() == null ||
-                !pesquisa.getConta().getId().equals(usuarioLogado.getConta().getId())) {
-            throw new IllegalArgumentException("Você não tem permissão para excluir esta pesquisa.");
-        }
-
-        service.deletar(id, usuarioLogado.getConta());
-        return "redirect:/pesquisas/" + status;
     }
 }
