@@ -5,15 +5,12 @@ import br.edu.ifba.ocs.model.Pesquisa.Status;
 import br.edu.ifba.ocs.security.ContaDetails;
 import br.edu.ifba.ocs.service.PesquisaService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -22,13 +19,14 @@ import java.util.UUID;
 @RequestMapping("/pesquisas")
 public class PesquisaWebController {
 
-    @Autowired
-    private PesquisaService service;
+    private final PesquisaService service;
 
+    public PesquisaWebController(PesquisaService service) {
+        this.service = service;
+    }
 
-
-    @GetMapping("/public/{status}")
-    public String listarPublico(
+    @GetMapping({ "/{status}", "/public/{status}" })
+    public String listar(
             @PathVariable Status status,
             Model model,
             @AuthenticationPrincipal ContaDetails usuarioLogado
@@ -42,24 +40,6 @@ public class PesquisaWebController {
 
         return "pesquisas/listar";
     }
-
-    @GetMapping("/{status}")
-    public String listarPrivado(
-            @PathVariable Status status,
-            Model model,
-            @AuthenticationPrincipal ContaDetails usuarioLogado
-    ) {
-        model.addAttribute("pesquisas", service.listarPorStatus(status));
-        model.addAttribute("status", status);
-
-        if (usuarioLogado != null) {
-            model.addAttribute("idContaLogada", usuarioLogado.getConta().getId());
-        }
-
-        return "pesquisas/listar";
-    }
-
-
 
     @GetMapping("/cadastrar")
     public String cadastrar(Model model) {
@@ -75,7 +55,6 @@ public class PesquisaWebController {
             Model model,
             @AuthenticationPrincipal ContaDetails usuarioLogado
     ) {
-
         validarDatas(pesquisa, result);
 
         if (result.hasErrors()) {
@@ -88,8 +67,6 @@ public class PesquisaWebController {
 
         return "redirect:/pesquisas/" + pesquisa.getStatus();
     }
-
-
 
     @GetMapping("/editar/{id}")
     public String editar(
@@ -113,7 +90,6 @@ public class PesquisaWebController {
             Model model,
             @AuthenticationPrincipal ContaDetails usuarioLogado
     ) {
-
         validarDatas(pesquisa, result);
 
         if (result.hasErrors()) {
@@ -122,21 +98,18 @@ public class PesquisaWebController {
         }
 
         service.editar(id, pesquisa, usuarioLogado.getConta());
+
         return "redirect:/pesquisas/" + pesquisa.getStatus();
     }
 
-
-
     @PostMapping("/excluir/{id}")
     public String excluir(@PathVariable UUID id,
-                          @RequestParam(required = false) Status status,
+                          @RequestParam(required = false, defaultValue = "EM_ANDAMENTO") Status status,
                           @AuthenticationPrincipal ContaDetails usuarioLogado) {
 
         service.deletar(id, usuarioLogado.getConta());
-
         return "redirect:/pesquisas/" + status;
     }
-
 
 
 
@@ -146,7 +119,6 @@ public class PesquisaWebController {
     }
 
     private void validarPermissao(Pesquisa pesquisa, ContaDetails usuarioLogado) {
-
         boolean ehDono = pesquisa.getConta() != null &&
                 pesquisa.getConta().getId().equals(usuarioLogado.getConta().getId());
 
@@ -163,20 +135,20 @@ public class PesquisaWebController {
         if (pesquisa.getDataInicio() != null &&
                 pesquisa.getDataFim() != null &&
                 pesquisa.getDataFim().isBefore(pesquisa.getDataInicio())) {
-            result.rejectValue(
-                    "dataFim",
-                    "dataFim.invalida",
-                    "A data de fim não pode ser anterior à data de início."
-            );
+            result.rejectValue("dataFim", "dataFim.invalida",
+                    "A data de fim não pode ser anterior à data de início.");
         }
 
-        if (pesquisa.getStatus() == Status.EM_ANDAMENTO &&
-                pesquisa.getDataFim() != null) {
-            result.rejectValue(
-                    "dataFim",
-                    "dataFim.invalida",
-                    "Pesquisa em andamento NÃO pode ter data de fim."
-            );
+
+        if (pesquisa.getStatus() == Status.EM_ANDAMENTO && pesquisa.getDataFim() != null) {
+            result.rejectValue("dataFim", "dataFim.invalida",
+                    "Pesquisa em andamento NÃO pode ter data de fim.");
+        }
+
+
+        if (pesquisa.getStatus() == Status.CONCLUIDA && pesquisa.getDataFim() == null) {
+            result.rejectValue("dataFim", "dataFim.obrigatoria",
+                    "Uma pesquisa concluída deve obrigatoriamente ter uma data de fim.");
         }
     }
 }

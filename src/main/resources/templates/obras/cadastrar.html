@@ -2,9 +2,10 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Cadastrar Obra</title>
+    <title>Cadastrar Obra - OCS.EUC</title>
 
     <style>
+        /* PADRONIZAÇÃO OCS.EUC */
         body {
             margin: 0;
             font-family: Arial, sans-serif;
@@ -31,6 +32,13 @@
             color: white;
             text-decoration: none;
             font-weight: bold;
+            padding: 6px 10px;
+            transition: transform 0.2s ease;
+        }
+
+        nav a:hover {
+            transform: translateY(-2px);
+            opacity: 0.9;
         }
 
         .container {
@@ -47,6 +55,7 @@
             margin-top: 0;
         }
 
+        /* FORMULÁRIOS */
         label {
             display: block;
             margin-top: 15px;
@@ -56,27 +65,41 @@
 
         input, textarea, select {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             margin-top: 6px;
-            border-radius: 6px;
-            border: 1px solid #ccc;
+            border-radius: 10px;
+            border: 1px solid #e6eef6;
+            background: #fdfdfd;
+            box-sizing: border-box;
         }
 
-        textarea {
-            resize: vertical;
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #1b3a57;
+            box-shadow: 0 0 0 2px rgba(27,58,87,0.1);
         }
 
         .section {
             margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e6eef6;
         }
 
+        .section:last-of-type {
+            border-bottom: none;
+        }
+
+        /* BOTÕES PADRONIZADOS */
         .btn {
-            padding: 8px 14px;
-            border-radius: 6px;
+            padding: 10px 18px;
+            border-radius: 18px;
             border: none;
             cursor: pointer;
             font-weight: bold;
             text-decoration: none;
+            display: inline-block;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
         }
 
         .btn-primary {
@@ -84,33 +107,47 @@
             color: white;
         }
 
+        .btn-primary:hover {
+            background: #153049;
+            box-shadow: 0 4px 12px rgba(27,58,87,0.2);
+        }
+
+        .btn-secondary {
+            background: #e6eef6;
+            color: #1b3a57;
+        }
+
         .btn-danger {
-            background: #c62828;
-            color: white;
+            background: #fbeaea;
+            color: #b00020;
         }
 
+        /* ALERTAS */
         .alerta-erro {
-            background-color: #fdecea;
-            color: #611a15;
+            background-color: #fbeaea;
+            color: #b00020;
             border: 1px solid #f5c2c7;
-            padding: 12px;
+            padding: 15px;
             margin-bottom: 20px;
-            border-radius: 6px;
-            font-weight: bold;
+            border-radius: 10px;
+            font-size: 0.9rem;
         }
 
+        /* SELEÇÃO DE AUTORAS */
         .autoras-selecionadas {
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            padding: 10px;
+            border: 1px solid #e6eef6;
+            border-radius: 14px;
+            padding: 15px;
             margin-top: 15px;
+            background: #fbfcfe;
         }
 
         .autora-item {
             display: flex;
             justify-content: space-between;
-            padding: 6px 0;
-            border-bottom: 1px solid #eee;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #e6eef6;
         }
 
         .autora-item:last-child {
@@ -121,18 +158,13 @@
             margin-top: 20px;
             padding: 20px;
             border-radius: 14px;
-            border: 1px solid #ccc;
-            background: #f9f9f9;
+            border: 1px solid #e6eef6;
+            background: #ffffff;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
         }
 
         .hidden {
             display: none;
-        }
-
-        #pesquisaAutora {
-            padding: 10px;
-            border-radius: 6px;
-            border: 1px solid #999;
         }
 
         .lista-pesquisa {
@@ -140,14 +172,14 @@
             max-height: 220px;
             overflow-y: auto;
             background: white;
-            border: 1px solid #ddd;
-            border-radius: 8px;
+            border: 1px solid #e6eef6;
+            border-radius: 10px;
         }
 
         .item-autora {
-            padding: 10px;
+            padding: 12px;
             cursor: pointer;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid #f0f4f8;
         }
 
         .item-autora:hover {
@@ -160,24 +192,23 @@
 <body>
 
 <header>
-    <h1>Obra</h1>
+    <h1>OCS.EUC - Observatório da Comunidade Surda</h1>
+    <p style="color: #e0e0e0; margin-top: 8px;">Cadastro de Nova Obra</p>
 </header>
 
 <nav>
     <a th:href="@{/}">Página Principal</a>
-
 </nav>
 
 <div class="container">
     <h2 th:text="${obra.id == null ? 'Cadastrar Obra' : 'Editar Obra'}">Cadastrar Obra</h2>
+    <hr style="border: 0; border-top: 1px solid #e6eef6; margin-bottom: 25px;">
 
-    <form th:action="@{/obras}"
-          method="post"
-          th:object="${obra}">
-
+    <form th:action="@{/obras}" method="post" th:object="${obra}">
 
         <div th:if="${#fields.hasAnyErrors()}" class="alerta-erro">
-            <ul>
+            <strong style="display: block; margin-bottom: 5px;">Por favor, corrija os erros abaixo:</strong>
+            <ul style="margin: 0; padding-left: 20px;">
                 <li th:each="err : ${#fields.errors()}" th:text="${err}"></li>
             </ul>
         </div>
@@ -188,57 +219,47 @@
             <h3>Dados da Obra</h3>
 
             <label>Título</label>
-            <input type="text"
-                   th:field="*{titulo}"
-                   placeholder="Ex: Educação Inclusiva e Comunidade Surda"
-                   required>
+            <input type="text" th:field="*{titulo}" placeholder="Ex: Educação Inclusiva e Comunidade Surda" required>
 
             <label>Resumo</label>
-            <textarea th:field="*{resumo}"
-                      rows="4"
-                      placeholder="Resumo do conteúdo da obra">
-            </textarea>
+            <textarea th:field="*{resumo}" rows="5" placeholder="Descreva brevemente o conteúdo da obra"></textarea>
 
-            <label>Palavras-chave</label>
-            <input type="text"
-                   th:field="*{palavrasChave}"
-                   placeholder="Ex: Libras, inclusão, educação">
-
-            <label>Ano de Publicação</label>
-            <input type="number"
-                   th:field="*{anoPublicacao}"
-                   placeholder="Ex: 2024">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div>
+                    <label>Palavras-chave</label>
+                    <input type="text" th:field="*{palavrasChave}" placeholder="Ex: Libras, inclusão, educação">
+                </div>
+                <div>
+                    <label>Ano de Publicação</label>
+                    <input type="number" th:field="*{anoPublicacao}" placeholder="Ex: 2024">
+                </div>
+            </div>
 
             <label>URL do Arquivo</label>
-            <input type="url"
-                   th:field="*{urlArquivo}"
-                   placeholder="Ex: https://repositorio.ifba.edu.br/obra.pdf">
+            <input type="url" th:field="*{urlArquivo}" placeholder="Ex: https://repositorio.exemplo.com/obra.pdf">
 
             <label>Categoria</label>
             <select th:field="*{categoria.id}" required>
-                <option value="">Selecione</option>
-                <option th:each="c : ${categorias}"
-                        th:value="${c.id}"
-                        th:text="${c.nome}">
-                </option>
+                <option value="">Selecione uma categoria</option>
+                <option th:each="c : ${categorias}" th:value="${c.id}" th:text="${c.nome}"></option>
             </select>
         </div>
 
-
         <div class="section">
-            <h3>Selecionar Autoras</h3>
+            <h3>Gestão de Autoria</h3>
 
-            <button type="button" class="btn btn-primary" onclick="abrirSeletor()">
-                Selecionar Autoras
-            </button>
-
-            <a th:href="@{/autoras/cadastrar}" class="btn btn-primary">
-                Cadastrar Autora
-            </a>
+            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                <button type="button" class="btn btn-secondary" onclick="abrirSeletor()">
+                    + Selecionar Autoras
+                </button>
+                <a th:href="@{/autoras/cadastrar}" class="btn btn-secondary">
+                    Nova Autora
+                </a>
+            </div>
 
             <div id="seletorAutoras" class="seletor hidden">
-                <input type="text" id="pesquisaAutora"
-                       placeholder="Digite o nome da autora...">
+                <label>Pesquisar Autora</label>
+                <input type="text" id="pesquisaAutora" placeholder="Digite o nome da autora...">
 
                 <div class="lista-pesquisa">
                     <div th:each="a : ${autoras}"
@@ -250,24 +271,39 @@
                     </div>
                 </div>
 
-                <button type="button" class="btn btn-danger" onclick="fecharSeletor()">
-                    Fechar
-                </button>
+                <div style="text-align: right; margin-top: 15px;">
+                    <button type="button" class="btn btn-danger" onclick="fecharSeletor()">
+                        Fechar
+                    </button>
+                </div>
             </div>
 
-            <h3>Autoras selecionadas</h3>
+            <p style="font-size: 0.9rem; color: #666; margin-top: 20px; margin-bottom: 8px;">Autoras selecionadas para esta obra:</p>
             <div id="listaAutoras" class="autoras-selecionadas"></div>
             <div id="autorasHidden"></div>
         </div>
 
-        <button type="submit" class="btn btn-primary">
-            Salvar Obra
-        </button>
+        <div style="padding-top: 10px;">
+            <button type="submit" class="btn btn-primary" style="padding: 12px 30px; font-size: 1rem;">
+                Salvar Obra
+            </button>
+            <a th:href="@{/}" class="btn btn-secondary" style="margin-left: 10px;">Voltar</a>
+        </div>
 
     </form>
 </div>
 
+<div vw class="enabled">
+    <div vw-access-button class="active"></div>
+    <div vw-plugin-wrapper>
+        <div class="vw-plugin-top-wrapper"></div>
+    </div>
+</div>
+
+<script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
 <script>
+    new window.VLibras.Widget('https://vlibras.gov.br/app');
+
     const autorasAdicionadas = new Set();
 
     function abrirSeletor() {
@@ -305,9 +341,10 @@
         div.id = "autora-" + id;
 
         div.innerHTML = `
-            <span>${nome}</span>
+            <span style="font-weight:500;">${nome}</span>
             <button type="button"
                     class="btn btn-danger"
+                    style="padding: 4px 12px; font-size: 0.7rem;"
                     onclick="removerAutora('${id}')">
                 Remover
             </button>
@@ -330,20 +367,6 @@
         document.getElementById("hidden-" + id)?.remove();
     }
 </script>
-
-
-<div vw class="enabled">
-    <div vw-access-button class="active"></div>
-    <div vw-plugin-wrapper>
-        <div class="vw-plugin-top-wrapper"></div>
-    </div>
-</div>
-
-<script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
-<script>
-    new window.VLibras.Widget('https://vlibras.gov.br/app');
-</script>
-
 
 </body>
 </html>

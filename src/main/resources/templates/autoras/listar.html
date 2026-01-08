@@ -2,14 +2,23 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>Autoras</title>
+  <title>Autoras - OCS.EUC</title>
   <style>
-    body { font-family: Arial; background: #f7f7f7; margin: 0; }
-    header { background: #1b3a57; color: white; padding: 20px; text-align: center; }
-    .section { max-width: 900px; margin: 30px auto; }
-    .card { background: white; padding: 20px; border-radius: 8px; margin-bottom: 15px; box-shadow: 0 2px 6px rgba(0,0,0,.1); }
-    a { color: #1b3a57; text-decoration: none; font-weight: bold; }
-    button { background: #c0392b; color: white; border: none; padding: 6px 10px; cursor: pointer; }
+    /* PADRONIZAÇÃO OCS.EUC */
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f7f7f7;
+      color: #333;
+    }
+
+    header {
+      background: #1b3a57;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
     nav {
       background: #153049;
       padding: 10px;
@@ -26,46 +35,158 @@
       transition: transform 0.2s ease;
     }
 
-
     nav a:hover {
-      transform: translateY(4px);
+      transform: translateY(-2px);
+      opacity: 0.9;
     }
-    .alerta-erro {
-      background-color: #fdecea;
-      color: #611a15;
-      border: 1px solid #f5c2c7;
-      padding: 12px;
-      margin: 15px;
-      border-radius: 6px;
+
+    .container {
+      max-width: 1000px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+
+    h2 {
+      color: #1b3a57;
+      margin-top: 0;
+    }
+
+    /* GRID E CARDS DE AUTORAS */
+    .autoras-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .autora-card {
+      background: white;
+      padding: 24px;
+      border-radius: 14px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      transition: transform 0.25s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .autora-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 20px rgba(27,58,87,0.12);
+    }
+
+    .autora-info p {
+      margin: 4px 0;
+      font-size: 0.95rem;
+      color: #555;
+    }
+
+    .autora-info strong {
+      color: #1b3a57;
+    }
+
+    /* BOTÕES */
+    .btn-cadastrar {
+      background: #1b3a57;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 18px;
+      text-decoration: none;
       font-weight: bold;
+      display: inline-block;
+      margin-bottom: 20px;
+      font-size: 0.9rem;
+      transition: background 0.2s;
+    }
+
+    .btn-cadastrar:hover {
+      background: #153049;
+    }
+
+    .acoes {
+      margin-top: 15px;
+      display: flex;
+      gap: 10px;
+      border-top: 1px solid #eee;
+      padding-top: 15px;
+    }
+
+    .btn-editar {
+      background: #e6eef6;
+      color: #1b3a57;
+      padding: 6px 14px;
+      border-radius: 14px;
+      font-size: 0.8rem;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    .btn-excluir {
+      background: #fbeaea;
+      color: #b00020;
+      padding: 6px 14px;
+      border-radius: 14px;
+      font-size: 0.8rem;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+    }
+
+    /* ALERTA DE ERRO */
+    .alerta-erro {
+      background-color: #fbeaea;
+      color: #b00020;
+      border: 1px solid #f5c2c7;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      font-weight: bold;
+      text-align: center;
     }
   </style>
 </head>
 <body>
 
 <header>
-  <h1>Autoras</h1>
-  <a th:href="@{/autoras/cadastrar}" style="color:white;">Cadastrar nova</a>
+  <h1>OCS.EUC - Observatório da Comunidade Surda</h1>
+  <p style="color: #e0e0e0; margin-top: 8px;">Gestão de Autoria e Colaboradores Acadêmicos</p>
 </header>
+
 <nav>
-  <a th:href="@{/}">Pagina Principal</a>
+  <a th:href="@{/}">Página Principal</a>
 </nav>
-<div th:if="${erro}" class="alerta-erro">
-  <p th:text="${erro}"></p>
-</div>
-<section class="section">
-  <div class="card" th:each="a : ${autoras}">
-    <p><strong>Nome:</strong> <span th:text="${a.nome}"></span></p>
-    <p><strong>Email:</strong> <span th:text="${a.email}"></span></p>
-    <p><strong>Instituição:</strong> <span th:text="${a.instituicao}"></span></p>
 
-    <a th:href="@{/autoras/editar/{id}(id=${a.id})}">Editar</a>
-
-    <form th:action="@{/autoras/excluir/{id}(id=${a.id})}" method="post" style="display:inline;">
-      <button type="submit">Excluir</button>
-    </form>
+<div class="container">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
+    <h2>Corpo de Pesquisadores</h2>
+    <a th:href="@{/autoras/cadastrar}" class="btn-cadastrar">+ Cadastrar Autora</a>
   </div>
-</section>
+
+  <div th:if="${erro}" class="alerta-erro">
+    <span th:text="${erro}"></span>
+  </div>
+
+  <div class="autoras-grid">
+    <div class="autora-card" th:each="a : ${autoras}">
+      <div class="autora-info">
+        <p><strong>Nome:</strong> <span th:text="${a.nome}"></span></p>
+        <p><strong>E-mail:</strong> <span th:text="${a.email != null ? a.email : 'Não informado'}"></span></p>
+        <p><strong>Instituição:</strong> <span th:text="${a.instituicao != null ? a.instituicao : '—'}"></span></p>
+      </div>
+
+      <div class="acoes">
+        <a th:href="@{/autoras/editar/{id}(id=${a.id})}" class="btn-editar">Editar Perfil</a>
+
+        <form th:action="@{/autoras/excluir/{id}(id=${a.id})}" method="post" style="display:inline;">
+          <button type="submit" class="btn-excluir"
+                  onclick="return confirm('Deseja excluir esta autora? Esta ação não pode ser desfeita.')">
+            Excluir
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 
 <div vw class="enabled">
   <div vw-access-button class="active"></div>
@@ -73,9 +194,11 @@
     <div class="vw-plugin-top-wrapper"></div>
   </div>
 </div>
+
 <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
 <script>
   new window.VLibras.Widget('https://vlibras.gov.br/app');
 </script>
+
 </body>
 </html>

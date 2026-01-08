@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sobre - Observatório da Comunidade Surda</title>
+  <title>Sobre - OCS.EUC</title>
 
   <style>
     body {
@@ -32,26 +32,43 @@
       color: white;
       text-decoration: none;
       font-weight: bold;
-      padding: 6px 10px;
-      transition: transform 0.2s ease;
+      transition: opacity 0.2s;
     }
 
     nav a:hover {
-      transform: translateY(4px);
+      opacity: 0.8;
     }
 
-    .section {
-      padding: 40px 20px;
+    .container {
       max-width: 1000px;
-      margin: auto;
+      margin: 30px auto;
       background: white;
+      padding: 40px;
       border-radius: 14px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    }
+
+    /* Padronização com a borda inferior das outras páginas */
+    .intro-secao {
+      margin-bottom: 26px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid #e6eef6;
     }
 
     h2, h3 {
       color: #1b3a57;
       margin-top: 0;
+    }
+
+    p {
+      line-height: 1.6;
+      text-align: justify;
+      color: #444;
+      margin-bottom: 15px;
+    }
+
+    strong {
+      color: #1b3a57;
     }
 
     .logos {
@@ -60,31 +77,43 @@
       align-items: center;
       gap: 40px;
       flex-wrap: wrap;
-      margin: 30px 0;
+      margin: 40px 0;
+      padding: 20px;
+      background: #fff;
     }
 
     .logos img {
-      max-height: 90px;
-      object-fit: contain;
+      max-height: 80px;
+      width: auto;
+      filter: grayscale(20%);
+      transition: filter 0.3s;
     }
 
-    .contatos {
+    .logos img:hover {
+      filter: grayscale(0%);
+    }
+
+    /* Estilo para a caixa de informações institucionais */
+    .info-card {
       margin-top: 30px;
-      background: #f4f8fc;
-      padding: 20px;
-      border-radius: 10px;
+      background: #fcfdfe;
+      padding: 25px;
+      border-radius: 14px;
+      border: 1px solid #e6eef6;
     }
 
-    .contatos p {
-      margin: 8px 0;
+    .info-item {
+      margin-bottom: 12px;
+      font-size: 0.95rem;
     }
 
     footer {
-      margin-top: 40px;
+      margin-top: 50px;
       background: #1b3a57;
       color: white;
-      padding: 20px;
+      padding: 30px;
       text-align: center;
+      font-size: 0.9rem;
     }
   </style>
 </head>
@@ -99,8 +128,10 @@
   <a th:href="@{/}">Página Principal</a>
 </nav>
 
-<section class="section">
-  <h2>Sobre o Projeto</h2>
+<div class="container">
+  <div class="intro-secao">
+    <h2>Sobre o Projeto</h2>
+  </div>
 
   <p>
     O <strong>OCS.EUC – Observatório da Comunidade Surda de Euclides da Cunha – BA</strong>
@@ -126,8 +157,7 @@
   </p>
 
   <p>
-    Alinhado às legislações brasileiras de acessibilidade, como a Lei nº 10.436/2002 (Lei de Libras)
-    e o Decreto nº 5.626/2005, o OCS.EUC busca contribuir para a redução das barreiras comunicacionais
+    Alinhado às legislações brasileiras de acessibilidade, o OCS.EUC busca contribuir para a redução das barreiras comunicacionais
     e para a construção de uma sociedade mais inclusiva, consciente da diversidade linguística
     e cultural da comunidade surda.
   </p>
@@ -135,51 +165,47 @@
   <p>
     Além do impacto social, o projeto também contribui para a formação técnica e científica
     dos estudantes envolvidos, especialmente da área de Informática, por meio do desenvolvimento
-    de aplicações web, pesquisa bibliográfica e uso de metodologias ágeis no processo de construção
-    do portal.
+    de aplicações web e uso de metodologias ágeis no processo de construção do portal.
   </p>
 
-  <h3>Instituições Envolvidas</h3>
-
   <div class="logos">
-    <img th:src="@{/templates/MARCA_IFBA_CAMPUS_HORIZONTAL_completa_CMYK_EUCLIDES}" alt="IFBA Euclides da Cunha">
+    <img th:src="@{/img/MARCA_IFBA_CAMPUS_HORIZONTAL_completa_CMYK_EUCLIDES DA CUNHA.png}" alt="IFBA Euclides da Cunha">
     <img th:src="@{/img/MARCA_IFBA_CMYK_PROEX_HORIZONTAL_COMPLETA_.png}" alt="PROEX Reitoria">
     <img th:src="@{/img/acsec.png}" alt="ACSEC">
   </div>
 
-  <div class="contatos">
+  <div class="info-card">
     <h3>Informações Institucionais</h3>
 
-    <p>
+    <div class="info-item">
       <strong>Instituição Proponente:</strong>
-      IFBA – Campus Euclides da Cunha
-    </p>
+      <span>IFBA – Campus Euclides da Cunha</span>
+    </div>
 
-    <p>
+    <div class="info-item">
       <strong>Pró-Reitoria Responsável:</strong>
-      Pró-Reitoria de Extensão (PROEX) – IFBA
-    </p>
+      <span>Pró-Reitoria de Extensão (PROEX) – IFBA</span>
+    </div>
 
-    <p>
+    <div class="info-item">
       <strong>Parceria Comunitária:</strong>
-      Associação da Comunidade Surda de Euclides da Cunha – BA (ACSEC)
-    </p>
+      <span>Associação da Comunidade Surda de Euclides da Cunha – BA (ACSEC)</span>
+    </div>
 
-    <p>
+    <div class="info-item">
       <strong>Área Temática:</strong>
-      Direitos Humanos e Justiça
-    </p>
+      <span>Direitos Humanos e Justiça</span>
+    </div>
 
-    <p>
+    <div class="info-item">
       <strong>Área de Conhecimento:</strong>
-      Ciência da Computação
-    </p>
+      <span>Ciência da Computação</span>
+    </div>
   </div>
-</section>
-
+</div>
 
 <footer>
-  <p>© 2025 Observatório da Comunidade Surda — IFBA Euclides da Cunha</p>
+  <p>© 2026 Observatório da Comunidade Surda — IFBA Euclides da Cunha</p>
 </footer>
 
 <div vw class="enabled">

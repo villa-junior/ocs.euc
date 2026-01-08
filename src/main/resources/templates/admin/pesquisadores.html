@@ -2,13 +2,14 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Admin - Pesquisadores Pendentes</title>
+    <title>Painel Admin - OCS.EUC</title>
 
     <style>
         body {
+            margin: 0;
             font-family: Arial, sans-serif;
             background: #f7f7f7;
-            margin: 0;
+            color: #333;
         }
 
         header {
@@ -18,109 +19,178 @@
             text-align: center;
         }
 
-        .container {
-            max-width: 900px;
-            margin: 40px auto;
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
+        nav {
+            background: #153049;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th, td {
-            padding: 12px;
-            border-bottom: 1px solid #ddd;
-            text-align: left;
-        }
-
-        th {
-            background: #1b3a57;
+        nav a {
             color: white;
-        }
-
-
-        .btn {
-            padding: 6px 12px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
+            text-decoration: none;
             font-weight: bold;
         }
 
+        .container {
+            max-width: 1000px;
+            margin: 30px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 14px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+        }
+
+        h2 {
+            color: #1b3a57;
+            margin-top: 0;
+            border-bottom: 1px solid #e6eef6;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+
+        /* ===== ESTILO DA TABELA ===== */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th {
+            background: #f8fbfe;
+            color: #1b3a57;
+            text-align: left;
+            padding: 15px;
+            font-size: 0.9rem;
+            border-bottom: 2px solid #e6eef6;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        tr:hover {
+            background-color: #fcfdfe;
+        }
+
+        /* ===== BOTÕES PADRONIZADOS ===== */
+        .btn-acoes {
+            display: flex;
+            gap: 10px;
+        }
 
         .btn-aprovar {
+            background: #e7f3e8;
+            color: #2e7d32;
+            padding: 8px 14px;
+            border-radius: 14px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-aprovar:hover {
             background: #2e7d32;
             color: white;
         }
 
         .btn-rejeitar {
-            background: #c62828;
+            background: #fbeaea;
+            color: #b00020;
+            padding: 8px 14px;
+            border-radius: 14px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-rejeitar:hover {
+            background: #b00020;
             color: white;
+        }
+
+        .msg-vazia {
+            text-align: center;
+            padding: 40px;
+            color: #888;
+            font-style: italic;
         }
     </style>
 </head>
 
-
 <body>
 
 <header>
-    <h1>Administração - Pesquisadores</h1>
+    <h1>OCS.EUC - Observatório da Comunidade Surda</h1>
 </header>
+
+<nav>
+    <a th:href="@{/}">Página Principal</a>
+</nav>
 
 <div class="container">
 
-    <h2>Pesquisadores pendentes de validação</h2>
+    <h2>Validação de Novos Pesquisadores</h2>
 
     <table>
         <thead>
         <tr>
-            <th>Nome</th>
-            <th>Email</th>
-            <th>Instituição</th>
-            <th>Ações</th>
+            <th>Nome do Solicitante</th>
+            <th>E-mail</th>
+            <th>Instituição / Vínculo</th>
+            <th style="text-align: center;">Decisão</th>
         </tr>
         </thead>
 
         <tbody>
         <tr th:each="p : ${pesquisadores}">
-            <td th:text="${p.nome}"></td>
+            <td th:text="${p.nome}" style="font-weight: bold; color: #1b3a57;"></td>
             <td th:text="${p.email}"></td>
-            <td th:text="${p.instituicao}"></td>
-            <td>
-                <form th:action="@{/admin/pesquisadores/{id}/aprovar(id=${p.id})}"
-                      method="post" style="display:inline">
-                    <button class="btn btn-aprovar">Aprovar</button>
+            <td th:text="${p.instituicao != null && !p.instituicao.isEmpty() ? p.instituicao : 'Não informada'}"></td>
+            <td class="btn-acoes" style="justify-content: center;">
+
+                <form th:action="@{/admin/pesquisadores/{id}/aprovar(id=${p.id})}" method="post">
+                    <button type="submit" class="btn-aprovar"
+                            onclick="return confirm('Confirmar a aprovação deste pesquisador?')">
+                        Aprovar
+                    </button>
                 </form>
 
-                <form th:action="@{/admin/pesquisadores/{id}/rejeitar(id=${p.id})}"
-                      method="post" style="display:inline">
-                    <button class="btn btn-rejeitar">Rejeitar</button>
+                <form th:action="@{/admin/pesquisadores/{id}/rejeitar(id=${p.id})}" method="post">
+                    <button type="submit" class="btn-rejeitar"
+                            onclick="return confirm('Tem certeza que deseja rejeitar este pedido?')">
+                        Rejeitar
+                    </button>
                 </form>
             </td>
         </tr>
 
         <tr th:if="${#lists.isEmpty(pesquisadores)}">
-            <td colspan="4">Nenhum pesquisador pendente.</td>
+            <td colspan="4" class="msg-vazia">
+                Não há pedidos de cadastro pendentes no momento.
+            </td>
         </tr>
         </tbody>
     </table>
 
 </div>
+
 <div vw class="enabled">
     <div vw-access-button class="active"></div>
     <div vw-plugin-wrapper>
         <div class="vw-plugin-top-wrapper"></div>
     </div>
 </div>
-
 <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
-<script>
-    new window.VLibras.Widget('https://vlibras.gov.br/app');
-</script>
+<script>new window.VLibras.Widget('https://vlibras.gov.br/app');</script>
 
 </body>
 </html>
