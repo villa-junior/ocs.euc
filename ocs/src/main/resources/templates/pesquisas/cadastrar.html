@@ -2,9 +2,10 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Cadastrar Pesquisa</title>
+    <title>Pesquisa - OCS.EUC</title>
 
     <style>
+
         body {
             margin: 0;
             font-family: Arial, sans-serif;
@@ -31,6 +32,13 @@
             color: white;
             text-decoration: none;
             font-weight: bold;
+            padding: 6px 10px;
+            transition: transform 0.2s ease;
+        }
+
+        nav a:hover {
+            transform: translateY(-2px);
+            opacity: 0.9;
         }
 
         .container {
@@ -47,6 +55,7 @@
             margin-top: 0;
         }
 
+
         label {
             display: block;
             margin-top: 15px;
@@ -56,31 +65,55 @@
 
         input, textarea, select {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             margin-top: 6px;
-            border-radius: 6px;
-            border: 1px solid #ccc;
+            border-radius: 10px;
+            border: 1px solid #e6eef6;
+            background: #fdfdfd;
+            box-sizing: border-box;
             font-size: 0.95rem;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #1b3a57;
+            box-shadow: 0 0 0 2px rgba(27,58,87,0.1);
         }
 
         textarea {
             resize: vertical;
         }
 
+
+        .alerta-erro {
+            background-color: #fbeaea;
+            color: #b00020;
+            border: 1px solid #f5c2c7;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+        }
+
+
         .acoes {
-            margin-top: 25px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e6eef6;
             display: flex;
-            gap: 10px;
+            gap: 12px;
         }
 
         .btn {
-            padding: 8px 14px;
-            border-radius: 6px;
+            padding: 10px 22px;
+            border-radius: 18px;
             border: none;
             cursor: pointer;
             font-weight: bold;
             text-decoration: none;
             font-size: 0.9rem;
+            transition: all 0.2s ease;
+            display: inline-block;
         }
 
         .btn-primary {
@@ -88,47 +121,54 @@
             color: white;
         }
 
-
-        .alerta-erro {
-            background-color: #fdecea;
-            color: #611a15;
-            border: 1px solid #f5c2c7;
-            padding: 12px;
-            margin-bottom: 20px;
-            border-radius: 6px;
-            font-weight: bold;
+        .btn-primary:hover {
+            background: #153049;
+            box-shadow: 0 4px 12px rgba(27,58,87,0.2);
         }
+
+        .btn-secondary {
+            background: #e6eef6;
+            color: #1b3a57;
+        }
+
+        .btn-secondary:hover {
+            background: #dbe7f2;
+        }
+        .is-invalid {
+            border: 2px solid #b00020 !important;
+            background-color: #fff8f8 !important;
+        }
+
     </style>
 </head>
 
 <body>
 
 <header>
-    <h1>Pesquisa</h1>
+    <h1>OCS.EUC - Observatório da Comunidade Surda</h1>
+    <p style="color: #e0e0e0; margin-top: 8px;">Módulo de Pesquisas Acadêmicas</p>
 </header>
 
 <nav>
-    <a th:href="@{/}">Página Principal</a>
-
+    <a th:href="@{/static}">Página Principal</a>
 </nav>
 
 <div class="container">
     <h2 th:text="${pesquisa.id == null ? 'Cadastrar Pesquisa' : 'Editar Pesquisa'}">
         Cadastrar Pesquisa
     </h2>
+    <hr style="border: 0; border-top: 1px solid #e6eef6; margin-bottom: 25px;">
 
     <form th:action="@{/pesquisas}"
           method="post"
           th:object="${pesquisa}">
 
         <div th:if="${#fields.hasAnyErrors()}" class="alerta-erro">
-            <ul>
+            <strong style="display: block; margin-bottom: 5px;">Atenção:</strong>
+            <ul style="margin: 0; padding-left: 20px;">
                 <li th:each="err : ${#fields.errors()}" th:text="${err}"></li>
             </ul>
         </div>
-
-        <input type="hidden" th:field="*{id}" />
-
 
         <input type="hidden" th:field="*{id}" />
 
@@ -137,20 +177,23 @@
                id="titulo"
                th:field="*{titulo}"
                placeholder="Ex: Inclusão da Comunidade Surda no Ensino Superior"
+               maxlength="255"
+               th:classappend="${#fields.hasErrors('titulo')} ? 'is-invalid' : ''"
                required />
 
-        <label for="descricao">Descrição</label>
+        <label for="descricao">Descrição e Objetivos</label>
         <textarea id="descricao"
                   th:field="*{descricao}"
-                  rows="4"
-                  placeholder="Resumo do objetivo, metodologia e contexto da pesquisa">
-        </textarea>
+                  rows="5"
+                  maxlength="255"
+                  th:classappend="${#fields.hasErrors('descricao')} ? 'is-invalid' : ''"
+                  placeholder="Resumo do objetivo, metodologia e contexto da pesquisa"></textarea>
 
         <label for="status">Status da Pesquisa</label>
         <select id="status"
                 th:field="*{status}"
                 required>
-            <option value="">Selecione</option>
+            <option value="">Selecione o status atual</option>
             <option th:value="${T(br.edu.ifba.ocs.model.Pesquisa.Status).EM_ANDAMENTO}">
                 Em andamento
             </option>
@@ -159,52 +202,85 @@
             </option>
         </select>
 
-        <label for="dataInicio">Data de Início</label>
-        <input type="date"
-               id="dataInicio"
-               th:field="*{dataInicio}"
-               th:attr="max=${hoje}"
-               required />
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div>
+                <label for="dataInicio">Data de Início</label>
+                <input type="date"
+                       id="dataInicio"
+                       th:field="*{dataInicio}"
+                       th:attr="max=${hoje}"
+                       required />
+            </div>
+            <div>
+                <label for="dataFim">
+                    Data de Fim
+                    <small style="font-weight:normal; color:#777;">(Opcional)</small>
+                </label>
+                <input type="date"
+                       id="dataFim"
+                       th:field="*{dataFim}"
+                       th:attr="max=${hoje}" />
+            </div>
+        </div>
 
-        <label for="dataFim">
-            Data de Fim
-            <span style="font-weight:normal; font-size:0.85em; color:#777;">
-                (somente se a pesquisa estiver concluída)
-            </span>
-        </label>
-        <input type="date"
-               id="dataFim"
-               th:field="*{dataFim}"
-               th:attr="max=${hoje}" />
-
-        <label for="urlParticipante">URL do Participante</label>
+        <label for="urlParticipante">Link para Participação (Voluntários)</label>
         <input type="url"
                id="urlParticipante"
                th:field="*{urlParticipante}"
-               placeholder="Ex: https://link-do-participante.com" />
+               maxlength="255"
+               th:classappend="${#fields.hasErrors('urlParticipante')} ? 'is-invalid' : ''"
+               placeholder="Ex: https://forms.gle/exemplo" />
 
-        <label for="urlOrganizador">URL do Organizador</label>
+        <label for="urlOrganizador">Link da Instituição / Organizador</label>
         <input type="url"
                id="urlOrganizador"
                th:field="*{urlOrganizador}"
-               placeholder="Ex: https://link-do-organizador.com" />
+               maxlength="255"
+               th:classappend="${#fields.hasErrors('urlOrganizador')} ? 'is-invalid' : ''"
+               placeholder="Ex: https://ifba.edu.br/pesquisa" />
 
-        <label for="arquivoResultados">Arquivo / Link dos Resultados</label>
-        <input type="text"
+        <label for="arquivoResultados">Repositório de Resultados / Arquivo Final</label>
+        <input type="url"
                id="arquivoResultados"
                th:field="*{arquivoResultados}"
+               maxlength="255"
+               th:classappend="${#fields.hasErrors('arquivoResultados')} ? 'is-invalid' : ''"
                placeholder="Ex: https://repositorio.ifba.edu.br/pesquisa.pdf" />
 
         <div class="acoes">
             <button type="submit" class="btn btn-primary">
-                Salvar
+                Salvar Pesquisa
             </button>
-
-
+            <a th:href="@{/pesquisas}" class="btn btn-secondary">
+                Voltar
+            </a>
         </div>
 
     </form>
 </div>
+
+<script>
+
+    document.querySelectorAll('input[maxlength], textarea[maxlength]').forEach(field => {
+
+        const counter = document.createElement('div');
+        counter.style = "text-align: right; font-size: 0.75rem; color: #888; margin-bottom: 10px; margin-top: 2px;";
+
+
+        field.after(counter);
+
+        const update = () => {
+            const current = field.value.length;
+            const max = field.getAttribute('maxlength');
+            counter.textContent = `${current} / ${max} caracteres`;
+
+            counter.style.color = current >= max ? "#b00020" : "#888";
+        };
+
+        field.addEventListener('input', update);
+        update();
+    });
+</script>
 
 <div vw class="enabled">
     <div vw-access-button class="active"></div>

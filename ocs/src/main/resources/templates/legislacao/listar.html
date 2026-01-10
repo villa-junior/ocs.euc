@@ -1,95 +1,152 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 <head>
     <meta charset="UTF-8">
     <title>Legislações</title>
 
     <style>
         body {
-          margin: 0;
-          font-family: Arial, sans-serif;
-          background: #f7f7f7;
-          color: #333;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f7f7f7;
+            color: #333;
         }
 
         header {
-          background: #1b3a57;
-          color: white;
-          padding: 20px;
-          text-align: center;
+            background: #1b3a57;
+            color: white;
+            padding: 20px;
+            text-align: center;
         }
 
         nav {
-          background: #153049;
-          padding: 10px;
-          display: flex;
-          justify-content: center;
-          gap: 20px;
+            background: #153049;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
         }
 
         nav a {
-          color: white;
-          text-decoration: none;
-          font-weight: bold;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
         }
 
         .container {
-          max-width: 1000px;
-          margin: 30px auto;
-          background: white;
-          padding: 30px;
-          border-radius: 14px;
-          box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            max-width: 1000px;
+            margin: 30px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 14px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
         }
 
         h2 {
-          color: #1b3a57;
-          margin-top: 0;
+            color: #1b3a57;
+            margin-top: 0;
         }
 
-        table {
-          width: 100%;
-          border-collapse: collapse;
-          margin-top: 20px;
-          font-size: 0.95rem;
+
+        .legislacoes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-top: 30px;
         }
 
-        th, td {
-          padding: 12px;
-          border-bottom: 1px solid #e0e0e0;
-          text-align: left;
-          vertical-align: top;
+        .legislacao-card {
+            background: #ffffff;
+            border-radius: 14px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
         }
 
-        th {
-          background: #f2f5f8;
-          color: #1b3a57;
+        .legislacao-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 22px rgba(27,58,87,0.18);
         }
 
-        tr:hover {
-          background: #f8fbfe;
+        .legislacao-titulo {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #1b3a57;
+            text-decoration: none;
+            margin-bottom: 10px;
         }
 
-        .btn {
-          padding: 6px 10px;
-          border-radius: 6px;
-          border: none;
-          cursor: pointer;
-          font-weight: bold;
-          text-decoration: none;
-          font-size: 0.85rem;
-          display: inline-block;
+        .legislacao-descricao {
+            font-size: 0.9rem;
+            color: #555;
+            margin: 10px 0;
+            line-height: 1.5;
         }
 
-        .btn-primary {
-          background: #1b3a57;
-          color: white;
+        .legislacao-meta {
+            font-size: 0.8rem;
+            color: #777;
+            margin-bottom: 6px;
         }
 
-        .btn-secondary {
-          background: #e0e0e0;
-          color: #333;
+        .legislacao-acoes {
+            margin-top: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+
+
+        .btn-ver {
+            background: #1b3a57;
+            color: white;
+            padding: 6px 14px;
+            border-radius: 18px;
+            font-size: 0.8rem;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .btn-editar {
+            background: #e6eef6;
+            color: #1b3a57;
+            padding: 6px 12px;
+            border-radius: 14px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-excluir {
+            background: #fbeaea;
+            color: #b00020;
+            padding: 6px 12px;
+            border-radius: 14px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+        }
+
+        .intro-secao {
+            margin-bottom: 26px;
+            padding-bottom: 18px;
+            border-bottom: 1px solid #e6eef6;
+            font-size: 0.95rem;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        strong {
+            color: #1b3a57;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -97,90 +154,74 @@
 <body>
 
 <header>
-    <h1>Legislações</h1>
+    <h1>OCS.EUC - Observatório da Comunidade Surda</h1>
 </header>
 
 <nav>
-    <a th:href="@{/}">Página Principal</a>
+    <a th:href="@{/static}">Página Principal</a>
 </nav>
 
 <div class="container">
-    <h2>Legislações</h2>
-
-    <!-- 🔒 BOTÃO APENAS PARA ADMIN -->
-    <div sec:authorize="hasRole('ADMIN')">
-        <a th:href="@{/legislacoes/cadastrar}" class="btn btn-primary">
-            Cadastrar Legislação
-        </a>
+    <div class="intro-secao">
+        <h2>Legislações de Referência</h2>
+        <p>
+            Esta seção reúne o conjunto de <strong>leis, decretos e normativas</strong> que fundamentam
+            as análises, pesquisas e produções do <strong>Observatório da Comunidade Surda</strong>.
+            As legislações aqui apresentadas constituem a base legal para a garantia de direitos,
+            promoção da acessibilidade e reconhecimento da Libras.
+        </p>
+        <p>
+            O objetivo é oferecer um <strong>repositório organizado e acessível</strong>,
+            contribuindo para estudos acadêmicos e ações sociais fundamentadas em marcos legais oficiais.
+        </p>
     </div>
 
-    <table>
-        <tbody>
+    <a sec:authorize="hasRole('ADMIN')"
+       th:href="@{/legislacoes/cadastrar}"
+       class="btn-ver"
+       style="margin-bottom:20px; display:inline-block;">
+        Cadastrar Legislação
+    </a>
 
-        <tr th:if="${#lists.isEmpty(legislacoes)}">
-            <td colspan="3">Nenhuma legislação encontrada.</td>
-        </tr>
+    <div class="legislacoes-grid">
 
-        <tr th:each="l : ${legislacoes}">
+        <div class="legislacao-card" th:each="l : ${legislacoes}">
 
-            <!-- COLUNA LEGISLAÇÃO -->
-            <td>
-                <strong th:text="${l.numero}">Lei nº</strong>
+            <div class="legislacao-titulo" th:text="${l.numero}"></div>
 
-                <div style="font-size:0.85rem; margin-top:6px;"
-                     th:text="${l.descricao}">
-                </div>
-
-                <div th:if="${l.urlArquivo != null}"
-                     style="margin-top:6px;">
-                    <a th:href="${l.urlArquivo}"
-                       target="_blank"
-                       style="color:#1b3a57; font-weight:bold;">
-                        Acessar documento
-                    </a>
-                </div>
-            </td>
-
-            <!-- DATA -->
-            <td>
+            <div class="legislacao-meta">
+                <strong>Data de publicação:</strong>
                 <span th:text="${#temporals.format(l.data, 'dd/MM/yyyy')}"></span>
-            </td>
+            </div>
 
-            <!-- 🔒 AÇÕES – APENAS ADMIN -->
-            <td sec:authorize="hasRole('ADMIN')">
+            <p class="legislacao-descricao" th:text="${l.descricao}"></p>
 
-                <form th:action="@{/legislacoes/editar}"
-                      method="post"
-                      style="display:inline">
+            <div class="legislacao-acoes">
+                <a th:if="${l.urlArquivo != null}"
+                   th:href="${l.urlArquivo}"
+                   target="_blank"
+                   class="btn-ver">
+                    Consultar documento
+                </a>
+                <span th:if="${l.urlArquivo == null}"></span>
 
-                    <input type="hidden" name="id"
-                           th:value="${l.id}" />
+                <div sec:authorize="hasRole('ADMIN')" style="display:flex; gap:8px;">
 
-                    <button type="submit"
-                            class="btn btn-primary">
-                        Editar
-                    </button>
-                </form>
+                    <form th:action="@{/legislacoes/editar/{id}(id=${l.id})}" method="get">
+                        <button type="submit" class="btn-editar">Editar</button>
+                    </form>
 
-                <form th:action="@{/legislacoes/{id}(id=${l.id})}"
-                      method="post"
-                      style="display:inline"
-                      onsubmit="return confirm('Deseja realmente excluir esta legislação?');">
+                    <form th:action="@{/legislacoes/excluir/{id}(id=${l.id})}" method="post">
+                        <input type="hidden" name="_method" value="DELETE"/>
+                        <button type="submit" class="btn-excluir">Excluir</button>
+                    </form>
 
-                    <input type="hidden" name="_method" value="DELETE"/>
+                </div>
+            </div>
 
-                    <button type="submit"
-                            class="btn btn-secondary">
-                        Excluir
-                    </button>
-                </form>
+        </div>
 
-            </td>
-        </tr>
-
-        </tbody>
-    </table>
-
+    </div>
 </div>
 
 <div vw class="enabled">

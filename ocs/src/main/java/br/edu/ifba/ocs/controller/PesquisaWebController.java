@@ -5,7 +5,7 @@ import br.edu.ifba.ocs.model.Pesquisa.Status;
 import br.edu.ifba.ocs.security.ContaDetails;
 import br.edu.ifba.ocs.service.PesquisaService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,13 +19,25 @@ import java.util.UUID;
 @RequestMapping("/pesquisas")
 public class PesquisaWebController {
 
-    @Autowired
-    private PesquisaService service;
+    private final PesquisaService service;
 
-    @GetMapping("/{status}")
-    public String listarPorStatus(@PathVariable Status status, Model model) {
+    public PesquisaWebController(PesquisaService service) {
+        this.service = service;
+    }
+
+    @GetMapping({ "/{status}", "/public/{status}" })
+    public String listar(
+            @PathVariable Status status,
+            Model model,
+            @AuthenticationPrincipal ContaDetails usuarioLogado
+    ) {
         model.addAttribute("pesquisas", service.listarPorStatus(status));
         model.addAttribute("status", status);
+
+        if (usuarioLogado != null) {
+            model.addAttribute("idContaLogada", usuarioLogado.getConta().getId());
+        }
+
         return "pesquisas/listar";
     }
 
@@ -43,57 +55,100 @@ public class PesquisaWebController {
             Model model,
             @AuthenticationPrincipal ContaDetails usuarioLogado
     ) {
-
-        if (pesquisa.getDataInicio() != null &&
-                pesquisa.getDataFim() != null &&
-                pesquisa.getDataFim().isBefore(pesquisa.getDataInicio())) {
-            result.rejectValue(
-                    "dataFim",
-                    "dataFim.invalida",
-                    "A data de fim não pode ser anterior à data de início."
-            );
-        }
-
-        if (pesquisa.getStatus() == Status.EM_ANDAMENTO &&
-                pesquisa.getDataFim() != null) {
-            result.rejectValue(
-                    "dataFim",
-                    "dataFim.invalida",
-                    "Pesquisa em andamento NÃO pode ter data de fim."
-            );
-        }
+        validarDatas(pesquisa, result);
 
         if (result.hasErrors()) {
             model.addAttribute("hoje", LocalDate.now());
             return "pesquisas/cadastrar";
         }
 
-
         pesquisa.setConta(usuarioLogado.getConta());
-
         service.salvar(pesquisa);
 
         return "redirect:/pesquisas/" + pesquisa.getStatus();
     }
 
     @GetMapping("/editar/{id}")
-    public String editar(@PathVariable UUID id, Model model) {
-
-        Pesquisa pesquisa = service.buscarPorId(id)
-                .orElseThrow(() -> new IllegalArgumentException("Pesquisa não encontrada"));
+    public String editar(
+            @PathVariable UUID id,
+            Model model,
+            @AuthenticationPrincipal ContaDetails usuarioLogado
+    ) {
+        Pesquisa pesquisa = buscarPesquisaOuFalhar(id);
+        validarPermissao(pesquisa, usuarioLogado);
 
         model.addAttribute("pesquisa", pesquisa);
         model.addAttribute("hoje", LocalDate.now());
         return "pesquisas/cadastrar";
     }
 
-    @PostMapping("/excluir/{id}")
-    public String excluir(
+    @PostMapping("/editar/{id}")
+    public String salvarEdicao(
             @PathVariable UUID id,
-            @RequestParam Status status
+            @Valid @ModelAttribute("pesquisa") Pesquisa pesquisa,
+            BindingResult result,
+            Model model,
+            @AuthenticationPrincipal ContaDetails usuarioLogado
     ) {
-        service.deletar(id);
+        validarDatas(pesquisa, result);
+
+        if (result.hasErrors()) {
+            model.addAttribute("hoje", LocalDate.now());
+            return "pesquisas/cadastrar";
+        }
+
+        service.editar(id, pesquisa, usuarioLogado.getConta());
+
+        return "redirect:/pesquisas/" + pesquisa.getStatus();
+    }
+
+    @PostMapping("/excluir/{id}")
+    public String excluir(@PathVariable UUID id,
+                          @RequestParam(required = false, defaultValue = "EM_ANDAMENTO") Status status,
+                          @AuthenticationPrincipal ContaDetails usuarioLogado) {
+
+        service.deletar(id, usuarioLogado.getConta());
         return "redirect:/pesquisas/" + status;
     }
+
+
+
+    private Pesquisa buscarPesquisaOuFalhar(UUID id) {
+        return service.buscarPorId(id)
+                .orElseThrow(() -> new IllegalArgumentException("Pesquisa não encontrada"));
+    }
+
+    private void validarPermissao(Pesquisa pesquisa, ContaDetails usuarioLogado) {
+        boolean ehDono = pesquisa.getConta() != null &&
+                pesquisa.getConta().getId().equals(usuarioLogado.getConta().getId());
+
+        boolean ehAdmin = usuarioLogado.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+
+        if (!ehDono && !ehAdmin) {
+            throw new AccessDeniedException("Você não tem permissão para esta ação.");
+        }
+    }
+
+    private void validarDatas(Pesquisa pesquisa, BindingResult result) {
+
+        if (pesquisa.getDataInicio() != null &&
+                pesquisa.getDataFim() != null &&
+                pesquisa.getDataFim().isBefore(pesquisa.getDataInicio())) {
+            result.rejectValue("dataFim", "dataFim.invalida",
+                    "A data de fim não pode ser anterior à data de início.");
+        }
+
+
+        if (pesquisa.getStatus() == Status.EM_ANDAMENTO && pesquisa.getDataFim() != null) {
+            result.rejectValue("dataFim", "dataFim.invalida",
+                    "Pesquisa em andamento NÃO pode ter data de fim.");
+        }
+
+
+        if (pesquisa.getStatus() == Status.CONCLUIDA && pesquisa.getDataFim() == null) {
+            result.rejectValue("dataFim", "dataFim.obrigatoria",
+                    "Uma pesquisa concluída deve obrigatoriamente ter uma data de fim.");
+        }
+    }
 }
-//

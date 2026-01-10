@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.Size;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -25,8 +26,10 @@ public class Pesquisa {
     private UUID id;
 
     @NotBlank(message = "Título é obrigatório")
+    @Size(max = 255, message = "O título está muito longo! Máximo de 255 caracteres.")
     private String titulo;
 
+    @Size(max = 255, message = "A descrição está muito longa! Máximo de 255 caracteres.")
     private String descricao;
 
     @NotNull(message = "Status é obrigatório")
@@ -44,14 +47,18 @@ public class Pesquisa {
     @Column(name = "data_fim")
     private LocalDate dataFim;
 
+    @Size(max = 255, message = "A URL do participante é muito longa.")
     @Column(name = "url_participante")
     private String urlParticipante;
 
+    @Size(max = 255, message = "A URL do organizador é muito longa.")
     @Column(name = "url_organizador")
     private String urlOrganizador;
 
+    @Size(max = 255, message = "O nome do arquivo é muito longo.")
     @Column(name = "arquivo_resultados")
     private String arquivoResultados;
+
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JdbcTypeCode(SqlTypes.CHAR)

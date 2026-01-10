@@ -4,169 +4,188 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Observatório da Comunidade Surda</title>
+    <title>Início - OCS.EUC</title>
 
     <style>
         body {
-          margin: 0;
-          font-family: Arial, sans-serif;
-          background: #f7f7f7;
-          color: #333;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f7f7f7;
+            color: #333;
         }
 
-        /* ===== HEADER ===== */
+
         header {
-          background: #1b3a57;
-          color: white;
-          padding: 20px;
+            background: #1b3a57;
+            color: white;
+            padding: 20px;
         }
 
         .header-top {
-          display: grid;
-          grid-template-columns: 1fr auto 1fr;
-          align-items: center;
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
         .header-top h1 {
-          grid-column: 2;
-          margin: 0;
-          text-align: center;
-          font-size: 1.8rem;
+            grid-column: 2;
+            margin: 0;
+            text-align: center;
+            font-size: 1.6rem;
         }
 
-        .auth-buttons {
-          grid-column: 3;
-          display: flex;
-          justify-content: flex-end;
-          gap: 12px;
+        .auth-area {
+            grid-column: 3;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 15px;
         }
 
-        .auth-buttons a,
-        .auth-buttons button {
-          text-decoration: none;
-          padding: 8px 16px;
-          border-radius: 20px;
-          font-weight: bold;
-          font-size: 0.9rem;
-          border: 2px solid transparent;
-          cursor: pointer;
-          transition: all 0.25s ease;
-          background: none;
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            font-size: 0.8rem;
+        }
+
+        .roles {
+            display: flex;
+            gap: 5px;
+            margin-top: 3px;
+        }
+
+        .roles span {
+            background: #2d5f8b;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.65rem;
+            font-weight: bold;
+        }
+
+
+        .btn-entrar, .btn-cadastrar, .btn-logout, .btn-admin {
+            text-decoration: none;
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.85rem;
+            transition: all 0.25s ease;
+            cursor: pointer;
+            border: none;
         }
 
         .btn-entrar {
-          color: white;
-          border-color: white;
+            color: white;
+            border: 2px solid white;
+            background: transparent;
         }
 
         .btn-entrar:hover {
-          background: white;
-          color: #1b3a57;
+            background: white;
+            color: #1b3a57;
         }
 
         .btn-cadastrar {
-          background: #2d5f8b;
-          color: white;
-        }
-
-        .btn-cadastrar:hover {
-          background: #244c6f;
-          transform: translateY(-1px);
+            background: #2d5f8b;
+            color: white;
         }
 
         .btn-logout {
-          background: #b00020;
-          color: white;
-          border-color: #b00020;
+            background: #fbeaea;
+            color: #b00020;
         }
 
-        .btn-logout:hover {
-          background: #7a0016;
+        .btn-admin {
+            background: #e6eef6;
+            color: #1b3a57;
         }
 
-        /* ===== NAV ===== */
+
         nav {
-          background: #153049;
-          padding: 10px;
-          display: flex;
-          justify-content: center;
-          gap: 20px;
+            background: #153049;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
         nav a {
-          color: white;
-          text-decoration: none;
-          font-weight: bold;
-          padding: 6px 10px;
-          transition: transform 0.2s ease;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.9rem;
+            transition: opacity 0.2s;
         }
 
         nav a:hover {
-          transform: translateY(3px);
+            opacity: 0.8;
         }
 
-        /* ===== BANNER ===== */
+
         .banner {
-          background-color: #1b3a57;
-          padding: 60px 20px;
-          text-align: center;
-          color: white;
+            background-color: #1b3a57;
+            padding: 60px 20px;
+            text-align: center;
+            color: white;
+            border-bottom: 5px solid #153049;
         }
 
-        /* ===== SECTIONS ===== */
+        .banner h2 { font-size: 2rem; margin-bottom: 10px; }
+
         .section {
-          padding: 40px 20px;
-          max-width: 1000px;
-          margin: auto;
+            padding: 50px 20px;
+            max-width: 1000px;
+            margin: auto;
+        }
+
+        .section h2 {
+            color: #1b3a57;
+            border-bottom: 2px solid #e6eef6;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
         }
 
         .cards {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-          gap: 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 25px;
         }
 
-        .card-link {
-          text-decoration: none;
-          color: inherit;
-        }
+        .card-link { text-decoration: none; color: inherit; }
 
         .card {
-          background: white;
-          padding: 18px;
-          border-radius: 12px;
-          box-shadow: 0 3px 8px rgba(0,0,0,0.07);
-          transition: transform 0.2s ease, box-shadow 0.2s ease;
-          cursor: pointer;
-          height: 100%;
-          border-left: 4px solid transparent;
-        }
-
-        .card h3 {
-          margin-top: 0;
-          font-size: 1.2rem;
-          color: #1b3a57;
-        }
-
-        .card p {
-          font-size: 0.9rem;
-          color: #555;
+            background: white;
+            padding: 25px;
+            border-radius: 14px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+            transition: all 0.25s ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid transparent;
         }
 
         .card:hover {
-          transform: translateY(-4px);
-          box-shadow: 0 6px 14px rgba(27, 58, 87, 0.18);
-          border-left: 4px solid #1b3a57;
-          background: #f4f8fc;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(27, 58, 87, 0.12);
+            border-color: #e6eef6;
         }
 
-        /* ===== FOOTER ===== */
+        .card h3 { color: #1b3a57; margin-top: 0; margin-bottom: 12px; }
+        .card p { font-size: 0.9rem; color: #666; line-height: 1.5; margin: 0; }
+
         footer {
-          margin-top: 40px;
-          background: #1b3a57;
-          color: white;
-          padding: 20px;
-          text-align: center;
+            background: #1b3a57;
+            color: white;
+            padding: 30px;
+            text-align: center;
+            margin-top: 60px;
         }
     </style>
 </head>
@@ -175,28 +194,39 @@
 
 <header>
     <div class="header-top">
+        <div class="admin-area">
+            <a sec:authorize="hasRole('ADMIN')" th:href="@{/admin/pesquisadores}" class="btn-admin">
+                Pendências Admin
+            </a>
+        </div>
 
         <h1>OCS.EUC - Observatório da Comunidade Surda</h1>
 
-        <div class="auth-buttons">
-
-            <div sec:authorize="!isAuthenticated()">
-                <a th:href="@{/login}" class="btn-entrar">Entrar</a>
-                <a th:href="@{/contas/nova}" class="btn-cadastrar">Cadastrar</a>
+        <div class="auth-area">
+            <div sec:authorize="isAuthenticated()" class="user-info">
+                <span>Olá, <strong th:text="${#authentication.principal.conta.nome}"></strong></span>
+                <div class="roles">
+                    <span sec:authorize="hasRole('ADMIN')">ADMIN</span>
+                    <span sec:authorize="hasRole('PESQUISADOR')">PESQUISADOR</span>
+                </div>
             </div>
 
-            <div sec:authorize="isAuthenticated()">
-                <form th:action="@{/logout}" method="post" style="display:inline">
+            <div class="auth-buttons">
+                <div sec:authorize="!isAuthenticated()" style="display:flex; gap:10px;">
+                    <a th:href="@{/login}" class="btn-entrar">Entrar</a>
+                    <a th:href="@{/contas/nova}" class="btn-cadastrar">Cadastrar</a>
+                </div>
+
+                <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post">
                     <button type="submit" class="btn-logout">Sair</button>
                 </form>
             </div>
-
         </div>
     </div>
 </header>
 
 <nav>
-    <a href="#sobre">Sobre</a>
+    <a href="#sobre">Início</a>
     <a href="#obras">Acervo</a>
     <a href="#pesquisas">Pesquisas</a>
     <a href="#legislacao">Legislação</a>
@@ -204,92 +234,87 @@
 
 <div class="banner">
     <h2>Conhecimento acessível para fortalecer a comunidade surda</h2>
-    <p>Repositório de livros, artigos, pesquisas, legislações e materiais audiovisuais.</p>
+    <p>Repositório de obras acadêmicas, pesquisas e marcos legais.</p>
 </div>
 
 <section id="sobre" class="section">
     <h2>Sobre o Observatório</h2>
-    <p>
-        O Observatório da Comunidade Surda é uma plataforma dedicada à reunião,
-        organização e divulgação de produções acadêmicas, culturais e institucionais.
-    </p>
     <a th:href="@{/sobre}" class="card-link">
         <div class="card">
-            <h3>Mais Informações</h3>
+            <h3>Conheça o Projeto</h3>
+            <p>Informações sobre os objetivos, estrutura institucional e a atuação do OCS.EUC no IFBA Campus Euclides da Cunha.</p>
         </div>
     </a>
 </section>
 
 <section id="obras" class="section">
-    <h2>Acervo de Obras</h2>
-
+    <h2>Acervo por Categoria</h2>
     <div class="cards">
         <a th:href="@{/obras/categoria/048f53a5-e8d8-11f0-aa61-5e6bbc2bdd97}" class="card-link">
             <div class="card">
                 <h3>Livros</h3>
-                <p>Obras completas em PDF.</p>
+                <p>Obras completas para fundamentação teórica e histórica.</p>
             </div>
         </a>
-
         <a th:href="@{/obras/categoria/04900713-e8d8-11f0-aa61-5e6bbc2bdd97}" class="card-link">
             <div class="card">
                 <h3>Artigos</h3>
-                <p>Publicações científicas.</p>
+                <p>Produções científicas e acadêmicas de eventos e periódicos.</p>
             </div>
         </a>
-
         <a th:href="@{/obras/categoria/0490181d-e8d8-11f0-aa61-5e6bbc2bdd97}" class="card-link">
             <div class="card">
                 <h3>Manuais</h3>
-                <p>Materiais educativos.</p>
+                <p>Guias práticos e materiais de orientação pedagógica.</p>
             </div>
         </a>
-
         <a th:href="@{/obras/categoria/04902238-e8d8-11f0-aa61-5e6bbc2bdd97}" class="card-link">
             <div class="card">
                 <h3>Audiovisuais</h3>
-                <p>Conteúdos em Libras.</p>
+                <p>Conteúdos em vídeo com foco em acessibilidade e Libras.</p>
             </div>
         </a>
     </div>
 </section>
 
 <section id="pesquisas" class="section">
-    <h2>Pesquisas</h2>
+    <h2>Linhas de Pesquisa</h2>
     <div class="cards">
-        <a th:href="@{/pesquisas/EM_ANDAMENTO}" class="card-link">
-            <div class="card"><h3>Em andamento</h3></div>
+        <a th:href="@{/pesquisas/public/EM_ANDAMENTO}" class="card-link">
+            <div class="card">
+                <h3>Em Andamento</h3>
+                <p>Acompanhe estudos ativos e veja como colaborar com as coletas de dados.</p>
+            </div>
         </a>
-        <a th:href="@{/pesquisas/CONCLUIDA}" class="card-link">
-            <div class="card"><h3>Concluídas</h3></div>
+        <a th:href="@{/pesquisas/public/CONCLUIDA}" class="card-link">
+            <div class="card">
+                <h3>Concluídas</h3>
+                <p>Resultados e conclusões de pesquisas já finalizadas pelo Observatório.</p>
+            </div>
         </a>
     </div>
 </section>
 
 <section id="legislacao" class="section">
-    <h2>Legislação</h2>
+    <h2>Marcos Legais</h2>
     <a th:href="@{/legislacoes}" class="card-link">
         <div class="card">
-            <h3>Acessar legislação</h3>
+            <h3>Legislação de Referência</h3>
+            <p>Acesse leis e decretos que garantem direitos e fundamentam as políticas de acessibilidade.</p>
         </div>
     </a>
 </section>
 
 <footer>
-    <p>© 2025 Observatório da Comunidade Surda — IFBA Euclides da Cunha</p>
+    <p>© 2026 Observatório da Comunidade Surda — IFBA Euclides da Cunha</p>
 </footer>
 
 <div vw class="enabled">
     <div vw-access-button class="active"></div>
-    <div vw-plugin-wrapper>
-        <div class="vw-plugin-top-wrapper"></div>
-    </div>
+    <div vw-plugin-wrapper><div class="vw-plugin-top-wrapper"></div></div>
 </div>
-
 <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
-<script>
-    new window.VLibras.Widget('https://vlibras.gov.br/app');
-</script>
+<script>new window.VLibras.Widget('https://vlibras.gov.br/app');</script>
 
 </body>
 </html>

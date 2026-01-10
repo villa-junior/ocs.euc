@@ -24,9 +24,17 @@ public class Conta {
     @Column(name = "senha_hash")
     private String senhaHash;
 
+    @Column(name = "validado", nullable = false)
+    private boolean validado = false;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Perfil perfil;
+
+
+    public boolean isValidado() {return validado;}
+
+    public void setValidado(boolean validado) {this.validado = validado;}
 
     private String instituicao;
 

@@ -19,11 +19,25 @@
             text-align: center;
         }
 
+        nav {
+            background: #153049;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
         .container {
-            max-width: 520px;
+            max-width: 500px;
             margin: 40px auto;
             background: white;
-            padding: 30px;
+            padding: 35px;
             border-radius: 14px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.08);
         }
@@ -32,51 +46,77 @@
             color: #1b3a57;
             margin-top: 0;
             text-align: center;
+            margin-bottom: 25px;
         }
 
         label {
             display: block;
-            margin-top: 15px;
+            margin-top: 18px;
             font-weight: bold;
             color: #1b3a57;
+            font-size: 0.9rem;
         }
 
         input, select {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             margin-top: 6px;
-            border-radius: 6px;
-            border: 1px solid #ccc;
+            border-radius: 8px;
+            border: 1px solid #e6eef6;
+            box-sizing: border-box;
+            background-color: #fcfdfe;
+            transition: border-color 0.2s;
         }
 
-        .btn {
-            margin-top: 25px;
-            padding: 10px 16px;
-            border-radius: 6px;
-            border: none;
-            cursor: pointer;
-            font-weight: bold;
-            width: 100%;
+        input:focus, select:focus {
+            outline: none;
+            border-color: #1b3a57;
+            background-color: #fff;
         }
 
-        .btn-primary {
+        .btn-enviar {
+            margin-top: 30px;
             background: #1b3a57;
             color: white;
+            padding: 12px 16px;
+            border-radius: 20px;
+            font-size: 1rem;
+            text-decoration: none;
+            font-weight: bold;
+            border: none;
+            width: 100%;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
         }
 
-        .btn-primary:hover {
+        .btn-enviar:hover {
             background: #153049;
+            transform: translateY(-1px);
         }
 
         .alerta-erro {
-            background-color: #fdecea;
-            color: #611a15;
+            background-color: #fbeaea;
+            color: #b00020;
             border: 1px solid #f5c2c7;
             padding: 12px;
             margin-bottom: 20px;
-            border-radius: 6px;
+            border-radius: 10px;
             font-weight: bold;
             text-align: center;
+            font-size: 0.85rem;
+        }
+
+        .form-footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 0.85rem;
+            color: #777;
+        }
+
+        .form-footer a {
+            color: #1b3a57;
+            text-decoration: none;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -84,41 +124,49 @@
 <body>
 
 <header>
-    <h1>OCS</h1>
+    <h1>OCS.EUC - Observatório da Comunidade Surda</h1>
 </header>
+
+<nav>
+    <a th:href="@{/static}">Página Principal</a>
+</nav>
 
 <div class="container">
 
-    <h2>Cadastrar Conta</h2>
+    <h2>Criar Nova Conta</h2>
 
     <div th:if="${erro}" class="alerta-erro" th:text="${erro}"></div>
 
     <form th:action="@{/contas/salvar}" th:object="${conta}" method="post">
 
-        <label>Nome</label>
-        <input type="text" th:field="*{nome}" required>
+        <label for="nome">Nome Completo</label>
+        <input type="text" id="nome" th:field="*{nome}" placeholder="Digite seu nome" required>
 
-        <label>Email</label>
-        <input type="email" th:field="*{email}" required>
+        <label for="email">E-mail Institucional ou Pessoal</label>
+        <input type="email" id="email" th:field="*{email}" placeholder="exemplo@email.com" required>
 
-        <label>Senha</label>
-        <input type="password" th:field="*{senha}" required>
+        <label for="senha">Senha</label>
+        <input type="password" id="senha" th:field="*{senha}" placeholder="Crie uma senha segura" required>
 
-        <label>Perfil</label>
-        <select th:field="*{perfil}" required>
-            <option value="">Selecione</option>
+        <label for="perfil">Perfil de Acesso</label>
+        <select id="perfil" th:field="*{perfilDesejado}" required>
+            <option value="">Selecione o tipo de perfil</option>
             <option th:each="p : ${perfis}"
-                    th:value="${p}"
+                    th:value="${p.name()}"
                     th:text="${p}">
             </option>
         </select>
 
-        <label>Instituição</label>
-        <input type="text" th:field="*{instituicao}">
+        <label for="instituicao">Instituição / Vínculo</label>
+        <input type="text" id="instituicao" th:field="*{instituicao}" placeholder="Ex: IFBA, UFBA, etc.">
 
-        <button type="submit" class="btn btn-primary">
-            Cadastrar
+        <button type="submit" class="btn-enviar">
+            Finalizar Cadastro
         </button>
+
+        <div class="form-footer">
+            Já possui uma conta? <a th:href="@{/login}">Faça login aqui</a>.
+        </div>
 
     </form>
 </div>

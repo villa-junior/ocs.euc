@@ -21,24 +21,26 @@ public class CadastroContaController {
         this.contaService = contaService;
     }
 
+
     @GetMapping("/nova")
     public String formulario(Model model) {
+
         model.addAttribute("conta", new CadastroContaDTO());
-        model.addAttribute("perfis",
-                Arrays.stream(Perfil.values())
-                        .filter(p -> p != Perfil.admin)
-                        .toList()
-        );
+        model.addAttribute("perfis", perfisPermitidos());
+
         return "contas/cadastro";
     }
 
+
     @PostMapping("/salvar")
-    public String salvar(@Valid @ModelAttribute("conta") CadastroContaDTO dto,
-                         BindingResult result,
-                         Model model) {
+    public String salvar(
+            @Valid @ModelAttribute("conta") CadastroContaDTO dto,
+            BindingResult result,
+            Model model
+    ) {
 
         if (result.hasErrors()) {
-            model.addAttribute("perfis", Perfil.values());
+            model.addAttribute("perfis", perfisPermitidos());
             return "contas/cadastro";
         }
 
@@ -46,10 +48,22 @@ public class CadastroContaController {
             contaService.cadastrar(dto);
         } catch (RuntimeException e) {
             model.addAttribute("erro", e.getMessage());
-            model.addAttribute("perfis", Perfil.values());
+            model.addAttribute("perfis", perfisPermitidos());
             return "contas/cadastro";
         }
 
-        return "redirect:/login?cadastro";
+
+        if (dto.getPerfilDesejado() == Perfil.pesquisador) {
+            return "redirect:/login?pedidoEmAnalise";
+        }
+
+        return "redirect:/login?cadastroSucesso";
+    }
+
+
+    private Perfil[] perfisPermitidos() {
+        return Arrays.stream(Perfil.values())
+                .filter(p -> p != Perfil.admin)
+                .toArray(Perfil[]::new);
     }
 }

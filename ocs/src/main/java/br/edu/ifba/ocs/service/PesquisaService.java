@@ -30,17 +30,62 @@ public class PesquisaService {
     }
 
     public Pesquisa salvar(Pesquisa pesquisa) {
-
         return repository.save(pesquisa);
     }
 
-    public void deletar(UUID id) {
-        if (!repository.existsById(id)) {
-            throw new IllegalArgumentException("Pesquisa não encontrada para exclusão.");
+    public void deletar(UUID id, Conta contaLogada) {
+
+        Pesquisa pesquisa = repository.findById(id)
+                .orElseThrow(() ->
+                        new IllegalArgumentException("Pesquisa não encontrada"));
+
+
+        if (pesquisa.getConta() == null) {
+            if (contaLogada.getPerfil() != br.edu.ifba.ocs.model.Perfil.admin) {
+                throw new SecurityException(
+                        "Você não tem permissão para excluir esta pesquisa"
+                );
+            }
+            repository.delete(pesquisa);
+            return;
         }
-        repository.deleteById(id);
+
+
+        if (contaLogada.getPerfil() == br.edu.ifba.ocs.model.Perfil.admin) {
+            repository.delete(pesquisa);
+            return;
+        }
+
+
+        if (!pesquisa.getConta().getId().equals(contaLogada.getId())) {
+            throw new SecurityException(
+                    "Você não tem permissão para excluir esta pesquisa"
+            );
+        }
+
+        repository.delete(pesquisa);
     }
 
+
+    public Pesquisa editar(UUID id, Pesquisa dados, Conta contaLogada) {
+        Pesquisa pesquisa = repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Pesquisa não encontrada"));
+
+        if (!pesquisa.getConta().getId().equals(contaLogada.getId())) {
+            throw new SecurityException("Você não tem permissão para editar esta pesquisa");
+        }
+
+        pesquisa.setTitulo(dados.getTitulo());
+        pesquisa.setDescricao(dados.getDescricao());
+        pesquisa.setStatus(dados.getStatus());
+        pesquisa.setDataInicio(dados.getDataInicio());
+        pesquisa.setDataFim(dados.getDataFim());
+        pesquisa.setUrlParticipante(dados.getUrlParticipante());
+        pesquisa.setUrlOrganizador(dados.getUrlOrganizador());
+        pesquisa.setArquivoResultados(dados.getArquivoResultados());
+
+        return repository.save(pesquisa);
+    }
 
     public List<Pesquisa> listarPorConta(Conta conta) {
         return repository.findByConta(conta);

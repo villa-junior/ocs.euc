@@ -108,7 +108,7 @@ public class ObraService {
 
         obraAutoraRepository.deleteByObraId(obraId);
 
-        // Remove a obra
+
         repository.delete(obra);
     }
 }

@@ -10,55 +10,33 @@ public class CadastroContaDTO {
     @NotBlank
     private String nome;
 
-    @Email
     @NotBlank
+    @Email
     private String email;
 
     @NotBlank
     private String senha;
 
-    @NotNull
-    private Perfil perfil;
-
     private String instituicao;
 
-    public String getNome() {
-        return nome;
-    }
+    @NotNull
+    private Perfil perfilDesejado;
 
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
 
-    public String getEmail() {
-        return email;
-    }
+    public String getNome() { return nome; }
+    public void setNome(String nome) { this.nome = nome; }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
 
-    public String getSenha() {
-        return senha;
-    }
+    public String getSenha() { return senha; }
+    public void setSenha(String senha) { this.senha = senha; }
 
-    public void setSenha(String senha) {
-        this.senha = senha;
-    }
+    public String getInstituicao() { return instituicao; }
+    public void setInstituicao(String instituicao) { this.instituicao = instituicao; }
 
-    public Perfil getPerfil() {
-        return perfil;
-    }
-
-    public void setPerfil(Perfil perfil) {
-        this.perfil = perfil;
-    }
-
-    public String getInstituicao() {
-        return instituicao;
-    }
-
-    public void setInstituicao(String instituicao) {
-        this.instituicao = instituicao;
+    public Perfil getPerfilDesejado() { return perfilDesejado; }
+    public void setPerfilDesejado(Perfil perfilDesejado) {
+        this.perfilDesejado = perfilDesejado;
     }
 }

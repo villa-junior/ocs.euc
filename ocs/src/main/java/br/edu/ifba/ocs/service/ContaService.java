@@ -4,15 +4,12 @@ import br.edu.ifba.ocs.dto.CadastroContaDTO;
 import br.edu.ifba.ocs.model.Conta;
 import br.edu.ifba.ocs.model.Perfil;
 import br.edu.ifba.ocs.repository.ContaRepository;
-
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
-import java.util.Objects;
-
+import java.util.List;
+import java.util.UUID;
 
 @Service
 public class ContaService {
@@ -26,6 +23,8 @@ public class ContaService {
         this.passwordEncoder = passwordEncoder;
     }
 
+
+    @Transactional
     public void cadastrar(CadastroContaDTO dto) {
 
         if (contaRepository.findByEmail(dto.getEmail()).isPresent()) {
@@ -35,14 +34,48 @@ public class ContaService {
         Conta conta = new Conta();
         conta.setNome(dto.getNome());
         conta.setEmail(dto.getEmail());
-        conta.setPerfil(dto.getPerfil());
         conta.setInstituicao(dto.getInstituicao());
+        conta.setSenhaHash(passwordEncoder.encode(dto.getSenha()));
 
 
-        conta.setSenhaHash(
-                passwordEncoder.encode(dto.getSenha())
-        );
+        if (dto.getPerfilDesejado() == Perfil.pesquisador) {
+
+            conta.setPerfil(Perfil.visitante);
+            conta.setValidado(false);
+        } else {
+            conta.setPerfil(dto.getPerfilDesejado());
+            conta.setValidado(true);
+        }
 
         contaRepository.save(conta);
+    }
+
+
+    public List<Conta> listarPesquisadoresPendentes() {
+        return contaRepository.findByPerfilAndValidadoFalse(Perfil.visitante);
+    }
+
+
+    @Transactional
+    public void aprovarPesquisador(UUID idConta) {
+
+        Conta conta = contaRepository.findById(idConta)
+                .orElseThrow(() ->
+                        new RuntimeException("Conta não encontrada"));
+
+        conta.setPerfil(Perfil.pesquisador);
+        conta.setValidado(true);
+    }
+
+
+
+    @Transactional
+    public void rejeitarPesquisador(UUID idConta) {
+
+        Conta conta = contaRepository.findById(idConta)
+                .orElseThrow(() ->
+                        new RuntimeException("Conta não encontrada"));
+
+        contaRepository.delete(conta);
     }
 }

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Controller
@@ -29,11 +30,13 @@ public class LegislacaoWebController {
     @GetMapping("/cadastrar")
     public String cadastrarForm(Model model) {
         model.addAttribute("legislacao", new Legislacao());
+        model.addAttribute("hoje", LocalDate.now());
         return "legislacao/cadastrar";
     }
 
 
-    @PostMapping("/editar/{id}")
+
+    @GetMapping("/editar/{id}")
     public String editarForm(@PathVariable UUID id, Model model) {
         model.addAttribute("legislacao", service.buscarPorId(id));
         return "legislacao/cadastrar";
@@ -47,7 +50,7 @@ public class LegislacaoWebController {
     }
 
 
-    @DeleteMapping("/excluir/{id}")
+    @PostMapping("/excluir/{id}")
     public String excluir(@PathVariable UUID id) {
         service.excluir(id);
         return "redirect:/legislacoes";

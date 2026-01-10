@@ -49,155 +49,274 @@
             margin-top: 0;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            font-size: 0.95rem;
+
+        .obras-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-top: 30px;
         }
 
-        th, td {
-            padding: 12px;
-            border-bottom: 1px solid #e0e0e0;
-            text-align: left;
-            vertical-align: top;
+        .obra-card {
+            background: #ffffff;
+            border-radius: 14px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
         }
 
-        th {
-            background: #f2f5f8;
-            color: #1b3a57;
+        .obra-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 22px rgba(27,58,87,0.18);
         }
 
-        tr:hover {
-            background: #f8fbfe;
-        }
-
-        .btn {
-            padding: 6px 10px;
-            border-radius: 6px;
-            border: none;
-            cursor: pointer;
+        .obra-titulo {
+            font-size: 1.1rem;
             font-weight: bold;
+            color: #1b3a57;
             text-decoration: none;
-            font-size: 0.85rem;
-            display: inline-block;
         }
 
-        .btn-primary {
+        .obra-resumo {
+            font-size: 0.9rem;
+            color: #555;
+            margin: 10px 0;
+            line-height: 1.5;
+        }
+
+        .obra-meta {
+            font-size: 0.8rem;
+            color: #777;
+            margin-bottom: 6px;
+        }
+
+        .obra-tags span {
+            display: inline-block;
+            background: #eef3f7;
+            padding: 4px 8px;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            margin: 2px 4px 0 0;
+        }
+
+        .obra-acoes {
+            margin-top: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-ver {
             background: #1b3a57;
             color: white;
+            padding: 6px 14px;
+            border-radius: 18px;
+            font-size: 0.8rem;
+            text-decoration: none;
+            font-weight: bold;
         }
 
-        .btn-secondary {
-            background: #e0e0e0;
-            color: #333;
+        .btn-editar {
+            background: #e6eef6;
+            color: #1b3a57;
+            padding: 6px 12px;
+            border-radius: 14px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-decoration: none;
         }
+
+        .btn-excluir {
+            background: #fbeaea;
+            color: #b00020;
+            padding: 6px 12px;
+            border-radius: 14px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+        }
+        .intro-obras {
+            margin-bottom: 26px;
+            padding-bottom: 18px;
+            border-bottom: 1px solid #e6eef6;
+            font-size: 0.95rem;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .intro-obras p {
+            margin: 0 0 12px 0;
+        }
+        strong {
+            color: #1b3a57;
+            font-weight: bold;
+        }
+
+
     </style>
 </head>
 
 <body>
 
 <header>
-    <h1>Acervo de Obras</h1>
+    <h1>OCS.EUC - Observatório da Comunidade Surda</h1>
+    <h2 th:if="${categoria != null and categoria.nome == 'Livros'}"  style="color: #e0e0e0; font-size:1.5rem; margin:8px 0 0 0; display:block;">Livros</h2>
+    <h2 th:if="${categoria != null and categoria.nome == 'Artigos'}"  style=" color: #e0e0e0; font-size:1.5rem; margin:8px 0 0 0; display:block;">Artigos</h2>
+    <h2 th:if="${categoria != null and categoria.nome == 'Manuais'}"  style="color: #e0e0e0;  font-size:1.5rem; margin:8px 0 0 0; display:block;">Manuais</h2>
+    <h2 th:if="${categoria != null and categoria.nome == 'Audiovisuais'}"  style=" color: #e0e0e0; font-size:1.5rem; margin:8px 0 0 0; display:block;">Audiovisuais</h2>
+
+    <p th:if="${categoria != null and categoria.nome == 'Livros'}">Obras completas que oferecem fundamentação teórica, histórica e conceitual sobre a comunidade surda.</p>
+    <p th:if="${categoria != null and categoria.nome == 'Artigos'}">Produções científicas publicadas em periódicos e eventos acadêmicos, voltadas à difusão do conhecimento.</p>
+    <p th:if="${categoria != null and categoria.nome == 'Manuais'}">Materiais didáticos e guias orientadores que apoiam práticas educacionais e institucionais.</p>
+    <p th:if="${categoria != null and categoria.nome == 'Audiovisuais'}">Conteúdos em formato de vídeo e mídia visual, com foco em Libras e acessibilidade comunicacional.</p>
 </header>
 
 <nav>
-    <a th:href="@{/}">Página Principal</a>
+    <a th:href="@{/static}">Página Principal</a>
 </nav>
 
+
 <div class="container">
+    <div class="intro-obras">
+
+
+        <p>
+            O acervo de obras do <strong>Observatório da Comunidade Surda</strong> reúne produções
+            acadêmicas, educativas e culturais que subsidiam pesquisas, ações institucionais
+            e práticas sociais voltadas à comunidade surda.
+        </p>
+
+
+        <p th:if="${categoria != null and categoria.nome == 'Livros'}">
+            A categoria <strong>Livros</strong> contempla obras completas, em formato digital ou
+            referencial, que abordam aspectos históricos, linguísticos, educacionais e culturais
+            da comunidade surda. São materiais fundamentais para estudos aprofundados e
+            fundamentação teórica em pesquisas acadêmicas.
+        </p>
+
+        <p th:if="${categoria != null and categoria.nome == 'Artigos'}">
+            Os <strong>Artigos</strong> reúnem produções científicas publicadas em periódicos,
+            anais de eventos e revistas acadêmicas, contribuindo para a difusão de pesquisas,
+            debates contemporâneos e avanços teóricos relacionados à surdez e à Libras.
+        </p>
+
+        <p th:if="${categoria != null and categoria.nome == 'Manuais'}">
+            A seção de <strong>Manuais</strong> apresenta materiais didáticos, guias técnicos
+            e documentos orientadores, voltados à formação, à prática educacional e ao
+            desenvolvimento de ações institucionais acessíveis.
+        </p>
+
+        <p th:if="${categoria != null and categoria.nome == 'Audiovisuais'}">
+            Em <strong>Audiovisuais</strong>, encontram-se conteúdos em formato de vídeo e outras
+            mídias visuais, priorizando o uso da Língua Brasileira de Sinais (Libras) e recursos
+            de acessibilidade, fortalecendo a comunicação visual e a inclusão informacional.
+        </p>
+
+
+        <p th:if="${categoria == null}">
+            As obras estão organizadas por categorias para facilitar a navegação e a consulta.
+            Sempre que disponível, o Observatório direciona ao acesso ao material completo,
+            respeitando os direitos autorais e as políticas das instituições responsáveis.
+        </p>
+
+    </div>
+
 
     <h2 th:text="${categoria != null ? categoria.nome : 'Todas as Obras'}"></h2>
 
 
     <a sec:authorize="hasRole('ADMIN')"
        th:href="@{/obras/cadastrar}"
-       class="btn btn-primary">
+       class="btn-ver"
+       style="margin-bottom:20px; display:inline-block;">
         Cadastrar Obra
     </a>
 
-    <table>
-        <thead>
-        <tr>
-            <th>Obra</th>
-            <th>Categoria</th>
-            <th>Autoras</th>
+    <div class="obras-grid">
 
-            <th sec:authorize="hasRole('ADMIN')">Ações</th>
-        </tr>
-        </thead>
 
-        <tbody>
-        <tr th:each="o : ${obras}">
+        <div class="obra-card" th:each="o : ${obras}">
 
-            <td>
-                <a th:if="${o.urlArquivo != null and !#strings.isEmpty(o.urlArquivo)}"
-                   th:href="${o.urlArquivo}"
-                   target="_blank"
-                   style="color:#1b3a57; font-weight:bold; text-decoration:none;">
-                    <span th:text="${o.titulo}"></span>
-                </a>
+            <a th:if="${o.urlArquivo != null}"
+               th:href="${o.urlArquivo}"
+               target="_blank"
+               class="obra-titulo"
+               th:text="${o.titulo}">
+            </a>
 
-                <span th:if="${o.urlArquivo == null or #strings.isEmpty(o.urlArquivo)}"
-                      style="font-weight:bold;"
-                      th:text="${o.titulo}">
-                </span>
+            <span th:if="${o.urlArquivo == null}"
+                  class="obra-titulo"
+                  th:text="${o.titulo}">
+            </span>
 
-                <div th:if="${o.resumo != null}"
-                     style="color:#666; font-size:0.85rem; margin-top:4px;">
-                    <span th:text="${#strings.abbreviate(o.resumo, 150)}"></span>
-                </div>
+            <p class="obra-resumo"
+               th:if="${o.resumo != null}"
+               th:text="${#strings.abbreviate(o.resumo, 180)}">
+            </p>
 
-                <div style="font-size:0.8rem; color:#888;">
-                    Ano de publicação:
-                    <span th:text="${o.anoPublicacao != null ? o.anoPublicacao : '—'}"></span>
-                </div>
+            <div class="obra-meta">
+                <strong>Categoria:</strong>
+                <span th:text="${o.categoria != null ? o.categoria.nome : '—'}"></span>
+            </div>
 
-                <div th:if="${o.palavrasChave != null}" style="margin-top:4px;">
-                    <span th:each="palavra : ${#strings.arraySplit(o.palavrasChave, ',')}">
-                        <span style="background:#eef3f7;
-                                     padding:2px 6px;
-                                     border-radius:6px;
-                                     font-size:0.75rem;
-                                     margin-right:4px;">
-                            <span th:text="${palavra.trim()}"></span>
-                        </span>
-                    </span>
-                </div>
-            </td>
+            <div class="obra-meta">
+                <strong>Ano:</strong>
+                <span th:text="${o.anoPublicacao != null ? o.anoPublicacao : '—'}"></span>
+            </div>
 
-            <td th:text="${o.categoria != null ? o.categoria.nome : '—'}"></td>
-
-            <td>
+            <div class="obra-meta">
+                <strong>Autoras:</strong>
                 <span th:each="nome, stat : ${autorasPorObra[o.id]}">
                     <span th:text="${nome}"></span><span th:if="${!stat.last}">, </span>
                 </span>
                 <span th:if="${autorasPorObra[o.id] == null || autorasPorObra[o.id].isEmpty()}">—</span>
-            </td>
+            </div>
 
+            <div class="obra-tags" th:if="${o.palavrasChave != null}">
+                <span th:each="palavra : ${#strings.arraySplit(o.palavrasChave, ',')}"
+                      th:text="${palavra.trim()}">
+                </span>
+            </div>
 
-            <td sec:authorize="hasRole('ADMIN')">
-                <a class="btn btn-primary"
-                   th:href="@{/obras/editar/{id}(id=${o.id})}">
-                    Editar
+            <div class="obra-acoes">
+
+                <a th:if="${o.urlArquivo != null}"
+                   th:href="${o.urlArquivo}"
+                   target="_blank"
+                   class="btn-ver">
+                    Ler obra
                 </a>
 
-                <form th:action="@{/obras/excluir/{id}(id=${o.id})}"
-                      method="post"
-                      style="display:inline">
+                <div sec:authorize="hasRole('ADMIN')" style="display:flex; gap:8px;">
+                    <a th:href="@{/obras/editar/{id}(id=${o.id})}"
+                       class="btn-editar">
+                        Editar
+                    </a>
 
-                    <input type="hidden" name="categoriaId"
-                           th:value="${o.categoria.id}" />
+                    <form th:action="@{/obras/excluir/{id}(id=${o.id})}"
+                          method="post"
+                          style="display:inline">
 
-                    <button type="submit" class="btn btn-secondary">
-                        Excluir
-                    </button>
-                </form>
-            </td>
+                        <input type="hidden" name="categoriaId"
+                               th:value="${o.categoria.id}" />
 
-        </tr>
-        </tbody>
-    </table>
+                        <button type="submit"
+                                class="btn-excluir"
+                                onclick="return confirm('Deseja excluir esta obra?')">
+                            Excluir
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
 
 </div>
 
