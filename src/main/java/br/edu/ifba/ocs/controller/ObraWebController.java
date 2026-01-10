@@ -121,7 +121,7 @@ public class ObraWebController {
                             obraService.buscarIdsAutoras(id)
                     );
 
-                    return "obras/cadastrar"; // reutiliza o mesmo formulário
+                    return "obras/cadastrar";
                 })
                 .orElse("redirect:/obras");
     }

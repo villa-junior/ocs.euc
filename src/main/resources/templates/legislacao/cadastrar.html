@@ -5,7 +5,7 @@
   <title>Legislação - OCS.EUC</title>
 
   <style>
-    /* PADRONIZAÇÃO OCS.EUC */
+
     body {
       margin: 0;
       font-family: Arial, sans-serif;
@@ -55,7 +55,7 @@
       margin-top: 0;
     }
 
-    /* FORMULÁRIOS */
+
     label {
       display: block;
       margin-top: 15px;
@@ -84,7 +84,7 @@
       resize: vertical;
     }
 
-    /* BOTÕES PADRONIZADOS */
+
     .acoes {
       margin-top: 30px;
       padding-top: 20px;
@@ -160,6 +160,7 @@
     <input type="date"
            id="data"
            th:field="*{data}"
+           th:attr="max=${hoje}"
            required />
 
     <label for="descricao">Descrição / Ementa</label>

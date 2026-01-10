@@ -49,7 +49,7 @@
             margin-top: 0;
         }
 
-        /* Padronização com o estilo de Obras */
+
         .legislacoes-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -101,7 +101,7 @@
             gap: 10px;
         }
 
-        /* Estilos de Botões Padronizados com a Base */
+
         .btn-ver {
             background: #1b3a57;
             color: white;
@@ -207,17 +207,15 @@
 
                 <div sec:authorize="hasRole('ADMIN')" style="display:flex; gap:8px;">
 
-                    <form th:action="@{/legislacoes/editar}" method="post">
-                        <input type="hidden" name="id" th:value="${l.id}" />
+                    <form th:action="@{/legislacoes/editar/{id}(id=${l.id})}" method="get">
                         <button type="submit" class="btn-editar">Editar</button>
                     </form>
 
-                    <form th:action="@{/legislacoes/{id}(id=${l.id})}"
-                          method="post"
-                          onsubmit="return confirm('Deseja realmente excluir esta legislação?');">
+                    <form th:action="@{/legislacoes/excluir/{id}(id=${l.id})}" method="post">
                         <input type="hidden" name="_method" value="DELETE"/>
                         <button type="submit" class="btn-excluir">Excluir</button>
                     </form>
+
                 </div>
             </div>
 

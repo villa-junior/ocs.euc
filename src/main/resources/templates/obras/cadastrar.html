@@ -5,7 +5,7 @@
     <title>Cadastrar Obra - OCS.EUC</title>
 
     <style>
-        /* PADRONIZAÇÃO OCS.EUC */
+
         body {
             margin: 0;
             font-family: Arial, sans-serif;
@@ -55,7 +55,7 @@
             margin-top: 0;
         }
 
-        /* FORMULÁRIOS */
+
         label {
             display: block;
             margin-top: 15px;
@@ -89,7 +89,7 @@
             border-bottom: none;
         }
 
-        /* BOTÕES PADRONIZADOS */
+
         .btn {
             padding: 10px 18px;
             border-radius: 18px;
@@ -122,7 +122,7 @@
             color: #b00020;
         }
 
-        /* ALERTAS */
+
         .alerta-erro {
             background-color: #fbeaea;
             color: #b00020;
@@ -133,7 +133,7 @@
             font-size: 0.9rem;
         }
 
-        /* SELEÇÃO DE AUTORAS */
+
         .autoras-selecionadas {
             border: 1px solid #e6eef6;
             border-radius: 14px;
@@ -186,6 +186,11 @@
             background: #1b3a57;
             color: white;
         }
+
+        .is-invalid {
+            border: 2px solid #b00020 !important;
+            background-color: #fff8f8 !important;
+        }
     </style>
 </head>
 
@@ -219,24 +224,39 @@
             <h3>Dados da Obra</h3>
 
             <label>Título</label>
-            <input type="text" th:field="*{titulo}" placeholder="Ex: Educação Inclusiva e Comunidade Surda" required>
+            <input type="text" th:field="*{titulo}"
+                   placeholder="Ex: Educação Inclusiva e Comunidade Surda"
+                   maxlength="255"
+                   th:classappend="${#fields.hasErrors('titulo')} ? 'is-invalid' : ''" required>
 
             <label>Resumo</label>
-            <textarea th:field="*{resumo}" rows="5" placeholder="Descreva brevemente o conteúdo da obra"></textarea>
+            <textarea th:field="*{resumo}" rows="5"
+                      placeholder="Descreva brevemente o conteúdo da obra"
+                      maxlength="255"
+                      th:classappend="${#fields.hasErrors('resumo')} ? 'is-invalid' : ''"></textarea>
 
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
                 <div>
                     <label>Palavras-chave</label>
-                    <input type="text" th:field="*{palavrasChave}" placeholder="Ex: Libras, inclusão, educação">
+                    <input type="text" th:field="*{palavrasChave}"
+                           placeholder="Ex: Libras, inclusão, educação"
+                           maxlength="255"
+                           th:classappend="${#fields.hasErrors('palavrasChave')} ? 'is-invalid' : ''">
                 </div>
                 <div>
                     <label>Ano de Publicação</label>
-                    <input type="number" th:field="*{anoPublicacao}" placeholder="Ex: 2024">
+                    <input type="number" th:field="*{anoPublicacao}"
+                           placeholder="Ex: 2024"
+                           th:classappend="${#fields.hasErrors('anoPublicacao')} ? 'is-invalid' : ''">
                 </div>
             </div>
 
             <label>URL do Arquivo</label>
-            <input type="url" th:field="*{urlArquivo}" placeholder="Ex: https://repositorio.exemplo.com/obra.pdf">
+            <input type="url" th:field="*{urlArquivo}"
+                   placeholder="Ex: https://repositorio.exemplo.com/obra.pdf"
+                   maxlength="255"
+                   th:classappend="${#fields.hasErrors('urlArquivo')} ? 'is-invalid' : ''">
+
 
             <label>Categoria</label>
             <select th:field="*{categoria.id}" required>
@@ -287,7 +307,7 @@
             <button type="submit" class="btn btn-primary" style="padding: 12px 30px; font-size: 1rem;">
                 Salvar Obra
             </button>
-            <a th:href="@{/}" class="btn btn-secondary" style="margin-left: 10px;">Voltar</a>
+            <a th:href="@{/obras}" class="btn btn-secondary" style="margin-left: 10px;">Voltar</a>
         </div>
 
     </form>
@@ -366,6 +386,29 @@
         document.getElementById("autora-" + id)?.remove();
         document.getElementById("hidden-" + id)?.remove();
     }
+</script>
+
+<script>
+
+    document.querySelectorAll('input[maxlength], textarea[maxlength]').forEach(field => {
+
+        const counter = document.createElement('div');
+        counter.style = "text-align: right; font-size: 0.75rem; color: #888; margin-bottom: 10px; margin-top: 2px;";
+
+
+        field.after(counter);
+
+        const update = () => {
+            const current = field.value.length;
+            const max = field.getAttribute('maxlength');
+            counter.textContent = `${current} / ${max} caracteres`;
+
+            counter.style.color = current >= max ? "#b00020" : "#888";
+        };
+
+        field.addEventListener('input', update);
+        update();
+    });
 </script>
 
 </body>

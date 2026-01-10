@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>Autoras - OCS.EUC</title>
   <style>
-    /* PADRONIZAÇÃO OCS.EUC */
+
     body {
       margin: 0;
       font-family: Arial, sans-serif;
@@ -51,7 +51,7 @@
       margin-top: 0;
     }
 
-    /* GRID E CARDS DE AUTORAS */
+
     .autoras-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -85,7 +85,7 @@
       color: #1b3a57;
     }
 
-    /* BOTÕES */
+
     .btn-cadastrar {
       background: #1b3a57;
       color: white;
@@ -132,7 +132,7 @@
       cursor: pointer;
     }
 
-    /* ALERTA DE ERRO */
+
     .alerta-erro {
       background-color: #fbeaea;
       color: #b00020;
@@ -179,7 +179,7 @@
 
         <form th:action="@{/autoras/excluir/{id}(id=${a.id})}" method="post" style="display:inline;">
           <button type="submit" class="btn-excluir"
-                  onclick="return confirm('Deseja excluir esta autora? Esta ação não pode ser desfeita.')">
+                  >
             Excluir
           </button>
         </form>

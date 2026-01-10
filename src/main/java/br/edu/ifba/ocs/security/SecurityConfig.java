@@ -26,7 +26,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
 
-                        // 🔓 ROTAS PÚBLICAS
+
                         .requestMatchers(
                                 "/",
                                 "/login",
@@ -37,8 +37,9 @@ public class SecurityConfig {
                                 "/js/**",
                                 "/images/**",
                                 "/pesquisas/public/**",
-                                "/legislacoes/**",
-                                "/obras/**"
+                                "/legislacoes",
+                                "/obras/**",
+                                "/error"
                         ).permitAll()
 
 
@@ -51,6 +52,16 @@ public class SecurityConfig {
 
 
                         .requestMatchers(
+                                "/autoras",
+                                "/autoras/listar",
+                                "/autoras/cadastrar/**",
+                                "/legislacoes/cadastrar/**",
+                                "/legislacoes/editar/**",
+                                "/legislacoes/salvar/**",
+                                "/legislacoes/excluir/**",
+                                "/autoras/cadastrar/**",
+                                "/autoras/editar/**",
+                                "/autoras/excluir/**",
                                 "/admin/**",
                                 "/obras/cadastrar/**",
                                 "/obras/editar/**",

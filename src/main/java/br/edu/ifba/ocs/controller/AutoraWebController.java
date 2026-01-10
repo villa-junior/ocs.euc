@@ -36,6 +36,23 @@ public class AutoraWebController {
         return "autoras/cadastrar";
     }
 
+    @GetMapping("/editar/{id}")
+    public String editar(@PathVariable UUID id, Model model) {
+
+        Autora autora = service.buscarPorId(id)
+                .orElseThrow(() -> new RuntimeException("Autora não encontrada: " + id));
+
+        model.addAttribute("autora", autora);
+        return "autoras/editar";
+    }
+
+    @PostMapping("/editar/{id}")
+    public String processarEdicao(@PathVariable UUID id, @ModelAttribute Autora autora) {
+        autora.setId(id);
+        service.salvar(autora);
+        return "redirect:/autoras/listar";
+    }
+
     @PostMapping
     public String salvar(
             @ModelAttribute Autora autora,

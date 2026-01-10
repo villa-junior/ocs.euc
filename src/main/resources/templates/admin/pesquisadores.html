@@ -50,7 +50,7 @@
             margin-bottom: 25px;
         }
 
-        /* ===== ESTILO DA TABELA ===== */
+
         table {
             width: 100%;
             border-collapse: collapse;
@@ -77,7 +77,7 @@
             background-color: #fcfdfe;
         }
 
-        /* ===== BOTÕES PADRONIZADOS ===== */
+
         .btn-acoes {
             display: flex;
             gap: 10px;
@@ -159,14 +159,14 @@
 
                 <form th:action="@{/admin/pesquisadores/{id}/aprovar(id=${p.id})}" method="post">
                     <button type="submit" class="btn-aprovar"
-                            onclick="return confirm('Confirmar a aprovação deste pesquisador?')">
+                            >
                         Aprovar
                     </button>
                 </form>
 
                 <form th:action="@{/admin/pesquisadores/{id}/rejeitar(id=${p.id})}" method="post">
                     <button type="submit" class="btn-rejeitar"
-                            onclick="return confirm('Tem certeza que deseja rejeitar este pedido?')">
+                            >
                         Rejeitar
                     </button>
                 </form>

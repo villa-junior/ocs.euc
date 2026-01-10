@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Acesso Negado - OCS.EUC</title>
+
+    <style>
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f7f7f7;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background: #1b3a57;
+            color: white;
+            padding: 20px;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header-top h1 {
+            margin: 0;
+            font-size: 1.6rem;
+        }
+
+
+        .error-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .error-card {
+            background: white;
+            padding: 50px;
+            border-radius: 14px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+            text-align: center;
+            max-width: 500px;
+            border-top: 5px solid #b00020;
+        }
+
+        .error-card h2 {
+            color: #b00020;
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+
+        .error-card p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .btn-voltar {
+            text-decoration: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-weight: bold;
+            background: #1b3a57;
+            color: white;
+            transition: opacity 0.2s;
+            display: inline-block;
+        }
+
+        .btn-voltar:hover {
+            opacity: 0.9;
+        }
+
+        footer {
+            background: #1b3a57;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div class="header-top">
+        <h1>OCS.EUC - Observatório da Comunidade Surda</h1>
+    </div>
+</header>
+
+<main class="error-container">
+    <div class="error-card">
+        <h2>Acesso Restrito</h2>
+        <p>
+            Desculpe, você não possui as permissões necessárias para acessar esta página.
+            Esta área é reservada para administradores do sistema.
+        </p>
+        <a th:href="@{/}" class="btn-voltar">Voltar para o Início</a>
+    </div>
+</main>
+
+<footer>
+    <p>© 2026 Observatório da Comunidade Surda — IFBA Euclides da Cunha</p>
+</footer>
+
+<div vw class="enabled">
+    <div vw-access-button class="active"></div>
+    <div vw-plugin-wrapper><div class="vw-plugin-top-wrapper"></div></div>
+</div>
+<script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+<script>new window.VLibras.Widget('https://vlibras.gov.br/app');</script>
+
+</body>
+</html>
