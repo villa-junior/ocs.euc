@@ -21,20 +21,17 @@ public class CadastroContaController {
         this.contaService = contaService;
     }
 
-
     @GetMapping("/nova")
     public String formulario(Model model) {
 
-        model.addAttribute("conta", new CadastroContaDTO());
+        model.addAttribute("cadastroDto", new CadastroContaDTO());
         model.addAttribute("perfis", perfisPermitidos());
-
         return "contas/cadastro";
     }
 
-
     @PostMapping("/salvar")
     public String salvar(
-            @Valid @ModelAttribute("conta") CadastroContaDTO dto,
+            @Valid @ModelAttribute("cadastroDto") CadastroContaDTO dto,
             BindingResult result,
             Model model
     ) {
@@ -45,8 +42,10 @@ public class CadastroContaController {
         }
 
         try {
+
             contaService.cadastrar(dto);
         } catch (RuntimeException e) {
+
             model.addAttribute("erro", e.getMessage());
             model.addAttribute("perfis", perfisPermitidos());
             return "contas/cadastro";

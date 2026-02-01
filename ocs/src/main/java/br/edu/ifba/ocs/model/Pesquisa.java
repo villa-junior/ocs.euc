@@ -42,6 +42,7 @@ public class Pesquisa {
     @Column(name = "data_inicio")
     private LocalDate dataInicio;
 
+
     @PastOrPresent(message = "A data de fim não pode ser futura")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     @Column(name = "data_fim")

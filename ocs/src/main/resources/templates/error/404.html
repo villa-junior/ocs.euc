@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -11,6 +12,7 @@
             font-family: Arial, sans-serif;
             background: #f7f7f7;
             color: #333;
+            line-height: 1.6;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
@@ -20,12 +22,42 @@
             background: #1b3a57;
             color: white;
             padding: 20px;
-            text-align: center;
         }
 
-        header h1 {
+        .header-top {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            gap: 15px;
+        }
+
+        .header-top h1 {
+            grid-column: 2;
             margin: 0;
+            text-align: center;
             font-size: 1.6rem;
+        }
+
+       nav {
+            background: #153049;
+            padding: 15px 10px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.9rem;
+            transition: opacity 0.2s;
         }
 
         .error-container {
@@ -44,25 +76,26 @@
             text-align: center;
             max-width: 500px;
             border-top: 5px solid #1b3a57;
+            box-sizing: border-box;
         }
 
-        .error-card .error-code {
-            font-size: 4rem;
+        .error-code {
+            font-size: 5rem;
             font-weight: bold;
             color: #1b3a57;
             margin: 0;
+            line-height: 1;
         }
 
         .error-card h2 {
             color: #333;
-            font-size: 1.5rem;
-            margin-top: 0;
+            font-size: 1.8rem;
+            margin-top: 10px;
             margin-bottom: 15px;
         }
 
         .error-card p {
             color: #666;
-            line-height: 1.6;
             margin-bottom: 30px;
         }
 
@@ -73,19 +106,40 @@
             font-weight: bold;
             background: #1b3a57;
             color: white;
-            transition: opacity 0.2s;
+            transition: all 0.25s ease;
             display: inline-block;
         }
 
         .btn-voltar:hover {
-            opacity: 0.9;
+            background: #153049;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(21, 48, 73, 0.2);
         }
 
         footer {
             background: #1b3a57;
             color: white;
-            padding: 20px;
+            padding: 30px;
             text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .header-top h1 {
+                font-size: 1.3rem;
+            }
+            .error-card {
+                padding: 30px 20px;
+            }
+            .error-code {
+                font-size: 4rem;
+            }
+        }
+           footer {
+            background: #1b3a57;
+            color: white;
+            padding: 30px;
+            text-align: center;
+            margin-top: 60px;
         }
     </style>
 </head>
@@ -93,16 +147,24 @@
 <body>
 
 <header>
-    <h1>OCS.EUC - Observatório da Comunidade Surda</h1>
+    <div class="header-top">
+        <div></div>
+        <h1>OCS.EUC - Observatório da Comunidade Surda</h1>
+        <div></div>
+    </div>
 </header>
+
+<nav>
+    <a th:href="@{/}">Página Principal</a>
+</nav>
 
 <main class="error-container">
     <div class="error-card">
         <p class="error-code">404</p>
         <h2>Ops! Página não encontrada</h2>
         <p>
-            O conteúdo que você está procurando não existe ou foi movido.
-            Verifique se o endereço digitado está correto.
+            O conteúdo que você está procurando não existe ou foi removido.
+            Verifique se o endereço digitado está correto ou utilize o menu superior.
         </p>
         <a th:href="@{/}" class="btn-voltar">Voltar para o Início</a>
     </div>

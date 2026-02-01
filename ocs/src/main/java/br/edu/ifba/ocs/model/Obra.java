@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -53,6 +54,7 @@ public class Obra {
     @JoinColumn(name = "id_conta")
     private Conta conta;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name = "data_registro")
     private LocalDate dataRegistro;
 

@@ -2,15 +2,16 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Pesquisa - OCS.EUC</title>
 
     <style>
-
         body {
             margin: 0;
             font-family: Arial, sans-serif;
             background: #f7f7f7;
             color: #333;
+            line-height: 1.6;
         }
 
         header {
@@ -20,47 +21,46 @@
             text-align: center;
         }
 
+        header h1 { margin: 0; font-size: 1.6rem; }
+
         nav {
             background: #153049;
-            padding: 10px;
+            padding: 15px 10px;
             display: flex;
             justify-content: center;
             gap: 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            flex-wrap: wrap;
         }
 
         nav a {
             color: white;
             text-decoration: none;
             font-weight: bold;
-            padding: 6px 10px;
-            transition: transform 0.2s ease;
-        }
-
-        nav a:hover {
-            transform: translateY(-2px);
-            opacity: 0.9;
+            font-size: 0.9rem;
+            transition: opacity 0.2s;
         }
 
         .container {
             max-width: 900px;
-            margin: 30px auto;
+            margin: 20px auto;
             background: white;
-            padding: 30px;
+            padding: 25px;
             border-radius: 14px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            width: 90%;
         }
 
-        h2 {
-            color: #1b3a57;
-            margin-top: 0;
-        }
-
+        h2, h3 { color: #1b3a57; margin-top: 0; }
 
         label {
             display: block;
             margin-top: 15px;
             font-weight: bold;
             color: #1b3a57;
+            font-size: 0.9rem;
         }
 
         input, textarea, select {
@@ -71,19 +71,9 @@
             border: 1px solid #e6eef6;
             background: #fdfdfd;
             box-sizing: border-box;
-            font-size: 0.95rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
         }
-
-        input:focus, textarea:focus, select:focus {
-            outline: none;
-            border-color: #1b3a57;
-            box-shadow: 0 0 0 2px rgba(27,58,87,0.1);
-        }
-
-        textarea {
-            resize: vertical;
-        }
-
 
         .alerta-erro {
             background-color: #fbeaea;
@@ -95,50 +85,61 @@
             font-size: 0.9rem;
         }
 
-
-        .acoes {
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #e6eef6;
-            display: flex;
-            gap: 12px;
-        }
-
-        .btn {
-            padding: 10px 22px;
-            border-radius: 18px;
-            border: none;
-            cursor: pointer;
-            font-weight: bold;
-            text-decoration: none;
-            font-size: 0.9rem;
-            transition: all 0.2s ease;
-            display: inline-block;
-        }
-
-        .btn-primary {
-            background: #1b3a57;
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: #153049;
-            box-shadow: 0 4px 12px rgba(27,58,87,0.2);
-        }
-
-        .btn-secondary {
-            background: #e6eef6;
-            color: #1b3a57;
-        }
-
-        .btn-secondary:hover {
-            background: #dbe7f2;
-        }
         .is-invalid {
             border: 2px solid #b00020 !important;
             background-color: #fff8f8 !important;
         }
 
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .section {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e6eef6;
+        }
+
+        .acoes {
+            margin-top: 30px;
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 12px 22px;
+            border-radius: 18px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            display: inline-block;
+            text-align: center;
+            flex: 1;
+        }
+
+        .btn-primary { background: #1b3a57; color: white; }
+        .btn-primary:disabled { background: #cccccc; color: #666666; cursor: not-allowed; opacity: 0.7; }
+        .btn-secondary { background: #e6eef6; color: #1b3a57; }
+
+        .hidden { display: none !important; }
+
+        @media (max-width: 600px) {
+            .form-grid { grid-template-columns: 1fr; gap: 0; }
+            .acoes { flex-direction: column; }
+        }
+
+        footer {
+            background: #1b3a57;
+            color: white;
+            padding: 30px;
+            text-align: center;
+            margin-top: 60px;
+        }
     </style>
 </head>
 
@@ -146,22 +147,18 @@
 
 <header>
     <h1>OCS.EUC - Observatório da Comunidade Surda</h1>
-    <p style="color: #e0e0e0; margin-top: 8px;">Módulo de Pesquisas Acadêmicas</p>
+    <p style="color: #e0e0e0; margin-top: 8px; font-size: 0.9rem;">Módulo de Pesquisas Acadêmicas</p>
 </header>
 
 <nav>
-    <a th:href="@{/static}">Página Principal</a>
+    <a th:href="@{/}">Página Principal</a>
 </nav>
 
 <div class="container">
-    <h2 th:text="${pesquisa.id == null ? 'Cadastrar Pesquisa' : 'Editar Pesquisa'}">
-        Cadastrar Pesquisa
-    </h2>
+    <h2 th:text="${pesquisa.id == null ? 'Cadastrar Pesquisa' : 'Editar Pesquisa'}">Cadastrar Pesquisa</h2>
     <hr style="border: 0; border-top: 1px solid #e6eef6; margin-bottom: 25px;">
 
-    <form th:action="@{/pesquisas}"
-          method="post"
-          th:object="${pesquisa}">
+    <form id="formPesquisa" th:action="@{/pesquisas}" method="post" th:object="${pesquisa}">
 
         <div th:if="${#fields.hasAnyErrors()}" class="alerta-erro">
             <strong style="display: block; margin-bottom: 5px;">Atenção:</strong>
@@ -172,127 +169,134 @@
 
         <input type="hidden" th:field="*{id}" />
 
-        <label for="titulo">Título da Pesquisa</label>
-        <input type="text"
-               id="titulo"
-               th:field="*{titulo}"
-               placeholder="Ex: Inclusão da Comunidade Surda no Ensino Superior"
-               maxlength="255"
-               th:classappend="${#fields.hasErrors('titulo')} ? 'is-invalid' : ''"
-               required />
+        <div class="section">
+            <h3>Identificação</h3>
 
-        <label for="descricao">Descrição e Objetivos</label>
-        <textarea id="descricao"
-                  th:field="*{descricao}"
-                  rows="5"
-                  maxlength="255"
-                  th:classappend="${#fields.hasErrors('descricao')} ? 'is-invalid' : ''"
-                  placeholder="Resumo do objetivo, metodologia e contexto da pesquisa"></textarea>
+            <label for="titulo">Título da Pesquisa</label>
+            <input type="text" id="titulo" th:field="*{titulo}" placeholder="Ex: Inclusão no Ensino Superior" th:classappend="${#fields.hasErrors('titulo')} ? 'is-invalid' : ''" required>
 
-        <label for="status">Status da Pesquisa</label>
-        <select id="status"
-                th:field="*{status}"
-                required>
-            <option value="">Selecione o status atual</option>
-            <option th:value="${T(br.edu.ifba.ocs.model.Pesquisa.Status).EM_ANDAMENTO}">
-                Em andamento
-            </option>
-            <option th:value="${T(br.edu.ifba.ocs.model.Pesquisa.Status).CONCLUIDA}">
-                Concluída
-            </option>
-        </select>
+            <label for="descricao">Descrição e Objetivos</label>
+            <textarea id="descricao" th:field="*{descricao}" rows="6" th:classappend="${#fields.hasErrors('descricao')} ? 'is-invalid' : ''" placeholder="Descreva os objetivos e a metodologia..."></textarea>
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-            <div>
-                <label for="dataInicio">Data de Início</label>
-                <input type="date"
-                       id="dataInicio"
-                       th:field="*{dataInicio}"
-                       th:attr="max=${hoje}"
-                       required />
-            </div>
-            <div>
-                <label for="dataFim">
-                    Data de Fim
-                    <small style="font-weight:normal; color:#777;">(Opcional)</small>
-                </label>
-                <input type="date"
-                       id="dataFim"
-                       th:field="*{dataFim}"
-                       th:attr="max=${hoje}" />
+            <div class="form-grid">
+                <div>
+                    <label for="status">Status</label>
+                    <select id="status" th:field="*{status}" required>
+                        <option value="">Selecione o status</option>
+                        <option th:value="${T(br.edu.ifba.ocs.model.Pesquisa.Status).EM_ANDAMENTO}">Em andamento</option>
+                        <option th:value="${T(br.edu.ifba.ocs.model.Pesquisa.Status).CONCLUIDA}">Concluída</option>
+                    </select>
+                </div>
+                <div class="form-grid" style="gap: 10px;">
+                    <div>
+                        <label for="dataInicio">Início</label>
+                        <input type="date" id="dataInicio" th:field="*{dataInicio}" th:attr="max=${hoje}" required>
+                    </div>
+                    <div>
+                        <label for="dataFim">Fim</label>
+                        <input type="date" id="dataFim" th:field="*{dataFim}" th:attr="max=${hoje}">
+                    </div>
+                </div>
             </div>
         </div>
 
-        <label for="urlParticipante">Link para Participação (Voluntários)</label>
-        <input type="url"
-               id="urlParticipante"
-               th:field="*{urlParticipante}"
-               maxlength="255"
-               th:classappend="${#fields.hasErrors('urlParticipante')} ? 'is-invalid' : ''"
-               placeholder="Ex: https://forms.gle/exemplo" />
+        <div class="section">
+            <h3>Links e Referências</h3>
 
-        <label for="urlOrganizador">Link da Instituição / Organizador</label>
-        <input type="url"
-               id="urlOrganizador"
-               th:field="*{urlOrganizador}"
-               maxlength="255"
-               th:classappend="${#fields.hasErrors('urlOrganizador')} ? 'is-invalid' : ''"
-               placeholder="Ex: https://ifba.edu.br/pesquisa" />
+            <label for="urlParticipante">Link para Participação (Voluntários)</label>
+            <input type="url" id="urlParticipante" th:field="*{urlParticipante}" placeholder="https://forms.gle/..." th:classappend="${#fields.hasErrors('urlParticipante')} ? 'is-invalid' : ''">
 
-        <label for="arquivoResultados">Repositório de Resultados / Arquivo Final</label>
-        <input type="url"
-               id="arquivoResultados"
-               th:field="*{arquivoResultados}"
-               maxlength="255"
-               th:classappend="${#fields.hasErrors('arquivoResultados')} ? 'is-invalid' : ''"
-               placeholder="Ex: https://repositorio.ifba.edu.br/pesquisa.pdf" />
+            <label for="urlOrganizador">Link da Instituição / Organizador</label>
+            <input type="url" id="urlOrganizador" th:field="*{urlOrganizador}" placeholder="https://ifba.edu.br/pesquisa" th:classappend="${#fields.hasErrors('urlOrganizador')} ? 'is-invalid' : ''">
+
+            <label for="arquivoResultados">Repositório de Resultados / Arquivo Final</label>
+            <input type="url" id="arquivoResultados" th:field="*{arquivoResultados}" placeholder="https://repositorio.ifba.edu.br/..." th:classappend="${#fields.hasErrors('arquivoResultados')} ? 'is-invalid' : ''">
+        </div>
+
+        <div id="js-alerta-limite" class="alerta-erro hidden" style="margin-bottom: 10px;">
+            <strong>Ops! Limite excedido:</strong>
+            <span id="js-msg-erro"></span>
+        </div>
 
         <div class="acoes">
-            <button type="submit" class="btn btn-primary">
-                Salvar Pesquisa
-            </button>
-            <a th:href="@{/pesquisas}" class="btn btn-secondary">
-                Voltar
-            </a>
+            <button type="submit" id="btnSalvar" class="btn btn-primary">Salvar Pesquisa</button>
+            <a th:href="@{/}" class="btn btn-secondary">Cancelar</a>
         </div>
-
     </form>
 </div>
 
-<script>
+<footer>
+    <p>© 2026 Observatório da Comunidade Surda — IFBA Euclides da Cunha</p>
+</footer>
 
-    document.querySelectorAll('input[maxlength], textarea[maxlength]').forEach(field => {
+<script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+<script>
+    new window.VLibras.Widget('https://vlibras.gov.br/app');
+
+    const MAX_CHARS = 255;
+    const btnSalvar = document.getElementById('btnSalvar');
+    const alertaLimite = document.getElementById('js-alerta-limite');
+    const msgErro = document.getElementById('js-msg-erro');
+
+    const camposValidar = {
+        'titulo': 'Título',
+        'descricao': 'Descrição',
+        'urlParticipante': 'Link Participação',
+        'urlOrganizador': 'Link Organizador',
+        'arquivoResultados': 'Repositório'
+    };
+
+    function verificarTodosLimites() {
+        let erros = [];
+        for (let id in camposValidar) {
+            const campo = document.getElementById(id);
+            if (campo && campo.value.length > MAX_CHARS) {
+                erros.push(camposValidar[id]);
+            }
+        }
+
+        if (erros.length > 0) {
+            alertaLimite.classList.remove('hidden');
+            msgErro.textContent = "O(s) campo(s) " + erros.join(", ") + " ultrapassaram o limite de " + MAX_CHARS + " caracteres.";
+            btnSalvar.disabled = true;
+        } else {
+            alertaLimite.classList.add('hidden');
+            btnSalvar.disabled = false;
+        }
+    }
+
+    Object.keys(camposValidar).forEach(id => {
+        const field = document.getElementById(id);
+        if (!field) return;
 
         const counter = document.createElement('div');
-        counter.style = "text-align: right; font-size: 0.75rem; color: #888; margin-bottom: 10px; margin-top: 2px;";
-
-
+        counter.style = "text-align: right; font-size: 0.75rem; color: #888; margin-bottom: 10px;";
         field.after(counter);
 
-        const update = () => {
+        field.addEventListener('input', () => {
             const current = field.value.length;
-            const max = field.getAttribute('maxlength');
-            counter.textContent = `${current} / ${max} caracteres`;
+            counter.textContent = `${current} / ${MAX_CHARS} caracteres`;
 
-            counter.style.color = current >= max ? "#b00020" : "#888";
-        };
-
-        field.addEventListener('input', update);
-        update();
+            if (current > MAX_CHARS) {
+                counter.style.color = "#b00020";
+                counter.style.fontWeight = "bold";
+                field.classList.add('is-invalid');
+            } else {
+                counter.style.color = "#888";
+                counter.style.fontWeight = "normal";
+                field.classList.remove('is-invalid');
+            }
+            verificarTodosLimites();
+        });
+        field.dispatchEvent(new Event('input'));
     });
 </script>
 
 <div vw class="enabled">
     <div vw-access-button class="active"></div>
-    <div vw-plugin-wrapper>
-        <div class="vw-plugin-top-wrapper"></div>
-    </div>
+    <div vw-plugin-wrapper><div class="vw-plugin-top-wrapper"></div></div>
 </div>
-
 <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
-<script>
-    new window.VLibras.Widget('https://vlibras.gov.br/app');
-</script>
-
+<script>new window.VLibras.Widget('https://vlibras.gov.br/app');</script>
 </body>
 </html>

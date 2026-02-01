@@ -7,114 +7,122 @@
 
   <style>
     body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f7f7f7;
-      color: #333;
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #f7f7f7;
+        color: #333;
+        line-height: 1.6;
     }
 
     header {
-      background: #1b3a57;
-      color: white;
-      padding: 20px;
-      text-align: center;
+        background: #1b3a57;
+        color: white;
+        padding: 20px;
+        text-align: center;
     }
 
-    nav {
-      background: #153049;
-      padding: 10px;
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-    }
+       nav {
+            background: #153049;
+            padding: 15px 10px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            flex-wrap: wrap;
+        }
 
-    nav a {
-      color: white;
-      text-decoration: none;
-      font-weight: bold;
-      transition: opacity 0.2s;
-    }
-
-    nav a:hover {
-      opacity: 0.8;
-    }
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.9rem;
+            transition: opacity 0.2s;
+        }
 
     .container {
-      max-width: 1000px;
-      margin: 30px auto;
-      background: white;
-      padding: 40px;
-      border-radius: 14px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-    }
-
-
-    .intro-secao {
-      margin-bottom: 26px;
-      padding-bottom: 18px;
-      border-bottom: 1px solid #e6eef6;
+        max-width: 1000px;
+        margin: 30px auto;
+        background: white;
+        padding: 40px;
+        border-radius: 14px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+        box-sizing: border-box;
     }
 
     h2, h3 {
-      color: #1b3a57;
-      margin-top: 0;
+        color: #1b3a57;
+        margin-top: 0;
+        border-bottom: 1px solid #e6eef6;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
     }
 
-    p {
-      line-height: 1.6;
-      text-align: justify;
-      color: #444;
-      margin-bottom: 15px;
-    }
+
 
     strong {
-      color: #1b3a57;
+        color: #1b3a57;
     }
 
     .logos {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 40px;
-      flex-wrap: wrap;
-      margin: 40px 0;
-      padding: 20px;
-      background: #fff;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        gap: 40px;
+        flex-wrap: wrap;
+        margin: 40px 0;
+        padding: 30px;
+        background: #ffffff;
+        border-radius: 12px;
+        border: 1px solid #eee;
     }
 
     .logos img {
-      max-height: 80px;
-      width: auto;
-      filter: grayscale(20%);
-      transition: filter 0.3s;
+        height: 120px;
+        width: auto;
+        object-fit: contain;
+        transition: transform 0.3s ease;
     }
 
     .logos img:hover {
-      filter: grayscale(0%);
+        transform: scale(1.05);
     }
 
-
     .info-card {
-      margin-top: 30px;
-      background: #fcfdfe;
-      padding: 25px;
-      border-radius: 14px;
-      border: 1px solid #e6eef6;
+        background: #ffffff;
+        padding: 25px;
+        border-radius: 14px;
+        border: 1px solid #e2e8f0;
+        margin-top: 30px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.04);
     }
 
     .info-item {
-      margin-bottom: 12px;
-      font-size: 0.95rem;
+        margin-bottom: 12px;
+        font-size: 0.95rem;
+        display: flex;
+        gap: 10px;
     }
 
-    footer {
-      margin-top: 50px;
-      background: #1b3a57;
-      color: white;
-      padding: 30px;
-      text-align: center;
-      font-size: 0.9rem;
+
+
+    @media (max-width: 600px) {
+        .container {
+            margin: 15px;
+            padding: 20px;
+        }
+        .logos img {
+            height: 80px;
+        }
     }
+         footer {
+            background: #1b3a57;
+            color: white;
+            padding: 30px;
+            text-align: center;
+            margin-top: 60px;
+        }
   </style>
 </head>
 
@@ -129,15 +137,14 @@
 </nav>
 
 <div class="container">
-  <div class="intro-secao">
-    <h2>Sobre o Projeto</h2>
-  </div>
+  <h2>Sobre o Projeto</h2>
 
   <p>
     O <strong>OCS.EUC – Observatório da Comunidade Surda de Euclides da Cunha – BA</strong>
     é um projeto de extensão institucional desenvolvido no
     <strong>Instituto Federal de Educação, Ciência e Tecnologia da Bahia (IFBA) – Campus Euclides da Cunha</strong>,
     vinculado à Pró-Reitoria de Extensão (PROEX).
+
   </p>
 
   <p>
@@ -156,22 +163,10 @@
     e da valorização da <strong>Língua Brasileira de Sinais (Libras)</strong>.
   </p>
 
-  <p>
-    Alinhado às legislações brasileiras de acessibilidade, o OCS.EUC busca contribuir para a redução das barreiras comunicacionais
-    e para a construção de uma sociedade mais inclusiva, consciente da diversidade linguística
-    e cultural da comunidade surda.
-  </p>
-
-  <p>
-    Além do impacto social, o projeto também contribui para a formação técnica e científica
-    dos estudantes envolvidos, especialmente da área de Informática, por meio do desenvolvimento
-    de aplicações web e uso de metodologias ágeis no processo de construção do portal.
-  </p>
-
   <div class="logos">
-    <img th:src="@{/img/MARCA_IFBA_CAMPUS_HORIZONTAL_completa_CMYK_EUCLIDES}" alt="IFBA Euclides da Cunha">
-    <img th:src="@{/img/MARCA_IFBA_CMYK_PROEX_HORIZONTAL_COMPLETA_.png}" alt="PROEX Reitoria">
-    <img th:src="@{/img/acsec.png}" alt="ACSEC">
+    <img th:src="@{/img/MARCA_IFBA_CAMPUS_VERTICAL_CMYK_EUCLIDES DA CUNHA.jpg}" alt="IFBA Euclides da Cunha">
+    <img th:src="@{/img/proex.jpg}" alt="PROEX Reitoria">
+    <img th:src="@{/img/acsec.jpg}" alt="ACSEC">
   </div>
 
   <div class="info-card">
@@ -191,15 +186,15 @@
       <strong>Parceria Comunitária:</strong>
       <span>Associação da Comunidade Surda de Euclides da Cunha – BA (ACSEC)</span>
     </div>
+    <div class="info-item">
+      <strong>Área de Conhecimento:</strong>
+      <span>Ciência da Computação</span>
+
+    </div>
 
     <div class="info-item">
       <strong>Área Temática:</strong>
       <span>Direitos Humanos e Justiça</span>
-    </div>
-
-    <div class="info-item">
-      <strong>Área de Conhecimento:</strong>
-      <span>Ciência da Computação</span>
     </div>
   </div>
 </div>
@@ -210,15 +205,10 @@
 
 <div vw class="enabled">
   <div vw-access-button class="active"></div>
-  <div vw-plugin-wrapper>
-    <div class="vw-plugin-top-wrapper"></div>
-  </div>
+  <div vw-plugin-wrapper><div class="vw-plugin-top-wrapper"></div></div>
 </div>
-
 <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
-<script>
-  new window.VLibras.Widget('https://vlibras.gov.br/app');
-</script>
+<script>new window.VLibras.Widget('https://vlibras.gov.br/app');</script>
 
 </body>
 </html>

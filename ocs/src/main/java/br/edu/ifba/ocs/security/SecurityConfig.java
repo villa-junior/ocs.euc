@@ -8,6 +8,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.http.HttpMethod;
 
 
 @EnableMethodSecurity
@@ -21,12 +22,33 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
+                        // 1. REGRAS RESTRITIVAS (ADMIN/PESQUISADOR)
+                        .requestMatchers(
+                                "/obras/cadastrar/**",
+                                "/obras/editar/**",
+                                "/obras/excluir/**",
+                                "/admin/**",
+                                "/autoras/cadastrar/**",
+                                "/autoras/editar/**",
+                                "/autoras/excluir/**",
+                                "/legislacoes/cadastrar/**",
+                                "/legislacoes/editar/**",
+                                "/legislacoes/excluir/**"
+                        ).hasRole("ADMIN")
 
+                        // Protege o método POST de salvar as obras
+                        .requestMatchers(HttpMethod.POST, "/obras/**").hasRole("ADMIN")
 
+                        .requestMatchers(
+                                "/pesquisas/cadastrar/**",
+                                "/pesquisas/editar/**",
+                                "/pesquisas/excluir/**"
+                        ).hasAnyRole("ADMIN", "PESQUISADOR")
+
+                        // 2. REGRAS PÚBLICAS
                         .requestMatchers(
                                 "/",
                                 "/login",
@@ -35,41 +57,16 @@ public class SecurityConfig {
                                 "/contas/salvar",
                                 "/css/**",
                                 "/js/**",
-                                "/images/**",
-                                "/pesquisas/public/**",
+                                "/img/**",
+                                "/error",
                                 "/legislacoes",
-                                "/obras/**",
-                                "/error"
+                                "/pesquisas/public/**",
+                                "/obras",             // Listagem geral pública
+                                "/obras/categoria/**" // Listagem por categoria pública
                         ).permitAll()
 
-
-                        .requestMatchers(
-                                "/pesquisas/cadastrar/**",
-                                "/pesquisas/editar/**",
-                                "/pesquisas/excluir/**",
-                                "/pesquisas/**"
-                        ).hasAnyRole("ADMIN", "PESQUISADOR")
-
-
-                        .requestMatchers(
-                                "/autoras",
-                                "/autoras/listar",
-                                "/autoras/cadastrar/**",
-                                "/legislacoes/cadastrar/**",
-                                "/legislacoes/editar/**",
-                                "/legislacoes/salvar/**",
-                                "/legislacoes/excluir/**",
-                                "/autoras/cadastrar/**",
-                                "/autoras/editar/**",
-                                "/autoras/excluir/**",
-                                "/admin/**",
-                                "/obras/cadastrar/**",
-                                "/obras/editar/**",
-                                "/obras/excluir/**"
-                        ).hasRole("ADMIN")
-
                         .anyRequest().authenticated()
-                )
+                ) // Fim do authorizeHttpRequests
                 .formLogin(form -> form
                         .loginPage("/login")
                         .defaultSuccessUrl("/", true)

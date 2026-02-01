@@ -2,14 +2,17 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Cadastrar Conta - OCS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cadastrar Conta - OCS.EUC</title>
 
     <style>
+        /* PADRÃO IDENTIDADE VISUAL MESTRE */
         body {
             margin: 0;
             font-family: Arial, sans-serif;
             background: #f7f7f7;
             color: #333;
+            line-height: 1.6;
         }
 
         header {
@@ -19,39 +22,43 @@
             text-align: center;
         }
 
+        header h1 { margin: 0; font-size: 1.6rem; }
+
         nav {
             background: #153049;
-            padding: 10px;
+            padding: 15px 10px;
             display: flex;
             justify-content: center;
             gap: 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            flex-wrap: wrap;
         }
 
         nav a {
             color: white;
             text-decoration: none;
             font-weight: bold;
+            font-size: 0.9rem;
+            transition: opacity 0.2s;
         }
 
         .container {
-            max-width: 500px;
-            margin: 40px auto;
+            max-width: 600px; /* Ajustado para formulários de conta */
+            margin: 20px auto;
             background: white;
-            padding: 35px;
+            padding: 25px;
             border-radius: 14px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            width: 90%;
         }
 
-        h2 {
-            color: #1b3a57;
-            margin-top: 0;
-            text-align: center;
-            margin-bottom: 25px;
-        }
+        h2, h3 { color: #1b3a57; margin-top: 0; }
 
         label {
             display: block;
-            margin-top: 18px;
+            margin-top: 15px;
             font-weight: bold;
             color: #1b3a57;
             font-size: 0.9rem;
@@ -61,63 +68,74 @@
             width: 100%;
             padding: 12px;
             margin-top: 6px;
-            border-radius: 8px;
+            border-radius: 10px;
             border: 1px solid #e6eef6;
+            background: #fdfdfd;
             box-sizing: border-box;
-            background-color: #fcfdfe;
-            transition: border-color 0.2s;
-        }
-
-        input:focus, select:focus {
-            outline: none;
-            border-color: #1b3a57;
-            background-color: #fff;
-        }
-
-        .btn-enviar {
-            margin-top: 30px;
-            background: #1b3a57;
-            color: white;
-            padding: 12px 16px;
-            border-radius: 20px;
             font-size: 1rem;
-            text-decoration: none;
-            font-weight: bold;
-            border: none;
-            width: 100%;
-            cursor: pointer;
-            transition: background 0.2s, transform 0.1s;
-        }
-
-        .btn-enviar:hover {
-            background: #153049;
-            transform: translateY(-1px);
+            transition: all 0.3s ease;
         }
 
         .alerta-erro {
             background-color: #fbeaea;
             color: #b00020;
             border: 1px solid #f5c2c7;
-            padding: 12px;
+            padding: 15px;
             margin-bottom: 20px;
             border-radius: 10px;
+            font-size: 0.9rem;
+        }
+
+        .is-invalid {
+            border: 2px solid #b00020 !important;
+            background-color: #fff8f8 !important;
+        }
+
+        .section {
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+        }
+
+        .acoes {
+            margin-top: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 12px 22px;
+            border-radius: 18px;
+            border: none;
+            cursor: pointer;
             font-weight: bold;
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            display: inline-block;
             text-align: center;
-            font-size: 0.85rem;
+        }
+
+        .btn-primary { background: #1b3a57; color: white; width: 100%; }
+        .btn-primary:disabled { background: #cccccc; color: #666666; cursor: not-allowed; opacity: 0.7; }
+        .btn-secondary { background: #e6eef6; color: #1b3a57; width: 100%; }
+
+        .hidden { display: none !important; }
+
+        footer {
+            background: #1b3a57;
+            color: white;
+            padding: 30px;
+            text-align: center;
+            margin-top: 60px;
         }
 
         .form-footer {
             margin-top: 20px;
             text-align: center;
-            font-size: 0.85rem;
-            color: #777;
+            font-size: 0.9rem;
         }
-
-        .form-footer a {
-            color: #1b3a57;
-            text-decoration: none;
-            font-weight: bold;
-        }
+        .form-footer a { color: #1b3a57; font-weight: bold; text-decoration: none; }
     </style>
 </head>
 
@@ -125,6 +143,7 @@
 
 <header>
     <h1>OCS.EUC - Observatório da Comunidade Surda</h1>
+    <p style="color: #e0e0e0; margin-top: 8px; font-size: 0.9rem;">Módulo de Gestão de Usuários</p>
 </header>
 
 <nav>
@@ -132,56 +151,129 @@
 </nav>
 
 <div class="container">
-
     <h2>Criar Nova Conta</h2>
+    <hr style="border: 0; border-top: 1px solid #e6eef6; margin-bottom: 25px;">
 
-    <div th:if="${erro}" class="alerta-erro" th:text="${erro}"></div>
+    <form id="formConta" th:action="@{/contas/salvar}" th:object="${cadastroDto}" method="post">
 
-    <form th:action="@{/contas/salvar}" th:object="${conta}" method="post">
-
-        <label for="nome">Nome Completo</label>
-        <input type="text" id="nome" th:field="*{nome}" placeholder="Digite seu nome" required>
-
-        <label for="email">E-mail Institucional ou Pessoal</label>
-        <input type="email" id="email" th:field="*{email}" placeholder="exemplo@email.com" required>
-
-        <label for="senha">Senha</label>
-        <input type="password" id="senha" th:field="*{senha}" placeholder="Crie uma senha segura" required>
-
-        <label for="perfil">Perfil de Acesso</label>
-        <select id="perfil" th:field="*{perfilDesejado}" required>
-            <option value="">Selecione o tipo de perfil</option>
-            <option th:each="p : ${perfis}"
-                    th:value="${p.name()}"
-                    th:text="${p}">
-            </option>
-        </select>
-
-        <label for="instituicao">Instituição / Vínculo</label>
-        <input type="text" id="instituicao" th:field="*{instituicao}" placeholder="Ex: IFBA, UFBA, etc.">
-
-        <button type="submit" class="btn-enviar">
-            Finalizar Cadastro
-        </button>
-
-        <div class="form-footer">
-            Já possui uma conta? <a th:href="@{/login}">Faça login aqui</a>.
+        <div th:if="${#fields.hasAnyErrors()}" class="alerta-erro">
+            <strong style="display: block; margin-bottom: 5px;">Erro de preenchimento:</strong>
+            <ul style="margin: 0; padding-left: 20px;">
+                <li th:each="err : ${#fields.errors()}" th:text="${err}"></li>
+            </ul>
         </div>
 
+        <div th:if="${erro}" class="alerta-erro">
+            <strong style="display: block; margin-bottom: 5px;">Atenção:</strong>
+            <span th:text="${erro}"></span>
+        </div>
+
+        <div class="section">
+            <label for="nome">Nome Completo</label>
+            <input type="text" id="nome" th:field="*{nome}" placeholder="Digite seu nome" required>
+
+            <label for="email">E-mail Institucional ou Pessoal</label>
+            <input type="email" id="email" th:field="*{email}" placeholder="exemplo@email.com" required>
+
+            <label for="senha">Senha</label>
+            <input type="password" id="senha" th:field="*{senha}" placeholder="Crie uma senha segura" required>
+
+            <label for="perfil">Perfil de Acesso</label>
+            <select id="perfil" th:field="*{perfilDesejado}" required>
+                <option value="">Selecione o tipo de perfil</option>
+                <option th:each="p : ${perfis}" th:value="${p}" th:text="${p}"></option>
+            </select>
+
+            <label for="instituicao">Instituição / Vínculo</label>
+            <input type="text" id="instituicao" th:field="*{instituicao}" placeholder="Ex: IFBA, UFBA, etc.">
+        </div>
+        <div id="js-alerta-limite" class="alerta-erro hidden" style="margin-bottom: 10px;">
+            <strong>Ops! Limite excedido:</strong>
+            <span id="js-msg-erro"></span>
+        </div>
+
+        <div class="acoes">
+            <button type="submit" id="btnSalvar" class="btn btn-primary">Finalizar Cadastro</button>
+            <div class="form-footer">
+                Já possui uma conta? <a th:href="@{/login}">Faça login aqui</a>.
+            </div>
+        </div>
     </form>
 </div>
 
-<div vw class="enabled">
-    <div vw-access-button class="active"></div>
-    <div vw-plugin-wrapper>
-        <div class="vw-plugin-top-wrapper"></div>
-    </div>
-</div>
+<footer>
+    <p>© 2026 Observatório da Comunidade Surda — IFBA Euclides da Cunha</p>
+</footer>
 
 <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
 <script>
     new window.VLibras.Widget('https://vlibras.gov.br/app');
+
+
+    const MAX_CHARS = 255;
+    const btnSalvar = document.getElementById('btnSalvar');
+    const alertaLimite = document.getElementById('js-alerta-limite');
+    const msgErro = document.getElementById('js-msg-erro');
+
+    const camposValidar = {
+        'nome': 'Nome Completo',
+        'email': 'E-mail',
+        'instituicao': 'Instituição',
+        'senha': 'Senha'
+    };
+
+    function verificarTodosLimites() {
+        let erros = [];
+        for (let id in camposValidar) {
+            const campo = document.getElementById(id);
+            if (campo && campo.value.length > MAX_CHARS) {
+                erros.push(camposValidar[id]);
+            }
+        }
+
+        if (erros.length > 0) {
+            alertaLimite.classList.remove('hidden');
+            msgErro.textContent = "O(s) campo(s) " + erros.join(", ") + " ultrapassaram o limite de " + MAX_CHARS + " caracteres.";
+            btnSalvar.disabled = true;
+        } else {
+            alertaLimite.classList.add('hidden');
+            btnSalvar.disabled = false;
+        }
+    }
+
+    Object.keys(camposValidar).forEach(id => {
+        const field = document.getElementById(id);
+        if (!field) return;
+
+        const counter = document.createElement('div');
+        counter.style = "text-align: right; font-size: 0.75rem; color: #888; margin-bottom: 5px;";
+        field.after(counter);
+
+        field.addEventListener('input', () => {
+            const current = field.value.length;
+            counter.textContent = `${current} / ${MAX_CHARS} caracteres`;
+
+            if (current > MAX_CHARS) {
+                counter.style.color = "#b00020";
+                counter.style.fontWeight = "bold";
+                field.classList.add('is-invalid');
+            } else {
+                counter.style.color = "#888";
+                counter.style.fontWeight = "normal";
+                field.classList.remove('is-invalid');
+            }
+            verificarTodosLimites();
+        });
+    });
 </script>
+
+<div vw class="enabled">
+    <div vw-access-button class="active"></div>
+    <div vw-plugin-wrapper><div class="vw-plugin-top-wrapper"></div></div>
+</div>
+<script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+<script>new window.VLibras.Widget('https://vlibras.gov.br/app');</script>
+
 
 </body>
 </html>

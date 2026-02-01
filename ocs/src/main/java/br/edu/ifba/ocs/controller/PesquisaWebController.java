@@ -4,13 +4,22 @@ import br.edu.ifba.ocs.model.Pesquisa;
 import br.edu.ifba.ocs.model.Pesquisa.Status;
 import br.edu.ifba.ocs.security.ContaDetails;
 import br.edu.ifba.ocs.service.PesquisaService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -28,11 +37,22 @@ public class PesquisaWebController {
     @GetMapping({ "/{status}", "/public/{status}" })
     public String listar(
             @PathVariable Status status,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            HttpServletRequest request,
             Model model,
             @AuthenticationPrincipal ContaDetails usuarioLogado
     ) {
-        model.addAttribute("pesquisas", service.listarPorStatus(status));
+        Pageable pageable = PageRequest.of(page, size, Sort.by("dataInicio").descending());
+        Page<Pesquisa> paginaDePesquisas = service.listarPorStatus(status, pageable);
+
+        model.addAttribute("pesquisas", paginaDePesquisas.getContent());
+        model.addAttribute("paginaAtual", page);
+        model.addAttribute("totalPaginas", paginaDePesquisas.getTotalPages());
         model.addAttribute("status", status);
+
+
+        model.addAttribute("urlBase", "/pesquisas/" + status);
 
         if (usuarioLogado != null) {
             model.addAttribute("idContaLogada", usuarioLogado.getConta().getId());

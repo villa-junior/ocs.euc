@@ -5,6 +5,8 @@ import br.edu.ifba.ocs.repository.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -25,6 +27,14 @@ public class ObraService {
 
     @Autowired
     private CategoriaRepository categoriaRepository;
+
+    public Page<Obra> listarPaginado(Pageable pageable) {
+        return repository.findAll(pageable);
+    }
+
+    public Page<Obra> listarPorCategoriaPaginado(UUID categoriaId, Pageable pageable) {
+        return repository.findByCategoriaId(categoriaId, pageable);
+    }
 
 
     public List<Obra> listar() {

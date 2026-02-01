@@ -4,6 +4,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Legislações</title>
 
     <style>
@@ -21,18 +22,24 @@
             text-align: center;
         }
 
-        nav {
+         nav {
             background: #153049;
-            padding: 10px;
+            padding: 15px 10px;
             display: flex;
             justify-content: center;
             gap: 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            flex-wrap: wrap;
         }
 
         nav a {
             color: white;
             text-decoration: none;
             font-weight: bold;
+            font-size: 0.9rem;
+            transition: opacity 0.2s;
         }
 
         .container {
@@ -42,13 +49,13 @@
             padding: 30px;
             border-radius: 14px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            box-sizing: border-box;
         }
 
         h2 {
             color: #1b3a57;
             margin-top: 0;
         }
-
 
         .legislacoes-grid {
             display: grid;
@@ -96,43 +103,51 @@
         .legislacao-acoes {
             margin-top: auto;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 10px;
+            flex-direction: column;
+            gap: 12px;
         }
 
+        .botoes-links {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
 
-        .btn-ver {
-            background: #1b3a57;
-            color: white;
-            padding: 6px 14px;
+        .botoes-admin {
+            display: flex;
+            gap: 8px;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+        }
+
+        .btn-ver, .btn-editar, .btn-excluir {
+            padding: 8px 14px;
             border-radius: 18px;
             font-size: 0.8rem;
             text-decoration: none;
             font-weight: bold;
+            display: inline-block;
+            text-align: center;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-ver {
+            background: #1b3a57;
+            color: white;
+            flex: 1;
         }
 
         .btn-editar {
             background: #e6eef6;
             color: #1b3a57;
-            padding: 6px 12px;
-            border-radius: 14px;
-            font-size: 0.75rem;
-            font-weight: bold;
-            text-decoration: none;
-            border: none;
-            cursor: pointer;
+            flex: 1;
         }
 
         .btn-excluir {
             background: #fbeaea;
             color: #b00020;
-            padding: 6px 12px;
-            border-radius: 14px;
-            font-size: 0.75rem;
-            font-weight: bold;
-            border: none;
-            cursor: pointer;
+            flex: 1;
         }
 
         .intro-secao {
@@ -147,6 +162,28 @@
         strong {
             color: #1b3a57;
             font-weight: bold;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                margin: 15px;
+                padding: 20px;
+            }
+
+            .legislacoes-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .btn-ver {
+                width: 100%;
+            }
+        }
+           footer {
+            background: #1b3a57;
+            color: white;
+            padding: 30px;
+            text-align: center;
+            margin-top: 60px;
         }
     </style>
 </head>
@@ -167,26 +204,18 @@
         <p>
             Esta seção reúne o conjunto de <strong>leis, decretos e normativas</strong> que fundamentam
             as análises, pesquisas e produções do <strong>Observatório da Comunidade Surda</strong>.
-            As legislações aqui apresentadas constituem a base legal para a garantia de direitos,
-            promoção da acessibilidade e reconhecimento da Libras.
-        </p>
-        <p>
-            O objetivo é oferecer um <strong>repositório organizado e acessível</strong>,
-            contribuindo para estudos acadêmicos e ações sociais fundamentadas em marcos legais oficiais.
         </p>
     </div>
 
     <a sec:authorize="hasRole('ADMIN')"
        th:href="@{/legislacoes/cadastrar}"
        class="btn-ver"
-       style="margin-bottom:20px; display:inline-block;">
+       style="margin-bottom:20px; display:inline-block; width: auto; flex: none;">
         Cadastrar Legislação
     </a>
 
     <div class="legislacoes-grid">
-
         <div class="legislacao-card" th:each="l : ${legislacoes}">
-
             <div class="legislacao-titulo" th:text="${l.numero}"></div>
 
             <div class="legislacao-meta">
@@ -197,44 +226,37 @@
             <p class="legislacao-descricao" th:text="${l.descricao}"></p>
 
             <div class="legislacao-acoes">
-                <a th:if="${l.urlArquivo != null}"
-                   th:href="${l.urlArquivo}"
-                   target="_blank"
-                   class="btn-ver">
-                    Consultar documento
-                </a>
-                <span th:if="${l.urlArquivo == null}"></span>
+                <div class="botoes-links">
+                    <a th:if="${l.urlArquivo != null}"
+                       th:href="${l.urlArquivo}"
+                       target="_blank"
+                       class="btn-ver">
+                        Consultar documento
+                    </a>
+                </div>
 
-                <div sec:authorize="hasRole('ADMIN')" style="display:flex; gap:8px;">
+                <div sec:authorize="hasRole('ADMIN')" class="botoes-admin">
+                    <a th:href="@{/legislacoes/editar/{id}(id=${l.id})}" class="btn-editar">Editar</a>
 
-                    <form th:action="@{/legislacoes/editar/{id}(id=${l.id})}" method="get">
-                        <button type="submit" class="btn-editar">Editar</button>
-                    </form>
-
-                    <form th:action="@{/legislacoes/excluir/{id}(id=${l.id})}" method="post">
+                    <form th:action="@{/legislacoes/excluir/{id}(id=${l.id})}" method="post" style="flex:1; display:flex;">
                         <input type="hidden" name="_method" value="DELETE"/>
-                        <button type="submit" class="btn-excluir">Excluir</button>
+                        <button type="submit" class="btn-excluir" onclick="return confirm('Deseja excluir?')">Excluir</button>
                     </form>
-
                 </div>
             </div>
-
         </div>
-
     </div>
 </div>
+<footer>
+    <p>© 2026 Observatório da Comunidade Surda — IFBA Euclides da Cunha</p>
+</footer>
 
 <div vw class="enabled">
     <div vw-access-button class="active"></div>
-    <div vw-plugin-wrapper>
-        <div class="vw-plugin-top-wrapper"></div>
-    </div>
+    <div vw-plugin-wrapper><div class="vw-plugin-top-wrapper"></div></div>
 </div>
-
 <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
-<script>
-    new window.VLibras.Widget('https://vlibras.gov.br/app');
-</script>
+<script>new window.VLibras.Widget('https://vlibras.gov.br/app');</script>
 
 </body>
 </html>

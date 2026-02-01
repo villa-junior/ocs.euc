@@ -2,14 +2,17 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Login - OCS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - OCS.EUC</title>
 
     <style>
+        /* PADRÃO IDENTIDADE VISUAL MESTRE - APLICADO AO LOGIN */
         body {
             margin: 0;
             font-family: Arial, sans-serif;
             background: #f7f7f7;
             color: #333;
+            line-height: 1.6;
         }
 
         header {
@@ -19,39 +22,43 @@
             text-align: center;
         }
 
+        header h1 { margin: 0; font-size: 1.6rem; }
+
         nav {
             background: #153049;
-            padding: 10px;
+            padding: 15px 10px;
             display: flex;
             justify-content: center;
             gap: 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            flex-wrap: wrap;
         }
 
         nav a {
             color: white;
             text-decoration: none;
             font-weight: bold;
+            font-size: 0.9rem;
+            transition: opacity 0.2s;
         }
 
         .container {
-            max-width: 400px;
-            margin: 60px auto;
+            max-width: 500px; /* Consistente com formulários de entrada */
+            margin: 40px auto;
             background: white;
-            padding: 35px;
+            padding: 25px;
             border-radius: 14px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            width: 90%;
         }
 
-        h2 {
-            color: #1b3a57;
-            text-align: center;
-            margin-top: 0;
-            margin-bottom: 25px;
-        }
+        h2 { color: #1b3a57; margin-top: 0; }
 
         label {
             display: block;
-            margin-top: 18px;
+            margin-top: 15px;
             font-weight: bold;
             color: #1b3a57;
             font-size: 0.9rem;
@@ -61,73 +68,78 @@
             width: 100%;
             padding: 12px;
             margin-top: 6px;
-            border-radius: 8px;
-            border: 1px solid #e6eef6;
-            box-sizing: border-box;
-            background-color: #fcfdfe;
-            transition: border-color 0.2s;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: #1b3a57;
-            background-color: #fff;
-        }
-
-        .btn-entrar {
-            margin-top: 30px;
-            width: 100%;
-            padding: 12px;
-            font-weight: bold;
-            background: #1b3a57;
-            color: white;
-            border: none;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: background 0.2s, transform 0.1s;
-        }
-
-        .btn-entrar:hover {
-            background: #153049;
-            transform: translateY(-1px);
-        }
-
-        .alerta {
-            padding: 12px;
             border-radius: 10px;
-            margin-bottom: 20px;
-            text-align: center;
-            font-weight: bold;
-            font-size: 0.85rem;
+            border: 1px solid #e6eef6;
+            background: #fdfdfd;
+            box-sizing: border-box;
+            font-size: 1rem;
+            transition: all 0.3s ease;
         }
-
 
         .alerta-erro {
-            background: #fbeaea;
+            background-color: #fbeaea;
             color: #b00020;
             border: 1px solid #f5c2c7;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            font-size: 0.9rem;
         }
 
-
         .alerta-info {
-            background: #e6eef6;
+            background-color: #e6eef6;
             color: #1b3a57;
             border: 1px solid #d1dbe5;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+        }
+
+        .is-invalid {
+            border: 2px solid #b00020 !important;
+            background-color: #fff8f8 !important;
+        }
+
+        .acoes {
+            margin-top: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 12px 22px;
+            border-radius: 18px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary { background: #1b3a57; color: white; width: 100%; }
+        .btn-primary:disabled { background: #cccccc; color: #666666; cursor: not-allowed; opacity: 0.7; }
+
+        .hidden { display: none !important; }
+
+        footer {
+            background: #1b3a57;
+            color: white;
+            padding: 30px;
+            text-align: center;
+            margin-top: 60px;
         }
 
         .form-footer {
-            margin-top: 25px;
+            margin-top: 20px;
             text-align: center;
-            font-size: 0.85rem;
-            color: #777;
+            font-size: 0.9rem;
         }
-
-        .form-footer a {
-            color: #1b3a57;
-            text-decoration: none;
-            font-weight: bold;
-        }
+        .form-footer a { color: #1b3a57; font-weight: bold; text-decoration: none; }
     </style>
 </head>
 
@@ -135,6 +147,7 @@
 
 <header>
     <h1>OCS.EUC - Observatório da Comunidade Surda</h1>
+    <p style="color: #e0e0e0; margin-top: 8px; font-size: 0.9rem;">Área de Acesso</p>
 </header>
 
 <nav>
@@ -142,51 +155,117 @@
 </nav>
 
 <div class="container">
-
     <h2>Acesso ao Sistema</h2>
+    <hr style="border: 0; border-top: 1px solid #e6eef6; margin-bottom: 25px;">
 
-    <div th:if="${param.pedidoEmAnalise}" class="alerta alerta-info">
-        Seu cadastro como pesquisador está em análise pelo administrador.
+    <div th:if="${param.pedidoEmAnalise}" class="alerta-info">
+        <strong>Aviso:</strong> Seu cadastro como pesquisador está em análise pelo administrador.
     </div>
 
-    <div th:if="${param.error}" class="alerta alerta-erro">
-        E-mail ou senha inválidos, ou cadastro ainda não validado.
+    <div th:if="${param.error}" class="alerta-erro">
+        <strong>Erro:</strong> E-mail ou senha inválidos, ou conta ainda não aprovada.
     </div>
 
-    <div th:if="${param.logout}" class="alerta alerta-info">
+    <div th:if="${param.logout}" class="alerta-info">
         Logout realizado com sucesso.
     </div>
 
-    <form th:action="@{/login}" method="post">
+    <form id="formLogin" th:action="@{/login}" method="post">
 
-        <label for="username">E-mail</label>
-        <input type="text" id="username" name="username" placeholder="Digite seu e-mail" required>
+        <div class="section">
+            <label for="username">E-mail</label>
+            <input type="email" id="username" name="username" placeholder="seu@email.com" required>
 
-        <label for="password">Senha</label>
-        <input type="password" id="password" name="password" placeholder="Digite sua senha" required>
+            <label for="password">Senha</label>
+            <input type="password" id="password" name="password" placeholder="Digite sua senha" required>
+        </div>
 
-        <button type="submit" class="btn-entrar">
-            Entrar
-        </button>
+        <div id="js-alerta-limite" class="alerta-erro hidden" style="margin-top: 15px; margin-bottom: 10px;">
+            <strong>Ops! Limite excedido:</strong>
+            <span id="js-msg-erro"></span>
+        </div>
+
+        <div class="acoes">
+            <button type="submit" id="btnSalvar" class="btn btn-primary">Entrar</button>
+            <div class="form-footer">
+                Ainda não tem conta? <a th:href="@{/contas/nova}">Cadastre-se aqui</a>.
+            </div>
+        </div>
     </form>
-
-    <div class="form-footer">
-        Ainda não tem conta? <a th:href="@{/contas/nova}">Cadastre-se aqui</a>.
-    </div>
-
 </div>
 
-<div vw class="enabled">
-    <div vw-access-button class="active"></div>
-    <div vw-plugin-wrapper>
-        <div class="vw-plugin-top-wrapper"></div>
-    </div>
-</div>
+<footer>
+    <p>© 2026 Observatório da Comunidade Surda — IFBA Euclides da Cunha</p>
+</footer>
 
 <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
 <script>
     new window.VLibras.Widget('https://vlibras.gov.br/app');
+
+
+    const MAX_CHARS = 255;
+    const btnSalvar = document.getElementById('btnSalvar');
+    const alertaLimite = document.getElementById('js-alerta-limite');
+    const msgErro = document.getElementById('js-msg-erro');
+
+    const camposValidar = {
+        'username': 'E-mail',
+        'password': 'Senha'
+    };
+
+    function verificarTodosLimites() {
+        let erros = [];
+        for (let id in camposValidar) {
+            const campo = document.getElementById(id);
+            if (campo && campo.value.length > MAX_CHARS) {
+                erros.push(camposValidar[id]);
+            }
+        }
+
+        if (erros.length > 0) {
+            alertaLimite.classList.remove('hidden');
+            msgErro.textContent = "O(s) campo(s) " + erros.join(", ") + " ultrapassaram o limite de " + MAX_CHARS + " caracteres.";
+            btnSalvar.disabled = true;
+        } else {
+            alertaLimite.classList.add('hidden');
+            btnSalvar.disabled = false;
+        }
+    }
+
+    Object.keys(camposValidar).forEach(id => {
+        const field = document.getElementById(id);
+        if (!field) return;
+
+        // Adiciona contador visual conforme o mestre
+        const counter = document.createElement('div');
+        counter.style = "text-align: right; font-size: 0.75rem; color: #888; margin-bottom: 5px;";
+        field.after(counter);
+
+        field.addEventListener('input', () => {
+            const current = field.value.length;
+            counter.textContent = `${current} / ${MAX_CHARS} caracteres`;
+
+            if (current > MAX_CHARS) {
+                counter.style.color = "#b00020";
+                counter.style.fontWeight = "bold";
+                field.classList.add('is-invalid');
+            } else {
+                counter.style.color = "#888";
+                counter.style.fontWeight = "normal";
+                field.classList.remove('is-invalid');
+            }
+            verificarTodosLimites();
+        });
+    });
 </script>
+
+<div vw class="enabled">
+    <div vw-access-button class="active"></div>
+    <div vw-plugin-wrapper><div class="vw-plugin-top-wrapper"></div></div>
+</div>
+<script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+<script>new window.VLibras.Widget('https://vlibras.gov.br/app');</script>
+
 
 </body>
 </html>

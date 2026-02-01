@@ -5,6 +5,8 @@ import br.edu.ifba.ocs.model.Pesquisa;
 import br.edu.ifba.ocs.model.Pesquisa.Status;
 import br.edu.ifba.ocs.repository.PesquisaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,10 +23,9 @@ public class PesquisaService {
         return repository.findAll();
     }
 
-    public List<Pesquisa> listarPorStatus(Status status) {
-        return repository.findByStatusOrderByDataInicioDesc(status);
+    public Page<Pesquisa> listarPorStatus(Status status, Pageable pageable) {
+        return repository.findByStatus(status, pageable);
     }
-
     public Optional<Pesquisa> buscarPorId(UUID id) {
         return repository.findById(id);
     }

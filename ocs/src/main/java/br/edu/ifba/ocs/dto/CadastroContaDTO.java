@@ -1,25 +1,32 @@
 package br.edu.ifba.ocs.dto;
 
 import br.edu.ifba.ocs.model.Perfil;
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 public class CadastroContaDTO {
 
-    @NotBlank
-    private String nome;
-
-    @NotBlank
-    @Email
+    @NotBlank(message = "O e-mail é obrigatório")
+    @Email(message = "Formato de e-mail inválido")
+    @Size(max = 255, message = "O e-mail excede o limite de 255 caracteres")
     private String email;
 
-    @NotBlank
+
+    @NotBlank(message = "O nome é obrigatório")
+    @Size(max = 255, message = "O nome excede o limite")
+    private String nome;
+
+    @NotBlank(message = "A senha é obrigatória")
+    @Size(min = 8, max = 255, message = "A senha deve ter entre 8 e 255 caracteres")
     private String senha;
 
+    @Size(max = 255, message = "A instituição não pode exceder 255 caracteres")
     private String instituicao;
 
-    @NotNull
+    @NotNull(message = "O perfil é obrigatório")
     private Perfil perfilDesejado;
 
 

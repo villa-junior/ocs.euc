@@ -4,6 +4,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Pesquisas do Observatório</title>
 
     <style>
@@ -23,18 +24,23 @@
 
         nav {
             background: #153049;
-            padding: 10px;
+            padding: 15px 10px;
             display: flex;
             justify-content: center;
             gap: 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            flex-wrap: wrap;
         }
 
         nav a {
             color: white;
             text-decoration: none;
             font-weight: bold;
+            font-size: 0.9rem;
+            transition: opacity 0.2s;
         }
-
         .container {
             max-width: 1000px;
             margin: 30px auto;
@@ -42,13 +48,13 @@
             padding: 30px;
             border-radius: 14px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            box-sizing: border-box;
         }
 
         h2 {
             color: #1b3a57;
             margin-top: 0;
         }
-
 
         .pesquisas-grid {
             display: grid;
@@ -69,7 +75,7 @@
 
         .pesquisa-card:hover {
             transform: translateY(-4px);
-            box-shadow: 0 10px 22px rgba(27,58,87,0.18);
+            box-shadow: 0 10px 22_2rgba(27,58,87,0.18);
         }
 
         .pesquisa-titulo {
@@ -95,55 +101,55 @@
         .pesquisa-acoes {
             margin-top: auto;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 10px;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .botoes-principais {
+            display: flex;
+            gap: 8px;
             flex-wrap: wrap;
         }
 
+        .botoes-gestao {
+            display: flex;
+            gap: 8px;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+        }
 
-        .btn-ver {
-            background: #1b3a57;
-            color: white;
-            padding: 6px 14px;
+        .btn-ver, .btn-secundario, .btn-editar, .btn-excluir {
+            padding: 8px 14px;
             border-radius: 18px;
             font-size: 0.8rem;
             text-decoration: none;
             font-weight: bold;
             display: inline-block;
+            text-align: center;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-ver {
+            background: #1b3a57;
+            color: white;
         }
 
         .btn-secundario {
             background: #eef3f7;
             color: #1b3a57;
-            padding: 6px 14px;
-            border-radius: 18px;
-            font-size: 0.8rem;
-            text-decoration: none;
-            font-weight: bold;
         }
 
         .btn-editar {
             background: #e6eef6;
             color: #1b3a57;
-            padding: 6px 12px;
-            border-radius: 14px;
-            font-size: 0.75rem;
-            font-weight: bold;
-            text-decoration: none;
-            border: none;
-            cursor: pointer;
+            flex: 1;
         }
 
         .btn-excluir {
             background: #fbeaea;
             color: #b00020;
-            padding: 6px 12px;
-            border-radius: 14px;
-            font-size: 0.75rem;
-            font-weight: bold;
-            border: none;
-            cursor: pointer;
+            flex: 1;
         }
 
         .intro-secao {
@@ -159,6 +165,72 @@
             color: #1b3a57;
             font-weight: bold;
         }
+
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin: 40px 0;
+            flex-wrap: wrap;
+        }
+
+        .pagination a, .pagination span {
+            display: inline-block;
+            padding: 10px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            background: white;
+            color: #1b3a57;
+            border: 1px solid #ddd;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        .pagination a:hover:not(.disabled):not(.active) {
+            background: #eef3f7;
+        }
+
+        .pagination a.active {
+            background: #1b3a57 !important;
+            color: white !important;
+            border-color: #1b3a57;
+        }
+
+        .pagination a.disabled {
+            color: #ccc !important;
+            border-color: #eee !important;
+            background: #fafafa !important;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        @media (max-width: 768px) {
+            header h1 { font-size: 1.4rem; }
+            header h2 { font-size: 1.2rem !important; }
+
+            .container {
+                margin: 15px;
+                padding: 20px;
+            }
+
+            .pesquisas-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .btn-ver, .btn-secundario {
+                width: 100%;
+                box-sizing: border-box;
+            }
+        }
+           footer {
+            background: #1b3a57;
+            color: white;
+            padding: 30px;
+            text-align: center;
+            margin-top: 60px;
+        }
     </style>
 </head>
 
@@ -172,7 +244,7 @@
 </header>
 
 <nav>
-    <a th:href="@{/static}">Página Principal</a>
+    <a th:href="@{/}">Página Principal</a>
 </nav>
 
 <div class="container">
@@ -190,17 +262,14 @@
     <a sec:authorize="hasAnyRole('ADMIN','PESQUISADOR')"
        th:href="@{/pesquisas/cadastrar}"
        class="btn-ver"
-       style="margin-bottom:20px; display:inline-block;">
+       style="margin-bottom:20px; display:inline-block; width: auto;">
         Cadastrar Pesquisa
     </a>
 
     <div class="pesquisas-grid">
-
         <div class="pesquisa-card" th:each="p : ${pesquisas}">
-
             <div class="pesquisa-titulo" th:text="${p.titulo}"></div>
-
-            <p class="pesquisa-descricao" th:text="${#strings.abbreviate(p.descricao, 180)}"></p>
+            <p class="pesquisa-descricao" th:text="${p.descricao}"></p>
 
             <div class="pesquisa-meta">
                 <strong>Início:</strong>
@@ -213,7 +282,7 @@
             </div>
 
             <div class="pesquisa-acoes">
-                <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                <div class="botoes-principais">
                     <a th:if="${p.status.name() == 'EM_ANDAMENTO' and p.urlParticipante != null}"
                        th:href="${p.urlParticipante}" target="_blank" class="btn-ver">Participar</a>
 
@@ -224,36 +293,42 @@
                        th:href="${p.urlOrganizador}" target="_blank" class="btn-secundario">Organização</a>
                 </div>
 
-                <div style="display:flex; gap:8px; margin-top:10px;">
-                    <th:block sec:authorize="hasRole('ADMIN')">
+                <div class="botoes-gestao" sec:authorize="isAuthenticated()">
+                    <th:block th:if="${#authorization.expression('hasRole(''ADMIN'')') or (p.conta != null and p.conta.id == idContaLogada)}">
                         <a th:href="@{/pesquisas/editar/{id}(id=${p.id})}" class="btn-editar">Editar</a>
-                        <form th:action="@{/pesquisas/excluir/{id}(id=${p.id})}" method="post">
-                            <input type="hidden" name="status" th:value="${status}" />
-                            <button type="submit" class="btn-excluir" onclick="return confirm('Deseja excluir?')">Excluir</button>
-                        </form>
-                    </th:block>
-
-                    <th:block sec:authorize="hasRole('PESQUISADOR')" th:if="${p.conta != null and p.conta.id == idContaLogada}">
-                        <a th:href="@{/pesquisas/editar/{id}(id=${p.id})}" class="btn-editar">Editar</a>
-                        <form th:action="@{/pesquisas/excluir/{id}(id=${p.id})}" method="post">
+                        <form th:action="@{/pesquisas/excluir/{id}(id=${p.id})}" method="post" style="flex:1; display:flex;">
                             <input type="hidden" name="status" th:value="${status}" />
                             <button type="submit" class="btn-excluir" onclick="return confirm('Deseja excluir?')">Excluir</button>
                         </form>
                     </th:block>
                 </div>
             </div>
-
         </div>
+        <div class="pagination" th:if="${totalPaginas > 1}">
+            <a th:href="@{/pesquisas/{st}(st=${status}, page=${paginaAtual - 1})}"
+               th:classappend="${paginaAtual == 0} ? 'disabled' : ''">&laquo;</a>
 
+            <span th:each="i : ${#numbers.sequence(0, totalPaginas - 1)}">
+            <a th:href="@{/pesquisas/{st}(st=${status}, page=${i})}"
+               th:text="${i + 1}"
+               th:classappend="${i == paginaAtual} ? 'active' : ''"></a>
+        </span>
+
+            <a th:href="@{/pesquisas/{st}(st=${status}, page=${paginaAtual + 1})}"
+               th:classappend="${paginaAtual + 1 == totalPaginas} ? 'disabled' : ''">&raquo;</a>
+        </div>
     </div>
-</div>
+    </div>
+
+<footer>
+    <p>© 2026 Observatório da Comunidade Surda — IFBA Euclides da Cunha</p>
+</footer>
 
 <div vw class="enabled">
     <div vw-access-button class="active"></div>
-    <div vw-plugin-wrapper>
-        <div class="vw-plugin-top-wrapper"></div>
-    </div>
+    <div vw-plugin-wrapper><div class="vw-plugin-top-wrapper"></div></div>
 </div>
+
 <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
 <script>new window.VLibras.Widget('https://vlibras.gov.br/app');</script>
 

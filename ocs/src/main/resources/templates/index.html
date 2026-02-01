@@ -12,6 +12,7 @@
             font-family: Arial, sans-serif;
             background: #f7f7f7;
             color: #333;
+            line-height: 1.6;
         }
 
 
@@ -27,6 +28,7 @@
             align-items: center;
             max-width: 1200px;
             margin: 0 auto;
+            gap: 15px;
         }
 
         .header-top h1 {
@@ -75,6 +77,8 @@
             transition: all 0.25s ease;
             cursor: pointer;
             border: none;
+            display: inline-block;
+            text-align: center;
         }
 
         .btn-entrar {
@@ -88,31 +92,21 @@
             color: #1b3a57;
         }
 
-        .btn-cadastrar {
-            background: #2d5f8b;
-            color: white;
-        }
-
-        .btn-logout {
-            background: #fbeaea;
-            color: #b00020;
-        }
-
-        .btn-admin {
-            background: #e6eef6;
-            color: #1b3a57;
-        }
+        .btn-cadastrar { background: #2d5f8b; color: white; }
+        .btn-logout { background: #fbeaea; color: #b00020; }
+        .btn-admin { background: #e6eef6; color: #1b3a57; }
 
 
         nav {
             background: #153049;
-            padding: 10px;
+            padding: 15px 10px;
             display: flex;
             justify-content: center;
             gap: 20px;
             position: sticky;
             top: 0;
             z-index: 100;
+            flex-wrap: wrap; /* Permite quebrar linha no celular */
         }
 
         nav a {
@@ -121,10 +115,6 @@
             font-weight: bold;
             font-size: 0.9rem;
             transition: opacity 0.2s;
-        }
-
-        nav a:hover {
-            opacity: 0.8;
         }
 
 
@@ -169,6 +159,7 @@
             display: flex;
             flex-direction: column;
             border: 1px solid transparent;
+            box-sizing: border-box;
         }
 
         .card:hover {
@@ -178,7 +169,7 @@
         }
 
         .card h3 { color: #1b3a57; margin-top: 0; margin-bottom: 12px; }
-        .card p { font-size: 0.9rem; color: #666; line-height: 1.5; margin: 0; }
+        .card p { font-size: 0.9rem; color: #666; margin: 0; }
 
         footer {
             background: #1b3a57;
@@ -186,6 +177,61 @@
             padding: 30px;
             text-align: center;
             margin-top: 60px;
+        }
+
+
+        @media (max-width: 768px) {
+            .header-top {
+                display: flex;
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .header-top h1 {
+                font-size: 1.3rem;
+                order: 1; /* Título primeiro no mobile */
+            }
+
+            .auth-area {
+                order: 2;
+                justify-content: center;
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .user-info {
+                align-items: center;
+                margin-bottom: 10px;
+            }
+
+            .admin-area {
+                order: 3;
+            }
+
+            nav {
+                gap: 15px;
+                padding: 12px;
+            }
+
+            nav a {
+                font-size: 0.85rem;
+            }
+
+            .banner {
+                padding: 40px 15px;
+            }
+
+            .banner h2 {
+                font-size: 1.5rem;
+            }
+
+            .section {
+                padding: 30px 15px;
+            }
+
+            .section h2 {
+                font-size: 1.4rem;
+            }
         }
     </style>
 </head>
@@ -212,7 +258,7 @@
             </div>
 
             <div class="auth-buttons">
-                <div sec:authorize="!isAuthenticated()" style="display:flex; gap:10px;">
+                <div sec:authorize="!isAuthenticated()" style="display:flex; gap:10px; flex-wrap: wrap; justify-content: center;">
                     <a th:href="@{/login}" class="btn-entrar">Entrar</a>
                     <a th:href="@{/contas/nova}" class="btn-cadastrar">Cadastrar</a>
                 </div>
